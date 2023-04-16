@@ -1,0 +1,44 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# prompt options
+add_newline = false
+
+continuation_prompt = "[∙](bright-black) "
+
+# prompt format
+format = """
+$directory\
+$git_branch\
+$git_status\
+$git_state\
+$aws\
+$character"""
+
+right_format = """
+$cmd_duration\
+"""
+
+# modules options
+[directory]
+truncation_length = 5
+truncate_to_repo = false
+
+[git_branch]
+style = 'dimmed green'
+
+[git_status]
+format = '($all_status$ahead_behind )'
+conflicted = '[${count}*](inverted red)'
+ahead = '[${count}⇡](dimmed purple)'
+behind = '[${count}⇣](inverted purple)'
+diverged = '[${count}⇕](inverted green)'
+untracked = '[${count}?](dimmed blue)'
+stashed = '[${count}$](dimmed gray)'
+modified = '[${count}!](dimmed yellow)'
+staged = '[${count}+](green)'
+renamed = '[${count}»](bright-cyan)'
+deleted = '[${count}✘](dimmed red)'
+
+[character]
+success_symbol = '[➜](bold green)'
+

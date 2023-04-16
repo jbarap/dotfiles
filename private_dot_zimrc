@@ -1,0 +1,45 @@
+# -------
+# Modules
+# -------
+
+# sane Zsh built-in environment options
+zmodule environment
+# correct bindkeys for input events
+zmodule input
+# utility aliases, functions, and colors
+zmodule utility
+
+
+# ----------
+# Completion
+# ----------
+
+# additional completion definitions for Zsh
+zmodule zsh-users/zsh-completions --fpath src
+
+# advanced vi mode
+zmodule jeffreytse/zsh-vi-mode
+
+# conda autocomplete
+zmodule conda-incubator/conda-zsh-completion -s 'conda-zsh-completion.plugin.zsh'
+
+# enable and configure smart and extensive tab completion
+# NOTE: this calls compinit, so it should be initialized after all completions
+zmodule completion
+
+
+# -------------------------------------
+# Modules that must be initialized last
+# -------------------------------------
+
+# syntax highlighting for Zsh.
+# NOTE: must be sourced after completion
+zmodule zsh-users/zsh-syntax-highlighting
+
+# history search (up arrow) for Zsh.
+# NOTE: must be sourced after zsh-users/zsh-syntax-highlighting
+zmodule zsh-users/zsh-history-substring-search
+
+# autosuggestions for Zsh.
+zmodule zsh-users/zsh-autosuggestions
+

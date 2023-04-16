@@ -1,0 +1,11 @@
+# sourcing
+. "$HOME/.cargo/env"
+
+# scripts
+export PATH="$HOME/scripts/:$PATH"
+
+# cuda setup
+export PATH="/usr/local/cuda-12.0/bin${PATH:+:${PATH}}"
+
+# go
+export PATH="/usr/local/go/bin:$HOME/go/bin/:$PATH"

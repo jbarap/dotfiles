@@ -1,0 +1,157 @@
+# --------
+# Options
+# --------
+
+# Remove older command from the history if a duplicate is to be added.
+setopt HIST_IGNORE_ALL_DUPS
+
+# environment variables
+export MANPAGER="nvim +Man!"
+export EDITOR="nvim"
+
+
+# -------------
+# Scripty stuff
+# -------------
+
+# cd with lf
+lfcd () {
+    tmp="$(mktemp)"
+    lf -last-dir-path="$tmp" "$@"
+    if [ -f "$tmp" ]; then
+        dir="$(cat "$tmp")"
+        rm -f "$tmp"
+        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
+    fi
+}
+
+command_exists () {
+    command -v $1 &> /dev/null
+    return $?
+}
+
+
+# -------
+# Keymaps
+# -------
+
+# vi maps in autocompletion
+zstyle ':completion:*' menu select
+zmodload zsh/complist
+
+bindkey -M menuselect 'h' vi-backward-char
+bindkey -M menuselect 'k' vi-up-line-or-history
+bindkey -M menuselect 'l' vi-forward-char
+bindkey -M menuselect 'j' vi-down-line-or-history
+
+# vi map to enter normal mode
+ZVM_VI_INSERT_ESCAPE_BINDKEY=jk
+
+# scripty maps
+bindkey -s '^o' 'lfcd\n'
+
+
+# -------
+# Aliases
+# -------
+
+source ~/.aliases.zsh
+
+
+# -----------
+# Tools setup
+# -----------
+
+# starship
+if command_exists "starship"; then
+    eval "$(starship init zsh)"
+fi
+# eval "$(starship init zsh)"
+
+# conda
+# TODO: clean this mess up and check for conda installation before attempting to run
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$("${HOME}/miniconda3/bin/conda" 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "${HOME}/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "${HOME}/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="${HOME}/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+
+# ------------------------
+# Zim module configuration
+# ------------------------
+
+# Append `../` to your input for each `.` you type after an initial `..`
+zstyle ':zim:input' double-dot-expand yes
+
+# zsh-autosuggestions
+
+# Disable automatic widget re-binding on each precmd. This can be set when
+# zsh-users/zsh-autosuggestions is the last module in your ~/.zimrc.
+ZSH_AUTOSUGGEST_MANUAL_REBIND=1
+
+# bind [ctrl + space] to accep suggestions
+zle -N autosuggest-accept
+bindkey '^ ' autosuggest-accept
+
+
+# -------------------------
+# Zim module initialization
+# -------------------------
+
+ZIM_HOME=${ZDOTDIR:-${HOME}}/.zim
+# Download zimfw plugin manager if missing.
+if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
+  if (( ${+commands[curl]} )); then
+    curl -fsSL --create-dirs -o ${ZIM_HOME}/zimfw.zsh \
+        https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
+  else
+    mkdir -p ${ZIM_HOME} && wget -nv -O ${ZIM_HOME}/zimfw.zsh \
+        https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
+  fi
+fi
+# Install missing modules, and update ${ZIM_HOME}/init.zsh if missing or outdated.
+if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZDOTDIR:-${HOME}}/.zimrc ]]; then
+  source ${ZIM_HOME}/zimfw.zsh init -q
+fi
+# Initialize modules.
+source ${ZIM_HOME}/init.zsh
+
+
+# ----------------------------------
+# Zim post-init module configuration
+# ----------------------------------
+
+# zsh-history-substring-search
+zmodload -F zsh/terminfo +p:terminfo
+# Bind ^[[A/^[[B manually so up/down works both before and after zle-line-init
+for key ('^[[A' '^P' ${terminfo[kcuu1]}) bindkey ${key} history-substring-search-up
+for key ('^[[B' '^N' ${terminfo[kcud1]}) bindkey ${key} history-substring-search-down
+for key ('k') bindkey -M vicmd ${key} history-substring-search-up
+for key ('j') bindkey -M vicmd ${key} history-substring-search-down
+unset key
+
+# don't cd to a directory if the command doesn't exist
+unsetopt AUTO_CD
+
+# for conda autocompletion to work properly
+# for some reason even though compinit should already be called
+compinit
+
+# zoxide setup
+# NOTE: this has to be initialized after compinit is called
+if command_exists "zoxide"; then
+    eval "$(zoxide init zsh)"
+fi
+
+# change autocompletion group division style
+zstyle ':completion:*' format '%F{green}-- %d --%f'

@@ -1,0 +1,13 @@
+# python
+.python-version
+__pycache__/
+*.egg-info/
+*.egg
+.ipynb_checkpoints
+.mypy_cache/
+
+# neovim
+.project
+
+# vscode
+**/.vscode/*

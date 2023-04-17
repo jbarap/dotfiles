@@ -6,6 +6,9 @@ alias openapp="xdg-open"
 alias watch="watch " # allow for watching aliases
 alias xclip="xclip -selection c -rmlastnl"
 
+# chezmoi
+alias cnv="chezmoi edit"
+
 # git
 alias g="git"
 alias wkt="git-fzf worktree list"

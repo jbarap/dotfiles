@@ -223,17 +223,6 @@ return {
       for _, name in ipairs(server_names) do
         local server_config = language_servers.configs[name]
 
-        -- use after_on_attach if defined
-        if server_config.after_on_attach then
-          local original_on_attach = server_config.on_attach
-          server_config.on_attach = function (client, bufnr)
-            if original_on_attach then
-              original_on_attach(client, bufnr)
-            end
-            server_config.after_on_attach(client, bufnr)
-          end
-        end
-
         local opts = vim.tbl_extend("keep", server_config, base_options or {})
         require("lspconfig")[name].setup(opts)
       end

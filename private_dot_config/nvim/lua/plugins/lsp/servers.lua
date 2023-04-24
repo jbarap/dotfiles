@@ -187,7 +187,7 @@ M._lazy_configs = {
     return {
       cmd = get_mason_lsp_cmd("dockerls"),
       -- disable semantic highlighting because it looks worse than regular
-      after_on_attach = function(client, _)
+      on_init = function(client)
         client.server_capabilities.semanticTokensProvider = nil
       end,
     }

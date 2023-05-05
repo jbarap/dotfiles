@@ -394,35 +394,48 @@ return {
   {
     "lukas-reineke/indent-blankline.nvim",
     event = { "BufReadPost", "BufNewFile" },
-    opts = {
-      show_trailing_blankline_indent = false,
-      use_treesitter = false,
-      char = "▏",
-      enabled = true,
-      filetype_exclude = {
-        "dashboard",
-        "help",
-        "toggleterm",
-        "packer",
-        "aerial",
-        "alpha",
-        "FTerm",
-        "man",
-        "TelescopePrompt",
-        "TelescopeResults",
-        "NeogitCommitView",
-        "neo-tree",
-        "dockerfile",
-        "NvimTree",
-        "NeovitStatus",
-        "tsplayground",
-        "startup",
-        "dap-repl",
-        "qf",
-      },
-      max_indent_increase = 10,
-      use_treesitter_scope = true,
-    }
+    config = function ()
+      require("indent_blankline").setup({
+        show_trailing_blankline_indent = false,
+        use_treesitter = false,
+        char = "▏",
+        enabled = true,
+        filetype_exclude = {
+          "dashboard",
+          "help",
+          "toggleterm",
+          "packer",
+          "aerial",
+          "alpha",
+          "FTerm",
+          "man",
+          "TelescopePrompt",
+          "TelescopeResults",
+          "NeogitCommitView",
+          "neo-tree",
+          "dockerfile",
+          "NvimTree",
+          "NeovitStatus",
+          "tsplayground",
+          "startup",
+          "dap-repl",
+          "qf",
+        },
+        max_indent_increase = 10,
+        use_treesitter_scope = true,
+      })
+
+      -- while this is fixed: https://github.com/lukas-reineke/indent-blankline.nvim/issues/489
+      vim.api.nvim_create_augroup('IndentBlankLineFix', {})
+      vim.api.nvim_create_autocmd('WinScrolled', {
+        group = 'IndentBlankLineFix',
+        callback = function()
+          if vim.v.event.all.leftcol ~= 0 then
+            vim.cmd('silent! IndentBlanklineRefresh')
+          end
+        end,
+      })
+    end,
   },
 
   -- Startup screen

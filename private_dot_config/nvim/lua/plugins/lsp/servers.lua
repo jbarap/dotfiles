@@ -69,6 +69,15 @@ M._lazy_configs = {
     }
   end,
 
+  pylyzer = function()
+    return {
+      cmd = get_mason_lsp_cmd("pylyzer"),
+      root_dir = function(fname)
+        return M.find_root(utils.tbl_concat(common_patterns, python_patterns), fname)
+      end
+    }
+  end,
+
   pyright = function()
     return {
       cmd = get_mason_lsp_cmd("pyright"),

@@ -75,7 +75,7 @@ opt.sidescrolloff = 4
 -- Fillchars
 opt.fillchars = "diff:╱"
 opt.list = true
-opt.listchars = { tab = "  ", trail = "·" }
+opt.listchars = { tab = "  " }
 
 -- Jumplist
 opt.jumpoptions = "stack"

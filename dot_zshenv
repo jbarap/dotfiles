@@ -1,11 +1,19 @@
 # sourcing
 . "$HOME/.cargo/env"
 
+# local bin
+export PATH="$HOME/.local/share/bin/:$PATH"
+
 # scripts
 export PATH="$HOME/scripts/:$PATH"
 
 # cuda setup
-export PATH="/usr/local/cuda-12.0/bin${PATH:+:${PATH}}"
+if [[ -n "$(find /usr/local -maxdepth 1 -name 'cuda*' -type d | head -n 1)" ]]; then
+    # grab most recent cuda version
+    recent_cuda_path=$(find /usr/local -maxdepth 1 -name 'cuda*' -type d | sort -r | head -n 1)
+    export PATH="${recent_cuda_path}/bin${PATH:+:${PATH}}"
+    export LD_LIBRARY_PATH="${recent_cuda_path}/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+fi
 
 # go
 export PATH="/usr/local/go/bin:$HOME/go/bin/:$PATH"

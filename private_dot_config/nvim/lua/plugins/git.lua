@@ -137,7 +137,7 @@ return {
             log_options = {
               single_file = {
                 follow = true,
-                all = true,
+                all = false,
               },
               multi_file = {
                 all = false,
@@ -147,35 +147,35 @@ return {
         },
         key_bindings = {
           view = {
-            ["<tab>"] = actions.select_next_entry,
-            ["<s-tab>"] = actions.select_prev_entry,
-            ["<leader>nf"] = actions.focus_files,
-            ["<leader>nn"] = actions.toggle_files,
-            ["[x"] = actions.prev_conflict,
-            ["]x"] = actions.next_conflict,
-            ["<leader>co"] = actions.conflict_choose("ours"),
-            ["<leader>ct"] = actions.conflict_choose("theirs"),
-            ["<leader>cb"] = actions.conflict_choose("all"), -- choose both
-            ["<leader>cB"] = actions.conflict_choose("base"),
-            ["<leader>cx"] = actions.conflict_choose("none"),
+            { "n", "<tab>", actions.select_next_entry, { desc = "Next entry" } },
+            { "n", "<s-tab>", actions.select_prev_entry, { desc = "Prev entry" } },
+            { "n", "<leader>nf", actions.focus_files, { desc = "Focus files" } },
+            { "n", "<leader>nn", actions.toggle_files, { desc = "Toggle files" } },
+            { "n", "[x", actions.prev_conflict, { desc = "Prev conflict" } },
+            { "n", "]x", actions.next_conflict, { desc = "Next conflict" } },
+            { "n", "<leader>co", actions.conflict_choose("ours"), { desc = "Choose ours" } },
+            { "n", "<leader>ct", actions.conflict_choose("theirs"), { desc = "Choose theirs" } },
+            { "n", "<leader>cb", actions.conflict_choose("all"), { desc = "Choose both" } }, -- choose both
+            { "n", "<leader>cB", actions.conflict_choose("base"), { desc = "Choose the base" } },
+            { "n", "<leader>cx", actions.conflict_choose("none"), { desc = "Choose none" } },
           },
           file_panel = {
-            ["j"] = actions.next_entry,
-            ["<down>"] = actions.next_entry,
-            ["k"] = actions.prev_entry,
-            ["<up>"] = actions.prev_entry,
-            ["<cr>"] = actions.select_entry,
-            ["o"] = actions.select_entry,
-            ["R"] = actions.refresh_files,
-            ["<tab>"] = actions.select_next_entry,
-            ["<s-tab>"] = actions.select_prev_entry,
-            ["<leader>nf"] = actions.focus_files,
-            ["<leader>nn"] = actions.toggle_files,
+            { "n", "j", actions.next_entry, { desc = "Next entry" }},
+            { "n", "<down>", actions.next_entry, { desc = "Next entry" }},
+            { "n", "k", actions.prev_entry, { desc = "Prev entry" }},
+            { "n", "<up>", actions.prev_entry, { desc = "Prev entry" }},
+            { "n", "<cr>", actions.select_entry, { desc = "Select entry" }},
+            { "n", "o", actions.select_entry, { desc = "Select entry" }},
+            { "n", "R", actions.refresh_files, { desc = "Refresh files" }},
+            { "n", "<tab>", actions.select_next_entry, { desc = "Select next entry" }},
+            { "n", "<s-tab>", actions.select_prev_entry, { desc = "Select prev entry" }},
+            { "n", "<leader>nf", actions.focus_files, { desc = "Focus files" }},
+            { "n", "<leader>nn", actions.toggle_files, { desc = "Toggle files" }},
           },
         },
         default_args = {
           DiffviewOpen = { "--untracked-files=no" },
-          DiffviewFileHistory = { "--base=LOCAL" }
+          -- DiffviewFileHistory = { "--base=LOCAL" }
         },
         -- TODO: use hooks to add buffers opened during diffview, close them on diffclose
         hooks = {

@@ -3,47 +3,17 @@ return {
     "nvim-telescope/telescope.nvim",
     lazy = true,
     cmd = { "Telescope" },
+    init = function ()
+      -- Prevent entering buffers in insert mode: https://github.com/nvim-telescope/telescope.nvim/issues/2501
+      vim.api.nvim_create_autocmd({ "WinLeave" }, {
+        callback = function()
+          if vim.bo.ft == "TelescopePrompt" and vim.fn.mode() == "i" then
+            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "i", false)
+          end
+        end,
+      })
+    end,
     dependencies = { "nvim-lua/popup.nvim", "nvim-lua/plenary.nvim" },
-    keys = {
-
-      -- files
-      { "<Leader>ff", function() require("telescope.builtin").find_files({
-        find_command = { "fd", "--type", "f", "--ignore", "--follow" },
-      }) end, desc = "Find files" },
-      { "<Leader>fF", function()
-        require("telescope.builtin").find_files({
-          find_command = { "fd", "--type", "f", "--hidden", "--no-ignore", "--follow" },
-        })
-      end,
-        desc = "Find files (all)",
-      },
-
-      -- grep
-      { "<Leader>fg", function() require("telescope.builtin").live_grep() end, desc = "Find grep" },
-      { "<Leader>fG", function()
-        require("telescope.builtin").live_grep({ additional_args = { "--no-ignore", "--hidden" } })
-      end,
-        desc = "Find grep (all)",
-      },
-      { "<Leader>f<C-g>", function() require("plugin_utils").rg_dir() end, desc = "Find grep (in dir)" },
-      { "<Leader>fW", function() require("telescope.builtin").grep_string() end,
-        desc = "Find word under cursor (in project)",
-        mode = { "n", "v" },
-      },
-
-      -- git
-      { "<Leader>gff", function() require("telescope.builtin").git_files() end, desc = "Git find files" },
-      { "<Leader>gfc", function() require("telescope.builtin").git_bcommits() end, desc = "Git find commits (buffer)" },
-      { "<Leader>gfC", function() require("telescope.builtin").git_commits() end, desc = "Git find commits (all)" },
-      { "<Leader>gfb", function() require("telescope.builtin").git_branches() end, desc = "Git find branches (all)" },
-
-      -- extra
-      { "<Leader>fb", function() require("telescope.builtin").buffers() end, desc = "Find buffers" },
-      { "<Leader>fz", function() require("telescope.builtin").current_buffer_fuzzy_find() end, desc = "Find fuZzy (in buffer)" },
-
-      -- extensions
-      { "<Leader>pl", "<cmd>Telescope projects<CR>", desc = "Projects list" },
-    },
     config = function()
       local actions = require("telescope.actions")
       local layout_actions = require("telescope.actions.layout")

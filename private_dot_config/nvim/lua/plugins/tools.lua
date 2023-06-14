@@ -415,4 +415,99 @@ return {
   },
   -- check: https://github.com/chipsenkbeil/distant.nvim
   -- check: https://github.com/miversen33/netman.nvim
+
+  -- Fzf lua
+  {
+    "ibhagwan/fzf-lua",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    keys = {
+      -- files
+      { "<Leader>ff", function() require("fzf-lua").files({
+        cmd = "fd --type f --ignore --follow",
+      }) end, desc = "Find files" },
+      { "<Leader>fF", function()
+        require("fzf-lua").files({
+          cmd = "fd --type f --hidden --no-ignore --follow",
+        })
+      end,
+        desc = "Find files (all)",
+      },
+
+      -- grep
+      { "<Leader>fg", function() require("fzf-lua").live_grep({
+        cmd = "rg --column --line-number --no-heading --color=always --smart-case --max-columns=4096",
+      }) end, desc = "Find grep" },
+      { "<Leader>fG", function()
+        require("fzf-lua").live_grep({
+        cmd = "rg --column --line-number --no-heading --color=always --smart-case --max-columns=4096 " ..
+          "--no-ignore --hidden",
+        })
+      end, desc = "Find grep (all)" },
+
+      { "<Leader>f<C-g>", function() require("plugin_utils").rg_dir() end, desc = "Find grep (in dir)" },
+      { "<Leader>fW", function() require("telescope.builtin").grep_string() end,
+        desc = "Find word under cursor (in project)",
+        mode = { "n", "v" },
+      },
+
+      -- git
+      { "<Leader>gff", function() require("telescope.builtin").git_files() end, desc = "Git find files" },
+      { "<Leader>gfc", function() require("telescope.builtin").git_bcommits() end, desc = "Git find commits (buffer)" },
+      { "<Leader>gfC", function() require("telescope.builtin").git_commits() end, desc = "Git find commits (all)" },
+      { "<Leader>gfb", function() require("telescope.builtin").git_branches() end, desc = "Git find branches (all)" },
+
+      -- extra
+      { "<Leader>fb", function() require("telescope.builtin").buffers() end, desc = "Find buffers" },
+      { "<Leader>fz", function() require("telescope.builtin").current_buffer_fuzzy_find() end, desc = "Find fuZzy (in buffer)" },
+
+      -- extensions
+      { "<Leader>pl", "<cmd>Telescope projects<CR>", desc = "Projects list" },
+    },
+    config = function()
+      require("fzf-lua").setup({
+        "telescope",
+        winopts = {
+          height = 0.97,
+          width = 0.97,
+          border = { "┌", "─", "┐", "│", "┘", "─", "└", "│" },
+
+          on_create = function()
+            vim.wo.winblend = 10
+          end,
+
+          preview = {
+            delay = 80,
+          },
+        },
+
+        fzf_opts = {
+          ["--layout"] = "reverse",
+          ["--pointer"] = "➜ ",
+        },
+
+        files = {
+          cwd_prompt_shorten_val = 5,
+        },
+
+        keymap = {
+          builtin = {
+            ["<C-p>"] = "toggle-preview",
+            ["<C-r>"] = "toggle-preview-ccw",
+            ["<A-j>"] = "preview-page-down",
+            ["<A-k>"] = "preview-page-up",
+          },
+          fzf = {
+            ["ctrl-p"] = "toggle-preview",
+          },
+        },
+
+        actions = {
+          files = {
+            ["ctrl-q"] = require("fzf-lua.actions").file_sel_to_qf,
+          },
+        },
+
+      })
+    end,
+  },
 }

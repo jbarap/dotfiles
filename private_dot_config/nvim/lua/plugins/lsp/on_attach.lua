@@ -8,14 +8,24 @@ return function(client, bufnr)
     vim.api.nvim_buf_set_option(bufnr, ...)
   end
 
+  local function buf_fzf_keymap(lhs, function_name, function_opts, keymap_opts)
+    function_opts = function_opts or {}
+    keymap_opts = keymap_opts or {}
+    vim.keymap.set("n", lhs, function()
+      require("fzf-lua")[function_name](function_opts)
+    end, vim.tbl_extend("force", { buffer = bufnr }, keymap_opts))
+  end
+
   buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
 
   -- Get/Go
-  -- See telescope for definition and references
-  buf_set_keymap("n", "gD", vim.lsp.buf.declaration, { desc = "Goto declaration" })
-  buf_set_keymap("n", "gi", vim.lsp.buf.implementation, { desc = "Goto implementation" })
-  buf_set_keymap("n", "gt", vim.lsp.buf.type_definition, { desc = "Goto type definition" })
+  buf_fzf_keymap("gr", "lsp_references", {}, { desc = "Goto references" })
+  buf_fzf_keymap("gd", "lsp_definitions", {}, { desc = "Goto definition" })
+  buf_fzf_keymap("gD", "lsp_declarations", {}, { desc = "Goto declaration" })
+  buf_fzf_keymap("gI", "lsp_implementations", {}, { desc = "Goto implementation" })
+  buf_fzf_keymap("gt", "lsp_typedefs", {}, { desc = "Goto type definition" })
 
+  -- TODO: implement incoming/outgoing calls
   -- Information
   buf_set_keymap("n", "K", vim.lsp.buf.hover, { desc = "Hover information" })
   buf_set_keymap("i", "<C-k>", vim.lsp.buf.signature_help, { desc = "Signature help" })
@@ -37,20 +47,8 @@ return function(client, bufnr)
   -- Formatting
   buf_set_keymap({ "n" , "v" }, "<leader>cf", function() vim.lsp.buf.format({ async = true }) end, { desc = "Code format" })
 
-  -- Telescope LSP
-  -- TODO: debug why sometimes goto def doesn't work or why sometimes it shows up double
-  -- TODO: implement incoming/outgoing calls
-  local function buf_bind_picker(lhs, picker_name, picker_opts, opts)
-    picker_opts = picker_opts or {}
-    opts = opts or {}
-    vim.keymap.set("n", lhs, function()
-      require("telescope.builtin")[picker_name](picker_opts)
-    end, vim.tbl_extend("force", { buffer = bufnr }, opts))
-  end
+  -- Symbols
+  buf_fzf_keymap("<Leader>fs", "lsp_document_symbols", {}, { desc = "Find symbols (lsp)" })
+  buf_fzf_keymap("<Leader>fS", "lsp_workspace_symbols", {}, { desc = "Find symbols (lsp Workspace)" })
 
-  buf_bind_picker("<Leader>fs", "lsp_document_symbols", {}, { desc = "Find symbols (lsp)" })
-  buf_bind_picker("<Leader>fS", "lsp_workspace_symbols", {}, { desc = "Find symbols (lsp Workspace)" })
-
-  buf_bind_picker("gr", "lsp_references", {}, { desc = "Goto references" })
-  buf_bind_picker("gd", "lsp_definitions", {}, { desc = "Goto definition" })
 end

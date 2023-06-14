@@ -49,6 +49,7 @@ ZVM_VI_INSERT_ESCAPE_BINDKEY=jk
 
 # scripty maps
 bindkey -s '^o' 'lfcd\n'
+bindkey -s '^z' 'fg\n'
 
 
 # -------

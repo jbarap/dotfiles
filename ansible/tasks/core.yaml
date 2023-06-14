@@ -1,0 +1,33 @@
+- name: Create fonts dir
+  ansible.builtin.file:
+    path: "{{lookup('env', 'HOME')}}/.local/share/fonts/"
+    state: directory
+
+- name: Create local bin dir
+  ansible.builtin.file:
+    path: "{{lookup('env', 'HOME')}}/.local/bin"
+    state: directory
+
+- name: Add latest git repository
+  become: true
+  ansible.builtin.apt_repository:
+    repo: ppa:git-core/ppa
+
+- name: Install latest git
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    name: git
+    state: latest
+
+- name: Install some base packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - ninja-build
+      - cmake
+      - unzip
+      - curl
+      - python3-venv
+    state: present
+

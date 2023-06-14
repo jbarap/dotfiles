@@ -1,0 +1,47 @@
+- name: Install tmux, fzf, rg
+  become: true
+  ansible.builtin.apt:
+    name:
+      - tmux
+      - fzf
+      - ripgrep
+      - fd-find
+      - zoxide
+      - xclip
+      - git-absorb
+    state: latest
+
+- name: Add fd alias
+  ansible.builtin.file:
+    path: "{{lookup('env', 'HOME')}}/.local/bin/fd"
+    src: "/usr/bin/fdfind"
+    state: link
+
+# bottom
+- name: Check for bottom
+  ansible.builtin.shell: command -v btm
+  register: bottom_exists
+  ignore_errors: true
+
+- name: Download bottom deb
+  when: bottom_exists is failed
+  ansible.builtin.get_url:
+    url: https://github.com/ClementTsang/bottom/releases/download/{{bottom_version | default('0.9.1')}}/bottom_{{bottom_version | default('0.9.1')}}_amd64.deb
+    dest: /tmp/bottom.deb
+
+- name: Install bottom deb
+  become: true
+  when: bottom_exists is failed
+  ansible.builtin.shell: dpkg -i /tmp/bottom.deb
+
+# lazydocker
+- name: Check for lazydocker
+  ansible.builtin.shell: command -v lazydocker
+  register: lazydocker_exists
+  ignore_errors: true
+
+# lazydocker
+- name: Install lazydocker
+  when: lazydocker_exists
+  ansible.builtin.shell: go install github.com/jesseduffield/lazydocker@latest
+

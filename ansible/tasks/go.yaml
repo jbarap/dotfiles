@@ -1,0 +1,23 @@
+- name: Check for Go
+  ansible.builtin.shell: command -v go
+  register: go_exists
+  ignore_errors: yes
+
+- name: Remove previous Go installations
+  when: go_exists is failed
+  ansible.builtin.file:
+    path: /usr/local/go
+    state: absent
+
+- name: Download Golang
+  when: go_exists is failed
+  ansible.builtin.get_url:
+    url: https://go.dev/dl/go{{golang_version | default('1.20.4')}}.linux-amd64.tar.gz
+    dest: /tmp/go{{golang_version | default('1.20.4')}}.linux-amd64.tar.gz
+
+- name: Unarchive
+  when: go_exists is failed
+  become: true
+  ansible.builtin.unarchive:
+    src: /tmp/go{{golang_version | default('1.20.4')}}.linux-amd64.tar.gz
+    dest: /usr/local

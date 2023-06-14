@@ -1,0 +1,51 @@
+# TODO: parametrize this process with fonts as font-name: download-url
+- name: Check for Hack
+  ansible.builtin.shell: test -n "$(fc-list | grep -i hack | head -n 1)"
+  register: hack_installed
+  ignore_errors: true
+
+- name: Download Hack
+  when: hack_installed is failed
+  ansible.builtin.get_url:
+    url: https://github.com/source-foundry/Hack/releases/download/v{{hack_version | default('3.003')}}/Hack-v{{hack_version | default('3.003')}}-ttf.tar.gz
+    dest: /tmp/hack_font.zip
+
+- name: Create hack dir
+  when: hack_installed is failed
+  ansible.builtin.file:
+    path: "{{lookup('env', 'HOME')}}/.local/share/fonts/hack"
+    state: directory
+
+- name: Unarchive Hack
+  when: hack_installed is failed
+  ansible.builtin.unarchive:
+    src: /tmp/hack_font.zip
+    dest: "{{lookup('env', 'HOME')}}/.local/share/fonts/hack"
+
+- name: Check for Nerd Font Symbols
+  ansible.builtin.shell: test -n "$(fc-list | grep -i symbolsnerdfont | head -n 1)"
+  register: nerd_symbols_installed
+  ignore_errors: true
+
+- name: Download Nerd Font Symbols
+  when: nerd_symbols_installed is failed
+  ansible.builtin.get_url:
+    url: https://github.com/ryanoasis/nerd-fonts/releases/download/v{{nerd_symbols_version | default('3.0.1')}}/NerdFontsSymbolsOnly.tar.xz
+    dest: /tmp/nerd_font_symbols.tar.xz
+
+- name: Create Nerd Font Symbols dir
+  when: nerd_symbols_installed is failed
+  ansible.builtin.file:
+    path: "{{lookup('env', 'HOME')}}/.local/share/fonts/nerd_font_symbols"
+    state: directory
+
+- name: Unarchive Nerd Font Symbols
+  when: nerd_symbols_installed is failed
+  ansible.builtin.unarchive:
+    src: /tmp/nerd_font_symbols.tar.xz
+    dest: "{{lookup('env', 'HOME')}}/.local/share/fonts/nerd_font_symbols"
+
+- name: Regenerate font cache
+  when: hack_installed is failed or nerd_symbols_installed is failed
+  ansible.builtin.shell: fc-cache -f -v
+

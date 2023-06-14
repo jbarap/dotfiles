@@ -1,0 +1,36 @@
+- name: Clone neovim nightly
+  ansible.builtin.git:
+    force: true
+    repo: https://github.com/neovim/neovim.git
+    dest: "{{lookup('env', 'HOME')}}/tools/neovim"
+
+- name: Install build requirements
+  become: true
+  ansible.builtin.apt:
+    name:
+      - ninja-build
+      - gettext
+      - cmake
+      - unzip
+      - curl
+    state: present
+
+- name: Check if neovim is installed
+  shell: "command -v nvim"
+  register: nvim_installed
+  ignore_errors: true
+
+- name: Remove existing installation
+  when: nvim_installed is not failed
+  become: true
+  apt:
+    name: neovim
+    state: absent
+
+- name: Build neovim and install the deb
+  become: true
+  ansible.builtin.shell: >-
+    cd {{lookup('env', 'HOME')}}/tools/neovim && 
+    make CMAKE_BUILD_TYPE=RelWithDebInfo && 
+    cd build && 
+    cpack -G DEB && sudo dpkg -i nvim-linux64.deb

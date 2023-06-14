@@ -1,0 +1,17 @@
+- name: Check for Starship
+  ansible.builtin.shell: command -v starship
+  register: starship_exists
+  ignore_errors: yes
+
+- name: Download starship installer
+  when: starship_exists is failed
+  ansible.builtin.get_url:
+    url: https://starship.rs/install.sh
+    dest: /tmp/starship_installer.sh
+
+- name: Install starship
+  when: starship_exists is failed
+  become: true
+  environment:
+    FORCE: 1
+  ansible.builtin.shell: sh /tmp/starship_installer.sh

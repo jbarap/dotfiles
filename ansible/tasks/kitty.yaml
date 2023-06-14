@@ -1,0 +1,63 @@
+- name: Check for kitty
+  ansible.builtin.shell: command -v kitty
+  register: kitty_exists
+  ignore_errors: yes
+
+- name: Download kitty installer
+  when: kitty_exists is failed
+  ansible.builtin.get_url:
+    url: https://sw.kovidgoyal.net/kitty/installer.sh
+    dest: /tmp/kitty_installer.sh
+
+- name: Install kitty
+  when: kitty_exists is failed
+  ansible.builtin.shell: sh /tmp/kitty_installer.sh
+
+- name: Create kitty link
+  when: kitty_exists is failed
+  ansible.builtin.file:
+    path: "{{lookup('env', 'HOME')}}/.local/bin/kitty"
+    src: "{{lookup('env', 'HOME')}}/.local/kitty.app/bin/kitty"
+    state: link
+
+- name: Create kitten link
+  when: kitty_exists is failed
+  ansible.builtin.file:
+    path: "{{lookup('env', 'HOME')}}/.local/bin/kitten"
+    src: "{{lookup('env', 'HOME')}}/.local/kitty.app/bin/kitten"
+    state: link
+
+- name: Add desktop file
+  when: kitty_exists is failed
+  ansible.builtin.file:
+    path: "{{lookup('env', 'HOME')}}/.local/share/applications/"
+    src: "{{lookup('env', 'HOME')}}/.local/kitty.app/share/applications/kitty.desktop"
+    state: hard
+
+- name: Add open-in option
+  when: kitty_exists is failed
+  ansible.builtin.file:
+    path: "{{lookup('env', 'HOME')}}/.local/share/applications/"
+    src: "{{lookup('env', 'HOME')}}/.local/kitty.app/share/applications/kitty-open.desktop"
+    state: hard
+
+- name: Point towards the correct kitty icon
+  when: kitty_exists is failed
+  ansible.builtin.replace:
+    path: "{{lookup('env', 'HOME')}}/.local/share/applications/kitty.desktop"
+    regexp: Icon=kitty
+    replace: "Icon={{lookup('env', 'HOME')}}/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png"
+
+- name: Point towards the correct kitty executable
+  when: kitty_exists is failed
+  ansible.builtin.replace:
+    path: "{{lookup('env', 'HOME')}}/.local/share/applications/kitty.desktop"
+    regexp: Exec=kitty
+    replace: "Exec={{lookup('env', 'HOME')}}/.local/kitty.app/bin/kitty"
+
+- name: Make kitty the default terminal
+  when: kitty_exists is failed
+  become: true
+  ansible.builtin.shell: >-
+     update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator {{lookup('env', 'HOME')}}/.local/kitty.app/bin/kitty 50 && 
+     update-alternatives --auto x-terminal-emulator

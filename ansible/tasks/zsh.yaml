@@ -1,0 +1,28 @@
+- name: Install zsh
+  become: true
+  ansible.builtin.apt:
+    name: zsh
+    state: present
+
+# TODO: use handlers or blocks for all the conditionals
+- name: Check for zsh
+  ansible.builtin.shell: command -v zsh
+  register: zsh_exists
+  ignore_errors: yes
+
+# TODO: make this nicer
+# - name: Set zsh as default shell
+#   ansible.builtin.expect:
+#       command: chsh -s $(which zsh)
+#       responses:
+#         (?i)password: "{{ user_password }}"
+
+- name: Download zimfw installer
+  when: zsh_exists is failed
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/zimfw/install/master/install.zsh
+    dest: /tmp/zim_installer.zsh
+
+- name: Install zimfw
+  when: zsh_exists is failed
+  ansible.builtin.shell: zsh /tmp/zim_installer.zsh

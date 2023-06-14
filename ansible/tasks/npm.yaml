@@ -1,0 +1,22 @@
+- name: Check for nvm
+  ansible.builtin.shell: test -d "{{lookup('env', 'HOME')}}/.nvm"
+  register: nvm_exists
+  ignore_errors: yes
+
+- name: Download nvm
+  when: nvm_exists is failed
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh
+    dest: /tmp/nvm_installer.sh
+
+# TODO: add creates to applicable scripts
+- name: Install nvm
+  when: nvm_exists is failed
+  ansible.builtin.shell: bash /tmp/nvm_installer.sh
+
+- name: Install node
+  when: nvm_exists is failed
+  environment:
+    NVM_DIR: "{{lookup('env', 'HOME')}}/.nvm"
+  ansible.builtin.shell: >-
+    /bin/bash -c "source $NVM_DIR/nvm.sh && nvm install node"

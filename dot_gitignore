@@ -1,6 +1,6 @@
 # python
 .python-version
-__pycache__/
+**/__pycache__/*
 *.egg-info/
 *.egg
 .ipynb_checkpoints

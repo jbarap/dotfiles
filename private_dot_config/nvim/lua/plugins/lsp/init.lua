@@ -116,9 +116,14 @@ return {
         save_after_format = false,
         sources = {
           ---- Linters
-          -- get_mason_nullls_source("diagnostics", "mypy", {
-          --   extra_args = { "--strict", "--ignore-missing-imports", "--check-untyped-defs" },
-          -- }),
+          get_mason_nullls_source("diagnostics", "mypy", {
+            extra_args = {
+              "--strict",
+              "--ignore-missing-imports",
+              "--check-untyped-defs",
+              "--allow-untyped-calls",
+            },
+          }),
           -- get_mason_nullls_source("diagnostics", "pylint", {
           --   condition = function(cond_utils)
           --     return cond_utils.root_has_file({"pylintrc"})
@@ -189,8 +194,9 @@ return {
       -- Language servers to register
       local server_names = {
         "ruff_lsp",
-        -- "jedi_language_server",
-        "pyright",
+        "jedi_language_server",
+        -- "pylyzer",
+        -- "pyright",
         "lua_ls",
         "dockerls",
         "gopls",

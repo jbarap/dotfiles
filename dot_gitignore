@@ -5,6 +5,7 @@
 *.egg
 .ipynb_checkpoints
 .mypy_cache/
+build/*
 
 # neovim
 .project

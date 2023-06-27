@@ -394,6 +394,10 @@ return {
   {
     "lukas-reineke/indent-blankline.nvim",
     event = { "BufReadPost", "BufNewFile" },
+    init = function ()
+      -- if this is not specified in init, it shows indent lines in dashboard while opening fugitive
+      vim.g.indent_blankline_filetype_exclude = {"dashboard"}
+    end,
     config = function ()
       require("indent_blankline").setup({
         show_trailing_blankline_indent = false,

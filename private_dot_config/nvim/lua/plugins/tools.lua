@@ -464,12 +464,14 @@ return {
       { "<Leader>pl", "<cmd>Telescope projects<CR>", desc = "Projects list" },
     },
     config = function()
+      local actions = require("fzf-lua.actions")
+
       require("fzf-lua").setup({
-        "telescope",
+        "borderless_full",
+        global_git_icons = true,
         winopts = {
           height = 0.97,
           width = 0.97,
-          border = { "┌", "─", "┐", "│", "┘", "─", "└", "│" },
 
           on_create = function()
             vim.wo.winblend = 10
@@ -477,6 +479,7 @@ return {
 
           preview = {
             delay = 80,
+            title_align = "center",
           },
         },
 
@@ -485,8 +488,20 @@ return {
           ["--pointer"] = "➜ ",
         },
 
+        fzf_colors = {
+          ["hl"] = { "fg", "TelescopeMatching" },
+          ["hl+"] = { "fg", "TelescopeMatching" },
+
+          ["fg+"] = { "fg", "TelescopeSelection" },
+          ["bg+"] = { "bg", "TelescopeSelection" },
+
+          ["pointer"] = { "fg", "TelescopeSelectionCaret" },
+          ["marker"] = { "fg", "TelescopeSelectionCaret" },
+        },
+
         files = {
           cwd_prompt_shorten_val = 5,
+          git_icons = true,
         },
 
         grep = {
@@ -495,20 +510,48 @@ return {
 
         keymap = {
           builtin = {
+            ["<F1>"] = "toggle-help",
+            ["<F2>"] = "toggle-fullscreen",
+            -- Only valid with the 'builtin' previewer
+            ["<F3>"] = "toggle-preview-wrap",
             ["<C-p>"] = "toggle-preview",
             ["<C-r>"] = "toggle-preview-ccw",
+            ["<F6>"] = "toggle-preview-cw",
             ["<A-j>"] = "preview-page-down",
             ["<A-k>"] = "preview-page-up",
+            ["<S-left>"] = "preview-page-reset",
           },
           fzf = {
+            ["ctrl-z"] = "abort",
+            ["ctrl-f"] = "half-page-down",
+            ["ctrl-b"] = "half-page-up",
+            ["ctrl-a"] = "beginning-of-line",
+            ["ctrl-e"] = "end-of-line",
+            ["alt-a"] = "toggle-all",
+            -- Only valid with fzf previewers (bat/cat/git/etc)
+            ["f3"] = "toggle-preview-wrap",
             ["ctrl-p"] = "toggle-preview",
+            ["ctrl-d"] = "preview-page-down",
+            ["ctrl-u"] = "preview-page-up",
+            ["ctrl-q"] = "select-all+accept",
           },
         },
 
         actions = {
           files = {
-            ["ctrl-q"] = require("fzf-lua.actions").file_sel_to_qf,
+            ["default"] = actions.file_edit_or_qf,
+            ["ctrl-s"] = actions.file_split,
+            ["ctrl-v"] = actions.file_vsplit,
+            ["ctrl-t"] = actions.file_tabedit,
+            ["ctrl-q"] = actions.file_sel_to_qf,
+            ["alt-l"] = actions.file_sel_to_ll,
           },
+          buffers = {
+            ["default"] = actions.buf_edit,
+            ["ctrl-x"] = actions.buf_split,
+            ["ctrl-v"] = actions.buf_vsplit,
+            ["ctrl-t"] = actions.buf_tabedit,
+          }
         },
 
       })

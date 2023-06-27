@@ -50,32 +50,32 @@ return {
           },
         },
         overrides = function (colors)
-            return {
-              NormalNC = { bg = colors.palette.sumiInk2 },
-              -- Cursor
-              CursorLine = { bg = colors.palette.sumiInk4 },
-              ColorColumn = { bg = colors.palette.sumiInk4 },
-              QuickFixLine = { bg = "#252525" },
-              -- Search
-              Search = { bg = "#1c284a" },
-              Substitute = { bg = "#4d1d28" },
-              -- Diffs
-              DiffDelete = { fg = "NONE" },
-              -- Windows
-              WinSeparator = { fg = "#252525" },
+          return {
+            NormalNC = { bg = colors.palette.sumiInk2 },
+            -- Cursor
+            CursorLine = { bg = colors.palette.sumiInk4 },
+            ColorColumn = { bg = colors.palette.sumiInk4 },
+            QuickFixLine = { bg = "#252525" },
+            -- Search
+            Search = { bg = "#1c284a" },
+            Substitute = { bg = "#4d1d28" },
+            -- Diffs
+            DiffDelete = { fg = "NONE" },
+            -- Windows
+            WinSeparator = { fg = "#252525" },
 
-              -- Telescope
-              TelescopeSelection = { bg = "#202020" },
-              TelescopeMatching = { fg = "#7fb4ca" },
+            -- Telescope
+            TelescopeSelection = { bg = "#202020" },
+            TelescopeMatching = { fg = "#7fb4ca" },
 
-              -- Cmp
-              Pmenu = { bg = "#0a0a0a" },
-              PmenuSbar = { bg = "#252525" },
+            -- Cmp
+            Pmenu = { bg = "#0a0a0a" },
+            PmenuSbar = { bg = "#252525" },
 
-              -- Diffview
-              DiffviewCursorLine = { bg = "#252525" },
-            }
-          end,
+            -- Diffview
+            DiffviewCursorLine = { bg = "#252525" },
+          }
+        end,
       })
       vim.cmd([[colorscheme kanagawa]])
     end

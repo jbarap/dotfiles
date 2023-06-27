@@ -489,6 +489,10 @@ return {
           cwd_prompt_shorten_val = 5,
         },
 
+        grep = {
+          rg_glob = true,
+        },
+
         keymap = {
           builtin = {
             ["<C-p>"] = "toggle-preview",

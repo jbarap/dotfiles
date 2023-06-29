@@ -470,12 +470,6 @@ return {
             action = "enew",
           },
           {
-            icon = "  ",
-            desc = "Find Project",
-            key = "p",
-            action = "Telescope projects",
-          },
-          {
             icon = "  ",
             desc = "File Tree",
             key = "t",
@@ -485,7 +479,13 @@ return {
             icon = "  ",
             desc = "Find File",
             key = "f",
-            action = "Telescope find_files",
+            action = "FzfLua files",
+          },
+          {
+            icon = "󰈭  ",
+            desc = "Live Grep",
+            key = "g",
+            action = "FzfLua live_grep",
           },
         },
         footer = {

@@ -463,6 +463,7 @@ return {
       -- extensions
       { "<Leader>pl", "<cmd>Telescope projects<CR>", desc = "Projects list" },
     },
+    cmd = "FzfLua",
     config = function()
       local actions = require("fzf-lua.actions")
 

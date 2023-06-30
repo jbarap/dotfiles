@@ -480,7 +480,7 @@ return {
 
           preview = {
             delay = 80,
-            title_align = "center",
+            title_pos = "center",
           },
         },
 

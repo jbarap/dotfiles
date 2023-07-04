@@ -104,7 +104,7 @@ return {
       { "<A-5>", "<cmd>BufferLineGoToBuffer 5<CR>", desc = "Buffer goto 5" },
       { "<A-6>", "<cmd>BufferLineGoToBuffer 6<CR>", desc = "Buffer goto 6" },
       { "<Leader>bp", "<cmd>BufferLinePick<CR>", desc = "Buffer pick" },
-      { "<Leader>bo", require("utils").buffer_close_all_but_current, desc = "Buffer only (close all but)" },
+      { "<Leader>bo", "<cmd>BufferLineCloseOthers<CR>", desc = "Buffer only (close all but)" },
     },
     dependencies = "nvim-tree/nvim-web-devicons",
     opts = {

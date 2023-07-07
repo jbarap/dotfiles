@@ -445,23 +445,25 @@ return {
       end, desc = "Find grep (all)" },
 
       { "<Leader>f<C-g>", function() require("plugin_utils").rg_dir() end, desc = "Find grep (in dir)" },
-      { "<Leader>fW", function() require("telescope.builtin").grep_string() end,
+      { "<Leader>fW", function() require("fzf-lua").grep_cword() end,
         desc = "Find word under cursor (in project)",
-        mode = { "n", "v" },
+        mode = { "n" },
+      },
+      { "<Leader>fW", function() require("fzf-lua").grep_visual() end,
+        desc = "Find word under cursor (in project)",
+        mode = { "v" },
       },
 
       -- git
-      { "<Leader>gff", function() require("telescope.builtin").git_files() end, desc = "Git find files" },
-      { "<Leader>gfc", function() require("telescope.builtin").git_bcommits() end, desc = "Git find commits (buffer)" },
-      { "<Leader>gfC", function() require("telescope.builtin").git_commits() end, desc = "Git find commits (all)" },
-      { "<Leader>gfb", function() require("telescope.builtin").git_branches() end, desc = "Git find branches (all)" },
+      { "<Leader>gff", function() require("fzf-lua").git_files() end, desc = "Git find files" },
+      { "<Leader>gfc", function() require("fzf-lua").git_bcommits() end, desc = "Git find commits (buffer)" },
+      { "<Leader>gfC", function() require("fzf-lua").git_commits() end, desc = "Git find commits (all)" },
+      { "<Leader>gfb", function() require("fzf-lua").git_branches() end, desc = "Git find branches (all)" },
 
       -- extra
-      { "<Leader>fb", function() require("telescope.builtin").buffers() end, desc = "Find buffers" },
+      { "<Leader>fb", function() require("fzf-lua").buffers() end, desc = "Find buffers" },
+      -- TODO: replace with fzf implementation if it gets pretty
       { "<Leader>fz", function() require("telescope.builtin").current_buffer_fuzzy_find() end, desc = "Find fuZzy (in buffer)" },
-
-      -- extensions
-      { "<Leader>pl", "<cmd>Telescope projects<CR>", desc = "Projects list" },
     },
     cmd = "FzfLua",
     config = function()

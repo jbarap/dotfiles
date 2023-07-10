@@ -2,7 +2,7 @@
 . "$HOME/.cargo/env"
 
 # local bin
-export PATH="$HOME/.local/share/bin/:$PATH"
+export PATH="$HOME/.local/share/bin/:$HOME/.local/bin/:$PATH"
 
 # scripts
 export PATH="$HOME/scripts/:$PATH"

@@ -10,13 +10,11 @@
   register: zsh_exists
   ignore_errors: yes
 
-# TODO: make this nicer
 - name: Set zsh as default shell
-  ansible.builtin.expect:
-    command: chsh -s $(which zsh) {{lookup('env', 'USER')}}
-    become: true
-    responses:
-      (?i)password: "{{ user_password }}"
+  become: true
+  user:
+    name: "{{lookup('env', 'USER')}}"
+    shell: /usr/bin/zsh
 
 - name: Download zimfw installer
   when: zsh_exists is failed

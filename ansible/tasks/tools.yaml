@@ -1,4 +1,4 @@
-- name: Install tmux, fzf, rg
+- name: Install other tools (tmux, fzf, rg, etc.)
   become: true
   ansible.builtin.apt:
     name:

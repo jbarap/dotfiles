@@ -49,18 +49,8 @@ return {
 
   {
     "williamboman/mason.nvim",
-    cmd = "Mason",
-    keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
-    opts = {
-      PATH = "skip",
-      pip = {
-        upgrade_pip = true,
-      },
-      ui = {
-        check_outdated_packages_on_open = false,
-        border = "rounded",
-      },
-      ensure_installed = {
+    init = function ()
+      local ensure_installed = {
         -- lsp
         "jedi-language-server",
         "pyright",
@@ -82,18 +72,38 @@ return {
         "stylua",
         "prettier",
         "staticcheck",
+      }
+
+      vim.api.nvim_create_user_command("MasonInstallMissing", function()
+        local mr = require("mason-registry")
+
+        local missing_packages = {}
+
+        for _, tool in ipairs(ensure_installed) do
+          local p = mr.get_package(tool)
+          if not p:is_installed() then
+            missing_packages:append(tool)
+          end
+        end
+
+        if #missing_packages == 0 then
+          vim.notify("No missing Mason packages to install", vim.log.levels.INFO)
+          return
+        end
+
+        vim.cmd("MasonInstall " .. table.concat(missing_packages, " "))
+      end, {})
+    end,
+    opts = {
+      PATH = "prepend",
+      pip = {
+        upgrade_pip = true,
+      },
+      ui = {
+        check_outdated_packages_on_open = false,
+        border = "rounded",
       },
     },
-    config = function(plugin, opts)
-      require("mason").setup(opts)
-      local mr = require("mason-registry")
-      for _, tool in ipairs(opts.ensure_installed) do
-        local p = mr.get_package(tool)
-        if not p:is_installed() then
-          p:install()
-        end
-      end
-    end,
   },
 
 }

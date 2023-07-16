@@ -3,6 +3,7 @@ return {
   {
     "nvim-neo-tree/neo-tree.nvim",
     cmd = "Neotree",
+    branch = "v3.x",
     keys = {
       { "<Leader>nn", "<cmd>Neotree filesystem focus left toggle<CR>", desc =  "Neotree toggle"  },
       { "<Leader>nf", "<cmd>Neotree filesystem focus reveal toggle<CR>", desc =  "Neotree toggle (focused on file)"  },
@@ -129,7 +130,9 @@ return {
           never_show = { -- remains hidden even if visible is toggled to true
           },
         },
-        follow_current_file = false,
+        follow_current_file = {
+          enabled = false,
+        },
         hijack_netrw_behavior = "open_default",
         use_libuv_file_watcher = true,
         --
@@ -560,4 +563,5 @@ return {
       })
     end,
   },
+
 }

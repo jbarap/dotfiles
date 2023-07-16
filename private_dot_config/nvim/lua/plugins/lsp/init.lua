@@ -181,7 +181,17 @@ return {
           -- header = true,
           border = "rounded",
           format = function(diagnostic)
-            return string.format("%s [%s](%s)", diagnostic.message, diagnostic.code, diagnostic.source)
+            local extra_info = {}
+
+            if diagnostic.code ~= nil then
+              table.insert(extra_info, "C:" .. diagnostic.code)
+            end
+
+            if diagnostic.source ~= nil then
+              table.insert(extra_info, "S:" .. diagnostic.source)
+            end
+
+            return string.format("%s (%s)", diagnostic.message, table.concat(extra_info, ", "))
           end,
           suffix = "",
         },

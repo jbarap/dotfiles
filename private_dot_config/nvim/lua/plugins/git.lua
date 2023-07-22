@@ -69,6 +69,7 @@ return {
   {
     "rbong/vim-flog",
     cmd = { "Flog" },
+    dependencies = { "tpope/vim-fugitive" },
     init = function()
       vim.keymap.set("n", "<Leader>gl", "<cmd>Flog -all<CR>", { desc = "Git log" })
     end,

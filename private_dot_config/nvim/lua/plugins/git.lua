@@ -55,19 +55,17 @@ return {
     },
   },
 
+  -- Main git interactions
   {
     "tpope/vim-fugitive",
+    cmd = "Git",
     init = function()
-      vim.keymap.set("n", "<Leader>gg", "<cmd>Git<CR>", { desc = "Git status" })
-      vim.keymap.set("n", "<Leader>gp", "<cmd>Git pull<CR>", { desc = "Git pull" })
-      vim.keymap.set("n", "<Leader>gP", function() vim.fn.feedkeys(":Git push ") end, { desc = "Git push" })
-
       -- override fugitive's buffer local keymaps
       vim.cmd("autocmd User FugitiveIndex nmap <buffer> <Tab> =")
       vim.cmd("autocmd User FugitiveIndex nmap <buffer> q <cmd>q<CR>")
     end
   },
-  { "tpope/vim-rhubarb" },
+
   {
     "rbong/vim-flog",
     cmd = { "Flog" },
@@ -75,31 +73,33 @@ return {
       vim.keymap.set("n", "<Leader>gl", "<cmd>Flog -all<CR>", { desc = "Git log" })
     end,
   },
-  -- Neogit (fugitive alternative)
-  -- {
-  --   "TimUntersberger/neogit",
-  --   cmd = "Neogit",
-  --   dependencies = { "nvim-lua/plenary.nvim" },
-  --   opts = {
-  --     kind = "split",
-  --     disable_context_highlighting = true,
-  --     disable_commit_confirmation = false,
-  --     disable_insert_on_commit = false,
-  --     disable_hint = true,
-  --     integrations = {
-  --       diffview = true,
-  --     },
-  --     sections = {
-  --       stashes = {
-  --         folded = true
-  --       },
-  --       recent = {
-  --         folded = true,
-  --       },
-  --     }
-  --   }
-  -- },
 
+  -- Neogit
+  {
+    "TimUntersberger/neogit",
+    cmd = "Neogit",
+    keys = {
+      { "<leader>gg", "<cmd>Neogit<CR>", { desc = "Git status" } }
+    },
+    dependencies = { "nvim-lua/plenary.nvim" },
+    opts = {
+      kind = "split",
+      disable_hint = true,
+      integrations = {
+        diffview = true,
+      },
+      sections = {
+        stashes = {
+          folded = true
+        },
+        recent = {
+          folded = true,
+        },
+      }
+    }
+  },
+
+  -- Diff comparison
   {
     "sindrets/diffview.nvim",
     cmd = { "DiffviewOpen", "DiffviewFileHistory" },

@@ -22,6 +22,10 @@ alias nvs="sudo -E -s nvim"
 alias ipy="ipython"
 alias jl="jupyter-lab"
 alias pt="poetry"
+alias pipgrep="pip list | grep -i"
+
+# mamba
+alias mm="micromamba"
 
 # viztracer
 alias vtrace="viztracer --output_file ./profile.json --min_duration 25 --max_stack_depth 25 --"

@@ -30,14 +30,6 @@ local python_patterns = {
   "pyrightconfig.json",
 }
 
----return the command of the given lsp with mason's prefix
----@param server_name string lspconfig source name
-local function get_mason_lsp_cmd(server_name)
-  local cmd = require("lspconfig")[server_name].document_config.default_config.cmd
-  cmd[1] = require("mason-core.path").bin_prefix(cmd[1])
-  return cmd
-end
-
 --        server settings
 -- ──────────────────────────────
 -- See: https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md
@@ -45,7 +37,6 @@ end
 M._lazy_configs = {
   jedi_language_server = function ()
     return {
-      cmd = get_mason_lsp_cmd("jedi_language_server"),
       before_init = function(initialize_params, config)
         -- if no virtualenv is activated, jedi uses python's packages from the virtualenv in
         -- which it was installed. This makes it use the system's packages instead
@@ -71,7 +62,6 @@ M._lazy_configs = {
 
   pylyzer = function()
     return {
-      cmd = get_mason_lsp_cmd("pylyzer"),
       root_dir = function(fname)
         return M.find_root(utils.tbl_concat(common_patterns, python_patterns), fname)
       end
@@ -80,7 +70,6 @@ M._lazy_configs = {
 
   pyright = function()
     return {
-      cmd = get_mason_lsp_cmd("pyright"),
       -- automatically identify virtualenvs set with pyenv
       on_new_config = function (config, _)
         local python_path
@@ -100,7 +89,6 @@ M._lazy_configs = {
 
   pylsp = function()
     return {
-      cmd = get_mason_lsp_cmd("pylsp"),
       settings = {
         pylsp = {
           plugins = {
@@ -130,7 +118,6 @@ M._lazy_configs = {
 
   ruff_lsp = function()
     return {
-      cmd = get_mason_lsp_cmd("ruff_lsp"),
       settings = {
         args = {
           -- to enable later: ANN,
@@ -162,14 +149,11 @@ M._lazy_configs = {
   end,
 
   gopls = function()
-    return {
-      cmd = get_mason_lsp_cmd("gopls"),
-    }
+    return {}
   end,
 
   lua_ls = function()
     return {
-      cmd = get_mason_lsp_cmd("lua_ls"),
       settings = {
         Lua = {
           runtime = {
@@ -194,7 +178,6 @@ M._lazy_configs = {
 
   dockerls = function()
     return {
-      cmd = get_mason_lsp_cmd("dockerls"),
       -- disable semantic highlighting because it looks worse than regular
       on_init = function(client)
         client.server_capabilities.semanticTokensProvider = nil
@@ -203,14 +186,11 @@ M._lazy_configs = {
   end,
 
   jsonls = function()
-    return {
-      cmd = get_mason_lsp_cmd("jsonls"),
-    }
+    return {}
   end,
 
   yamlls = function()
     return {
-      cmd = get_mason_lsp_cmd("yamlls"),
       settings = {
         yaml = {
           -- from: https://github.com/Allaman/nvim/blob/main/lua/config/lsp/languages/yaml.lua
@@ -242,17 +222,14 @@ M._lazy_configs = {
     }
   end,
 
-  terraform_lsp = function()
-    return {
-      cmd = get_mason_lsp_cmd("terraform_lsp"),
-    }
+  terraformls = function()
+    return {}
   end,
 
   clangd = function()
-    return {
-      cmd = get_mason_lsp_cmd("clangd"),
-    }
+    return {}
   end,
+
 }
 
 M.configs = setmetatable({}, {

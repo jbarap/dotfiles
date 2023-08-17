@@ -204,14 +204,14 @@ return {
       -- Language servers to register
       local server_names = {
         "ruff_lsp",
-        "jedi_language_server",
+        -- "jedi_language_server",
         -- "pylyzer",
-        -- "pyright",
+        "pyright",
         "lua_ls",
         "dockerls",
         "gopls",
         "jsonls",
-        "terraform_lsp",
+        "terraformls",
         "yamlls",
         "clangd",
       }

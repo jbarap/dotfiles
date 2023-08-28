@@ -5,6 +5,7 @@ alias cppwd="pwd && pwd | xclip"
 alias openapp="xdg-open"
 alias watch="watch " # allow for watching aliases
 alias xclip="xclip -selection c -rmlastnl"
+alias aptgrep="sudo apt list --installed | grep -i"
 
 # chezmoi
 alias cnv="chezmoi edit"

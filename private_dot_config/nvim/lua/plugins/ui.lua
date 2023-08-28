@@ -55,6 +55,9 @@ return {
             -- Cursor
             CursorLine = { bg = colors.palette.sumiInk4 },
             ColorColumn = { bg = colors.palette.sumiInk4 },
+
+            Folded = { bg = colors.palette.sumiInk5 },
+
             QuickFixLine = { bg = "#252525" },
             -- Search
             Search = { bg = "#1c284a" },

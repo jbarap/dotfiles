@@ -96,6 +96,7 @@ vim.g.loaded_netrwPlugin = 1
 opt.diffopt = "filler,vertical,closeoff,internal,indent-heuristic,algorithm:patience,linematch:60"
 
 -- Folds
+-- display the number of lines folded after the fold
 function _G.custom_fold_expr()
   local line = vim.fn.getline(vim.v.foldstart)
   local sub = vim.fn.substitute(line, [[/*|*/|{{{\d=]], "", "g")

@@ -27,6 +27,14 @@
     name: neovim
     state: absent
 
+- name: Clean previous build
+  when: nvim_installed is not failed
+  become: true
+  ansible.builtin.shell: >-
+    cd {{lookup('env', 'HOME')}}/tools/neovim && 
+    make clean && 
+    make distclean
+
 - name: Build neovim and install the deb
   become: true
   ansible.builtin.shell: >-

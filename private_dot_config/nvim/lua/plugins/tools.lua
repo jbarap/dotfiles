@@ -486,6 +486,8 @@ return {
           preview = {
             delay = 80,
             title_pos = "center",
+            layout = "vertical",
+            vertical = "down:60%",
           },
         },
 

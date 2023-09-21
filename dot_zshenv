@@ -1,6 +1,3 @@
-# sourcing
-. "$HOME/.cargo/env"
-
 # local bin
 export PATH="$HOME/.local/share/bin/:$HOME/.local/bin/:$PATH"
 
@@ -17,3 +14,12 @@ fi
 
 # go
 export PATH="/usr/local/go/bin:$HOME/go/bin/:$PATH"
+
+# cargo
+. "$HOME/.cargo/env"
+
+# nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+

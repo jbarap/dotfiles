@@ -171,6 +171,9 @@ M._lazy_configs = {
           telemetry = {
             enable = false,
           },
+          hint = {
+            enable = true,
+          },
         },
       },
     }

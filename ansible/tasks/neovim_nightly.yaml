@@ -32,7 +32,6 @@
   become: true
   ansible.builtin.shell: >-
     cd {{lookup('env', 'HOME')}}/tools/neovim && 
-    make clean && 
     make distclean
 
 - name: Build neovim and install the deb

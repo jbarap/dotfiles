@@ -178,12 +178,6 @@ return {
           DiffviewOpen = { "--untracked-files=no" },
           -- DiffviewFileHistory = { "--base=LOCAL" }
         },
-        -- TODO: use hooks to add buffers opened during diffview, close them on diffclose
-        hooks = {
-          diff_buf_read = function(_)
-            require("indent_blankline.commands").disable()
-          end
-        },
       })
     end
   },

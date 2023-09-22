@@ -22,13 +22,6 @@ function M.toggle_diff_view(mode)
     vim.cmd("silent DiffviewClose")
     require("utils").buffer_close_all_but_current()
 
-    -- enable indents once we close the diffview
-    bfr = vim.api.nvim_get_current_buf()
-    buf_type = vim.api.nvim_buf_get_option(bfr, "filetype")
-    if not vim.tbl_contains(vim.g.indent_blankline_filetype_exclude, buf_type) then
-      require("indent_blankline.commands").enable()
-    end
-
   else
     if mode == "diff" then
       vim.fn.feedkeys(":DiffviewOpen ")
@@ -73,7 +66,6 @@ function M.buffer_performance_mode()
   if string.match(option, "y") then
     vim.fn.execute("TSBufDisable highlight")
   end
-  require("indent_blankline.commands").disable()
   vim.fn.execute("TSBufDisable indent")
   vim.fn.execute("TSBufDisable incremental_selection")
 end

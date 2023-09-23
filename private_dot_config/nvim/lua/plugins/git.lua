@@ -1,5 +1,5 @@
 return {
-  -- Gitsigns
+  -- Git changes visualizer and hunk operations
   {
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" },
@@ -55,39 +55,32 @@ return {
     },
   },
 
-  -- Main git interactions
-  {
-    "tpope/vim-fugitive",
-    cmd = "Git",
-    init = function()
-      -- override fugitive's buffer local keymaps
-      vim.cmd("autocmd User FugitiveIndex nmap <buffer> <Tab> =")
-      vim.cmd("autocmd User FugitiveIndex nmap <buffer> q <cmd>q<CR>")
-    end
-  },
-
+  -- Commit and branch visualizer
   {
     "rbong/vim-flog",
     cmd = { "Flog" },
+    keys = {
+      { "<leader>gl", "<cmd>Flog -all<CR>", { desc = "Git log" } }
+    },
     dependencies = { "tpope/vim-fugitive" },
-    init = function()
-      vim.keymap.set("n", "<Leader>gl", "<cmd>Flog -all<CR>", { desc = "Git log" })
-    end,
   },
 
-  -- Neogit
+  -- Main git interactions
   {
     "TimUntersberger/neogit",
     cmd = "Neogit",
     keys = {
       { "<leader>gg", "<cmd>Neogit<CR>", { desc = "Git status" } }
     },
-    dependencies = { "nvim-lua/plenary.nvim" },
+    dependencies = { "nvim-lua/plenary.nvim", "ibhagwan/fzf-lua" },
     opts = {
       kind = "split",
       disable_hint = true,
       integrations = {
         diffview = true,
+        -- TODO: prefer fzf over telescope when the integration is more mature
+        -- fzf_lua = true,
+        -- telescope = false,
       },
       sections = {
         stashes = {
@@ -98,6 +91,17 @@ return {
         },
       }
     }
+  },
+
+  -- Backup git porcelain
+  {
+    "tpope/vim-fugitive",
+    cmd = "Git",
+    init = function()
+      -- override fugitive's buffer local keymaps
+      vim.cmd("autocmd User FugitiveIndex nmap <buffer> <Tab> =")
+      vim.cmd("autocmd User FugitiveIndex nmap <buffer> q <cmd>q<CR>")
+    end
   },
 
   -- Diff comparison

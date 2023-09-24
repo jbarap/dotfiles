@@ -390,7 +390,26 @@ return {
     init = function ()
       vim.api.nvim_create_user_command(
         "ChezmoiApply",
-        function() require('FTerm').scratch({ cmd = "chezmoi apply -v $(chezmoi target-path .)" }) end, {}
+        function()
+          local dir_is_managed = vim.system({
+            "sh", "-c", 'test -n "$(chezmoi managed $(chezmoi target-path .))"'
+          }):wait().code == 0
+
+          -- Fallback on applying on a file-basis
+          local target = "."
+          if not dir_is_managed then
+            target = vim.fn.expand("%")
+          end
+
+          target = string.gsub(
+            vim.system({"chezmoi", "target-path", target }, {text = true}):wait().stdout,
+            "\n",
+            ""
+          )
+          vim.notify(string.format("Applying changes to %s", target), vim.log.levels.INFO, { title = "Chezmoi" })
+
+          require('FTerm').scratch({ cmd = string.format("chezmoi apply -v %s", target) })
+        end, {}
       )
     end,
     keys = {

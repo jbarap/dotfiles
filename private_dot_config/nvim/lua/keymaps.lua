@@ -9,6 +9,9 @@ vim.g.mapleader = " "
 set_keymap("i", "jk", "<ESC>", { desc = "Exit insert mode" })
 set_keymap("i", "JK", "<ESC>", { desc = "Exit insert mode" })
 
+-- Indent
+set_keymap("i", "<S-Tab>", "<C-d>", { desc = "Remove an indent level", remap = true })
+
 set_keymap("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit insert mode from terminal" })
 
 -- Buffer nagivation

@@ -15,6 +15,7 @@
     nerd_symbols_version: "3.0.1"
     bottom_version: "0.9.1"
 
+  # TODO: validate that the playbook is not being ran as root
   tasks:
     - name: Setup core components
       ansible.builtin.include_tasks: "tasks/core.yaml"

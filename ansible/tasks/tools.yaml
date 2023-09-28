@@ -41,7 +41,6 @@
   register: lazydocker_exists
   ignore_errors: true
 
-# lazydocker
 - name: Install lazydocker
   when: lazydocker_exists
   ansible.builtin.shell: go install github.com/jesseduffield/lazydocker@latest

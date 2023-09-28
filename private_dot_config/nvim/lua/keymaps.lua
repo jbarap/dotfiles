@@ -60,12 +60,6 @@ end, { remap = false, expr = true }, { desc = "Delete line (don't yank if empty)
 set_keymap("v", "<C-j>", ":m '>+1<CR>gv=gv")
 set_keymap("v", "<C-k>", ":m '<-2<CR>gv=gv")
 
--- Center screen on cursor move
-set_keymap("n", "<C-o>", "<C-o>zz", { remap = false }, { desc = "Jumplist prev" })
-set_keymap("n", "<C-i>", "<C-i>zz", { remap = false }, { desc = "Jumplist next" })
-set_keymap("n", "n", "nzz", { remap = false }, { desc = "Next search result" })
-set_keymap("n", "N", "Nzz", { remap = false }, { desc = "Prev search result" })
-
 -- Replace
 set_keymap("n", "<Leader>cs", ":%s/", { desc = "Code substitute" })
 set_keymap("v", "<Leader>cs", ":s/", { desc = "Code substitute (within selection)" })

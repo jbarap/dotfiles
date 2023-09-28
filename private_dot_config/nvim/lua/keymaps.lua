@@ -78,7 +78,7 @@ set_keymap("n", "<Leader>Y", '"+y$', { desc = "Yank to clipboard ('til EOL)" })
 
 set_keymap("n", "gp", "a<CR><Esc>PkJJxx", { desc = "Paste inline" })
 
-set_keymap("n", "<Leader><CR>", "<cmd>nohlsearch<cr>", { desc = "Clear hlsearch" })
+set_keymap("n", "<Leader>/", "<cmd>nohlsearch<cr>", { desc = "Clear hlsearch" })
 set_keymap("v", "<Leader><CR>", "<Esc>", { desc = "Exit visual mode" })
 
 set_keymap("n", "<Leader>fw", require("utils").search_word_under_cursor, { desc = "Find word under cursor" })

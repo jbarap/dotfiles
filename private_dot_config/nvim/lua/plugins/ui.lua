@@ -397,9 +397,9 @@ return {
   {
     "lukas-reineke/indent-blankline.nvim",
     event = "VeryLazy",
-    branch = "v3",
     config = function()
       require("ibl").setup({
+        debounce = 300,
         indent = {
           char = "▏",
           tab_char = "▏",
@@ -527,70 +527,110 @@ return {
     },
   },
 
-  -- Whichkey
+  -- Keymap hints
+  -- FIXME: mapping <Leader><CR> works strangely because of clue's special keys
+  -- TODO: Profile the performance impact compared to whichkey (not just startup)
   {
-    "folke/which-key.nvim",
+    "echasnovski/mini.clue",
     event = "VeryLazy",
     config = function ()
-      local wk = require("which-key")
+      local miniclue = require('mini.clue')
 
-      vim.o.timeout = true
-      vim.o.timeoutlen = 300
+      miniclue.setup({
+        triggers = {
+          -- Leader triggers
+          { mode = 'n', keys = '<Leader>' },
+          { mode = 'x', keys = '<Leader>' },
 
-      wk.setup({
-        plugins = {
-          marks = false,
-          registers = false,
-          presets = {
-            operators = false,
-            motions = false,
-            text_objects = false,
-            windows = true,
-            nav = true,
-            z = true,
-            g = true,
+          -- Built-in completion
+          { mode = 'i', keys = '<C-x>' },
+
+          -- `g` key
+          { mode = 'n', keys = 'g' },
+          { mode = 'x', keys = 'g' },
+
+          -- Marks
+          { mode = 'n', keys = "'" },
+          { mode = 'n', keys = '`' },
+          { mode = 'x', keys = "'" },
+          { mode = 'x', keys = '`' },
+
+          -- Registers
+          { mode = 'n', keys = '"' },
+          { mode = 'x', keys = '"' },
+          { mode = 'i', keys = '<C-r>' },
+          { mode = 'c', keys = '<C-r>' },
+
+          -- Window commands
+          { mode = 'n', keys = '<C-w>' },
+
+          -- `z` key
+          { mode = 'n', keys = 'z' },
+          { mode = 'x', keys = 'z' },
+        },
+
+        clues = {
+          -- mini.clue
+          miniclue.gen_clues.builtin_completion(),
+          miniclue.gen_clues.g(),
+          miniclue.gen_clues.marks(),
+          miniclue.gen_clues.registers(),
+          miniclue.gen_clues.windows(),
+          miniclue.gen_clues.z(),
+
+          -- custom
+          { mode = 'n', keys = '<Leader>b', desc = '+Buffer' },
+          { mode = 'n', keys = '<Leader>c', desc = '+Code' },
+          { mode = 'n', keys = '<Leader>cd', desc = '+Documentation' },
+          { mode = 'n', keys = '<Leader>d', desc = '+Debugging/Diff' },
+          { mode = 'n', keys = '<Leader>dv', desc = '+Diffview' },
+          { mode = 'n', keys = '<Leader>f', desc = '+Find/Files' },
+          { mode = 'n', keys = '<Leader>g', desc = '+Git' },
+          { mode = 'n', keys = '<Leader>gb', desc = '+Blame' },
+          { mode = 'n', keys = '<Leader>gf', desc = '+Find' },
+          { mode = 'n', keys = '<Leader>gh', desc = '+Hunk/Highlight' },
+          { mode = 'n', keys = '<Leader>n', desc = '+Neotree' },
+          { mode = 'n', keys = '<Leader>q', desc = '+Quickfix' },
+          { mode = 'n', keys = '<Leader>r', desc = '+Remote' },
+          { mode = 'n', keys = '<Leader>s', desc = '+Show' },
+          { mode = 'n', keys = '<Leader>t', desc = '+Test/Tab' },
+          { mode = 'n', keys = '<Leader>tr', desc = '+Test Run' },
+          { mode = 'n', keys = '<Leader>td', desc = '+Test Debug' },
+          { mode = 'n', keys = '<Leader>to', desc = '+Test Output' },
+          { mode = 'n', keys = '<Leader>v', desc = '+Vim' },
+          { mode = 'n', keys = '<Leader>w', desc = '+Workspace' },
+        },
+
+        window = {
+          config = {
+            anchor = "SW",
+            row = 'auto',
+            col = 'auto',
+            width = 'auto',
           },
+          delay = 800,
         }
       })
-      wk.register({
-        mode = { "n", "v" },
-        ["g"] = { name = "+goto" },
-        ["gz"] = { name = "+surround" },
-        ["]"] = { name = "+next" },
-        ["["] = { name = "+prev" },
-        ["<leader>"] = {
-          ["b"] = { name = "buffer" },
-          ["c"] = {
-            name = "code",
-            ["d"] = { name = "documentation"},
-          },
-          ["d"] = {
-            name = "debugging/diff",
-            ["v"] = { name = "diffview" }
-          },
-          ["f"] = { name = "find/files" },
-          ["g"] = {
-            name = "git",
-            ["b"] = { name = "blame" },
-            ["f"] = { name = "find" },
-            ["h"] = { name = "hunk/highlight" },
-          },
-          ["n"] = { name = "neotree" },
-          ["p"] = { name = "project/peek" },
-          ["q"] = { name = "quickfix" },
-          ["r"] = { name = "remote" },
-          ["s"] = { name = "show" },
-          ["t"] = {
-            name = "test/tab",
-            ["r"] = { name = "test run" },
-            ["d"] = { name = "test debug" },
-            ["o"] = { name = "test output" },
-          },
-          ["v"] = { name = "vim" },
-          ["w"] = { name = "workspace" },
-        },
+    end
+  },
+
+  {
+    "rcarriga/nvim-notify",
+    event = "VeryLazy",
+    config = function ()
+      require("notify").setup({
+        timeout = 3000,
+        max_height = function()
+          return math.floor(vim.o.lines * 0.75)
+        end,
+        max_width = function()
+          return math.floor(vim.o.columns * 0.75)
+        end,
       })
-    end,
+
+      vim.notify = require("notify")
+
+    end
   },
 
 }

@@ -86,62 +86,46 @@ return {
 
   -- External commands as diagnostics/code actions/completion
   {
-    "jose-elias-alvarez/null-ls.nvim",
-    event = { "BufReadPre", "BufNewFile" },
+    "nvimtools/none-ls.nvim",
+    event = { "bufreadpre", "bufnewfile" },
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function ()
       local null_ls = require("null-ls")
 
-      ---convenience wrapper of null\_ls builtin sources to register with a custom command
-      ---@param type string formatting, diagnostics, code\_actions, hover, or completion.
-      ---@param name string source name.
-      ---@param opts table extra options to pass to the source.
-      local function get_mason_nullls_source(type, name, opts)
-        opts = opts or {}
+      local sources = {
+        -- linters
+        null_ls.builtins.diagnostics.luacheck.with({
+          extra_args = { "--globals", "vim", "--allow-defined" },
+        }),
+        null_ls.builtins.diagnostics.staticcheck,
 
-        local source = null_ls.builtins[type][name]
-        local custom_opts = {
-          command = require("mason-core.path").bin_prefix(source["_opts"]["command"]),
-        }
+        -- formatters
+        null_ls.builtins.formatting.black.with({
+          args = { "--quiet", "--line-length", 105, "-" },
+        }),
+        null_ls.builtins.formatting.stylua,
+        null_ls.builtins.formatting.prettier,
+        null_ls.builtins.formatting.gofmt, -- gofmt executable comes with go
+      }
 
-        opts = vim.tbl_extend("force", custom_opts, opts)
-        return source.with(opts)
+      if not vim.tbl_contains(require("plugins.lsp.servers").lsps_in_use, "pyright") then
+        table.insert(sources, null_ls.builtins.diagnostics.mypy.with({
+          extra_args = {
+            "--strict",
+            "--ignore-missing-imports",
+            "--check-untyped-defs",
+            "--allow-untyped-calls",
+          },
+        }))
       end
 
       null_ls.setup({
-        debounce = 250,
+        debounce = 200,
         debug = false,
         default_timeout = 20000,
         on_attach = require("plugins.lsp.on_attach"),
         save_after_format = false,
-        sources = {
-          ---- Linters
-          get_mason_nullls_source("diagnostics", "mypy", {
-            extra_args = {
-              "--strict",
-              "--ignore-missing-imports",
-              "--check-untyped-defs",
-              "--allow-untyped-calls",
-            },
-          }),
-          -- get_mason_nullls_source("diagnostics", "pylint", {
-          --   condition = function(cond_utils)
-          --     return cond_utils.root_has_file({"pylintrc"})
-          --   end,
-          -- }),
-          get_mason_nullls_source("diagnostics", "luacheck", {
-            extra_args = { "--globals", "vim", "--allow-defined" },
-          }),
-          get_mason_nullls_source("diagnostics", "staticcheck", {}),
-
-          -- ---- Fixers
-          get_mason_nullls_source("formatting", "black", {
-            args = { "--quiet", "--line-length", 105, "-" },
-          }),
-          get_mason_nullls_source("formatting", "stylua", {}),
-          get_mason_nullls_source("formatting", "prettier", {}),
-          null_ls.builtins.formatting.gofmt, -- gofmt executable comes with go
-        },
+        sources = sources,
       })
     end,
   },
@@ -201,21 +185,6 @@ return {
       -- ──────────────────────────────
       local language_servers = require("plugins.lsp.servers")
 
-      -- Language servers to register
-      local server_names = {
-        "ruff_lsp",
-        -- "jedi_language_server",
-        -- "pylyzer",
-        "pyright",
-        "lua_ls",
-        "dockerls",
-        "gopls",
-        "jsonls",
-        "terraformls",
-        "yamlls",
-        "clangd",
-      }
-
       local capabilities = vim.lsp.protocol.make_client_capabilities()
 
       -- for nvim_ufo compatibility
@@ -236,7 +205,7 @@ return {
       }
 
       -- initialization for all servers
-      for _, name in ipairs(server_names) do
+      for _, name in ipairs(language_servers.lsps_in_use) do
         local server_config = language_servers.configs[name]
 
         local opts = vim.tbl_extend("keep", server_config, base_options or {})

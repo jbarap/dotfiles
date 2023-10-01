@@ -1,7 +1,5 @@
 local utils = require("utils")
 
-local lsputils = require("lspconfig.util")
-
 local M = {}
 
 --          preparation
@@ -10,7 +8,9 @@ local runtime_path = vim.split(package.path, ";")
 table.insert(runtime_path, "lua/?.lua")
 table.insert(runtime_path, "lua/?/init.lua")
 
+-- TODO: implement this as a util instead of relying on lspconfig
 function M.find_root(patterns, fname)
+  local lsputils = require("lspconfig.util")
   return lsputils.root_pattern(unpack(patterns))(fname) or lsputils.find_git_ancestor(fname) or vim.loop.cwd()
 end
 
@@ -30,7 +30,21 @@ local python_patterns = {
   "pyrightconfig.json",
 }
 
---        server settings
+M.lsps_in_use = {
+  "ruff_lsp",
+  -- "jedi_language_server",
+  -- "pylyzer",
+  "pyright",
+  "lua_ls",
+  "dockerls",
+  "gopls",
+  "jsonls",
+  "terraformls",
+  "yamlls",
+  "clangd",
+}
+
+--        lsp settings
 -- ──────────────────────────────
 -- See: https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md
 -- And: https://github.com/neovim/nvim-lspconfig/blob/master/ADVANCED_README.md
@@ -75,7 +89,7 @@ M._lazy_configs = {
         local python_path
         local virtual_env = vim.env.VIRTUAL_ENV or vim.env.PYENV_VIRTUAL_ENV
         if virtual_env then
-          python_path = lsputils.path.join(virtual_env, "bin", "python")
+          python_path = require("lspconfig.util").path.join(virtual_env, "bin", "python")
         else
           python_path = "python"
         end
@@ -135,7 +149,7 @@ M._lazy_configs = {
         local virtual_env = vim.env.VIRTUAL_ENV or vim.env.PYENV_VIRTUAL_ENV
 
         if virtual_env then
-          python_path = lsputils.path.join(virtual_env, "bin", "python")
+          python_path = require("lspconfig.util").path.join(virtual_env, "bin", "python")
         else
           python_path = "python"
         end
@@ -146,10 +160,6 @@ M._lazy_configs = {
         return M.find_root(utils.tbl_concat(common_patterns, python_patterns), fname)
       end
     }
-  end,
-
-  gopls = function()
-    return {}
   end,
 
   lua_ls = function()
@@ -188,10 +198,6 @@ M._lazy_configs = {
     }
   end,
 
-  jsonls = function()
-    return {}
-  end,
-
   yamlls = function()
     return {
       settings = {
@@ -225,19 +231,15 @@ M._lazy_configs = {
     }
   end,
 
-  terraformls = function()
-    return {}
-  end,
-
-  clangd = function()
-    return {}
-  end,
-
 }
 
 M.configs = setmetatable({}, {
   __index = function (table, key)
-    return M._lazy_configs[key]()
+    if M._lazy_configs[key] ~= nil then
+      return M._lazy_configs[key]()
+    else
+      return {}
+    end
   end
 })
 

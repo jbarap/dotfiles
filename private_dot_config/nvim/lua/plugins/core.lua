@@ -82,7 +82,7 @@ return {
         for _, tool in ipairs(ensure_installed) do
           local p = mr.get_package(tool)
           if not p:is_installed() then
-            missing_packages:append(tool)
+            table.insert(missing_packages, tool)
           end
         end
 

@@ -357,9 +357,6 @@ return {
     config = true,
   },
 
-  -- Repeat
-  { "tpope/vim-repeat" },
-
   -- Text objects
   {
     "echasnovski/mini.ai",
@@ -486,13 +483,6 @@ return {
     keys = {
       { "<leader>qe", function() require("replacer").run() end, nowait = true, desc = "Quickfix edit" },
     },
-  },
-
-  -- Scope buffers to tabs
-  {
-    "tiagovla/scope.nvim",
-    event = "VeryLazy",
-    config = true,
   },
 
 }

@@ -20,9 +20,9 @@ set_keymap("n", "<Leader>b,", "<cmd>bprev<CR>", { desc = "Buffer prev" })
 set_keymap("n", "<Leader>bd", require("utils").buffer_delete, { desc = "Buffer delete" })
 
 -- Tab navigation
-set_keymap("n", "<Leader>t.", "<cmd>tabnext<CR>", { desc = "Tab next" })
-set_keymap("n", "<Leader>t,", "<cmd>tabprev<CR>", { desc = "Tab prev" })
-set_keymap("n", "<Leader>tn", "<cmd>tabnew<CR>", { desc = "Tab new" })
+set_keymap("n", "<A-<>", "<cmd>tabnext<CR>", { desc = "Tab next" })
+set_keymap("n", "<A->>", "<cmd>tabprev<CR>", { desc = "Tab prev" })
+set_keymap("n", "<Leader>tc", "<cmd>tabnew<CR>", { desc = "Tab create" })
 
 -- Screen navigation
 set_keymap({ "n", "v" }, "<A-j>", "<C-d>", { remap = true, desc = "Move screen up" })

@@ -91,45 +91,74 @@ return {
     config = true,
   },
 
-  -- Tabs
   {
-    "akinsho/bufferline.nvim",
-    event = "VeryLazy",
+    "nanozuki/tabby.nvim",
+    lazy = false,
     keys = {
-      { "<A-.>", "<cmd>keepjumps BufferLineCycleNext<CR>", desc = "Buffer next" },
-      { "<A-,>", "<cmd>keepjumps BufferLineCyclePrev<CR>", desc = "Buffer prev" },
-      { "<A-<>", "<cmd>BufferLineMovePrev<CR>", desc = "Buffer move prev" },
-      { "<A->>", "<cmd>BufferLineMoveNext<CR>", desc = "Buffer move next" },
-      { "<A-1>", "<cmd>BufferLineGoToBuffer 1<CR>", desc = "Buffer goto 1" },
-      { "<A-2>", "<cmd>BufferLineGoToBuffer 2<CR>", desc = "Buffer goto 2" },
-      { "<A-3>", "<cmd>BufferLineGoToBuffer 3<CR>", desc = "Buffer goto 3" },
-      { "<A-4>", "<cmd>BufferLineGoToBuffer 4<CR>", desc = "Buffer goto 4" },
-      { "<A-5>", "<cmd>BufferLineGoToBuffer 5<CR>", desc = "Buffer goto 5" },
-      { "<A-6>", "<cmd>BufferLineGoToBuffer 6<CR>", desc = "Buffer goto 6" },
-      { "<Leader>bp", "<cmd>BufferLinePick<CR>", desc = "Buffer pick" },
-      { "<Leader>bo", "<cmd>BufferLineCloseOthers<CR>", desc = "Buffer only (close all but)" },
+      { "<Leader>tn", function()
+        vim.ui.input({ prompt = "Enter new tab name: " }, function(input)
+          if input == nil or input == "" then
+            return
+          end
+          vim.cmd(string.format("TabRename %s", input))
+        end)
+      end, desc = "Tab (re)name" },
     },
-    dependencies = "nvim-tree/nvim-web-devicons",
-    opts = {
-      options = {
-        max_name_length = 18,
-        max_prefix_length = 15,
-        tab_size = 18,
-        offsets = {{ filetype = "NvimTree", text = "Tree", text_align = "center" }},
-        show_buffer_close_icons = false,
-        show_close_icon = false,
-        separator_style = "thick",
-        always_show_bufferline = false,
-      },
-      highlights = {
-        buffer_selected = { bold = true },
-        close_button = { fg = "#000000", bg = "#000000"},
-        modified = { fg = "NONE", bg = "NONE", },
-        background = {
-          fg = '#727169',
-        },
-      },
-    },
+    config = function ()
+
+      vim.o.showtabline = 2
+
+      local theme = {
+        fill = 'TabLineFill',
+        head = "TabLine",
+        current_tab = { fg="#000000", bg="#7e9cd8", style="bold" },
+        tab = 'TabLine',
+        win = 'TabLine',
+        tail = 'TabLine',
+      }
+
+      require('tabby.tabline').set(
+        function(line)
+          return {
+            {
+              { '  ', hl = theme.head },
+              line.sep('', theme.head, theme.fill),
+            },
+            line.wins_in_tab(line.api.get_current_tab()).foreach(function(win)
+              local hl = win.is_current() and theme.current_tab or theme.tab
+
+              return {
+                line.sep('', hl, theme.fill),
+                win.is_current() and '' or '',
+                win.buf_name(),
+                line.sep('', hl, theme.fill),
+                hl = hl,
+                margin = ' ',
+              }
+            end),
+            line.spacer(),
+            line.tabs().foreach(function(tab)
+              local hl = tab.is_current() and theme.current_tab or theme.tab
+              return {
+                line.sep('', hl, theme.fill),
+                tab.is_current() and '' or '󰆣',
+                tab.number(),
+                tab.name(),
+                line.sep('', hl, theme.fill),
+                hl = hl,
+                margin = ' ',
+              }
+            end),
+            {
+              line.sep('', theme.tail, theme.fill),
+              { '  ', hl = theme.tail },
+            },
+            hl = theme.fill,
+          }
+        end
+      )
+
+    end
   },
 
   -- Markdown preview
@@ -589,6 +618,7 @@ return {
           { mode = 'n', keys = '<Leader>gb', desc = '+Blame' },
           { mode = 'n', keys = '<Leader>gf', desc = '+Find' },
           { mode = 'n', keys = '<Leader>gh', desc = '+Hunk/Highlight' },
+          { mode = 'n', keys = '<Leader>m', desc = '+Marks' },
           { mode = 'n', keys = '<Leader>n', desc = '+Neotree' },
           { mode = 'n', keys = '<Leader>q', desc = '+Quickfix' },
           { mode = 'n', keys = '<Leader>r', desc = '+Remote' },

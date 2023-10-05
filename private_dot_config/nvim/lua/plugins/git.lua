@@ -78,9 +78,7 @@ return {
       disable_hint = true,
       integrations = {
         diffview = true,
-        -- TODO: prefer fzf over telescope when the integration is more mature
-        -- fzf_lua = true,
-        -- telescope = false,
+        fzf_lua = true,
       },
       sections = {
         stashes = {

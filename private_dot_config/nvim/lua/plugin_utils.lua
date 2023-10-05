@@ -20,7 +20,6 @@ function M.toggle_diff_view(mode)
 
   if is_diffview then
     vim.cmd("silent DiffviewClose")
-    require("utils").buffer_close_all_but_current()
 
   else
     if mode == "diff" then

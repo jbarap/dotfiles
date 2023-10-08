@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# adapted from: https://github.com/ThePrimeagen/.dotfiles/blob/602019e902634188ab06ea31251c01c1a43d1621/bin/.local/scripts/tmux-sessionizer
+if [[ $# -gt 0 ]]; then
+    target_directory=$(zoxide query "$@")
+else
+    target_directory=$(find ~/data/ -type d | fzf)
+fi
+
+if [[ -z target_directory ]]; then
+    exit 0
+fi
+
+session_name=$(basename "$target_directory" | tr . _)
+tmux_running=$(pgrep tmux)
+
+if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
+    tmux new-session -s $session_name -c $selected
+    exit 0
+fi
+
+if ! tmux has-session -t=$session_name 2> /dev/null; then
+    tmux new-session -ds $session_name -c $target_directory
+fi
+
+tmux switch-client -t $session_name

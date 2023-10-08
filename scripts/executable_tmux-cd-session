@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+tmux_running=$(pgrep tmux)
+
+if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
+    echo "Tmux not running"
+    exit 0
+fi
+
+session_name=$(tmux list-sessions | awk '{print $1}' | tr -d : | fzf)
+
+if [[ -z $session_name ]]; then
+    exit 0
+fi
+
+tmux switch-client -t $session_name

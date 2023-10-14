@@ -121,7 +121,7 @@ return {
         function(line)
           return {
             {
-              { '  ', hl = theme.head },
+              { ' ⧉ ', hl = theme.head },
               line.sep('', theme.head, theme.fill),
             },
             line.wins_in_tab(line.api.get_current_tab()).foreach(function(win)
@@ -131,6 +131,7 @@ return {
                 line.sep('', hl, theme.fill),
                 win.is_current() and '' or '',
                 win.buf_name(),
+                win.buf().is_changed() and '🞱' or "",
                 line.sep('', hl, theme.fill),
                 hl = hl,
                 margin = ' ',
@@ -151,7 +152,7 @@ return {
             end),
             {
               line.sep('', theme.tail, theme.fill),
-              { '  ', hl = theme.tail },
+              { '  ', hl = theme.tail },
             },
             hl = theme.fill,
           }
@@ -426,6 +427,7 @@ return {
   {
     "lukas-reineke/indent-blankline.nvim",
     event = "VeryLazy",
+    enabled = false,  -- FIXME: disabled due to the noticeable performance hit
     config = function()
       require("ibl").setup({
         debounce = 300,

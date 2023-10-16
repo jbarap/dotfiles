@@ -158,7 +158,10 @@ M._lazy_configs = {
       end,
       root_dir = function(fname)
         return M.find_root(utils.tbl_concat(common_patterns, python_patterns), fname)
-      end
+      end,
+      on_init = function(client)
+        client.server_capabilities.hoverProvider = false
+      end,
     }
   end,
 

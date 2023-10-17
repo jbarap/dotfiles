@@ -37,5 +37,9 @@ if use_plugins then
     ui = {
       border = "rounded",
     },
+    profiling = {
+      loader = true,
+      require = true,
+    },
   })
 end

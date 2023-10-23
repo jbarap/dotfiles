@@ -7,6 +7,18 @@ return {
       require("neoscroll").setup({
         cursor_scrolls_alone = true,
         hide_cursor = false,
+        pre_hook = function()
+          vim.opt.eventignore:append({
+            'WinScrolled',
+            'CursorMoved',
+          })
+        end,
+        post_hook = function()
+          vim.opt.eventignore:remove({
+            'WinScrolled',
+            'CursorMoved',
+          })
+        end,
       })
       require("neoscroll.config").set_mappings({
         ["<C-u>"] = { "scroll", { "-vim.wo.scroll", "true", "200" } },

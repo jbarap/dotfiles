@@ -349,10 +349,10 @@ return {
   {
     "gbprod/substitute.nvim",
     keys = {
-      { "s", "<cmd>lua require('substitute').operator()<cr>", desc = "Substitute" },
-      { "ss", "<cmd>lua require('substitute').line()<cr>", desc = "Substitute (line)" },
-      { "S", "<cmd>lua require('substitute').eol()<cr>", desc = "Substitute ('til EOL)" },
-      { "s", "<cmd>lua require('substitute').visual()<cr>", mode = "x", desc = "Substitute (selection)" },
+      { "<A-s>", function() require("substitute").operator() end, desc = "Substitute" },
+      { "<A-s><A-s>", function() require('substitute').line() end, desc = "Substitute (line)" },
+      { "<A-S>", function() require('substitute').eol() end, desc = "Substitute ('til EOL)" },
+      { "<A-s>", function() require('substitute').visual() end, mode = "x", desc = "Substitute (selection)" },
     },
     config = true,
   },

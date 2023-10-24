@@ -7,6 +7,10 @@ alias watch="watch " # allow for watching aliases
 alias xclip="xclip -selection c -rmlastnl"
 alias aptgrep="sudo apt list --installed | grep -i"
 
+# scripts
+alias tcd="tmux-cd-session"
+alias tnew="tmux-new-session"
+
 # chezmoi
 alias cnv="chezmoi edit"
 

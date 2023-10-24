@@ -367,7 +367,7 @@ return {
       { "<Leader>gfb", function() require("fzf-lua").git_branches() end, desc = "Git find branches (all)" },
 
       -- extra
-      { "<Leader>fb", function() require("fzf-lua").buffers() end, desc = "Find buffers" },
+      { "<Leader>fb", function() require("fzf-lua").buffers({ sort_lastused=true }) end, desc = "Find buffers" },
       -- TODO: replace with fzf implementation if it gets pretty
       { "<Leader>fz", function() require("telescope.builtin").current_buffer_fuzzy_find() end, desc = "Find fuZzy (in buffer)" },
     },

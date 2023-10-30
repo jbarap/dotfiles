@@ -227,7 +227,7 @@ return {
     dependencies = { "mfussenegger/nvim-dap" },
   },
 
-  -- check "dccsillag/magma-nvim"
+  -- check "benlubas/molten-nvim"
   -- check ahmedkhalf/jupyter-nvim
 
   -- Tests

@@ -65,7 +65,6 @@ return {
         -- indenting with TS is really slow for some reason, look for alternatives
         indent = {
           enable = false,
-          disable = disable_on_big_file,
         },
 
         yati = {
@@ -139,6 +138,8 @@ return {
       })
     end
   },
+
+  -- Indentation module
   {
     "yioneko/nvim-yati",
     event = { "BufReadPost", "BufNewFile" },

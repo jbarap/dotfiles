@@ -427,7 +427,7 @@ return {
   {
     "lukas-reineke/indent-blankline.nvim",
     event = "VeryLazy",
-    enabled = false,  -- FIXME: disabled due to the noticeable performance hit
+    enabled = true,  -- FIXME: noticeable performance hit
     config = function()
       require("ibl").setup({
         debounce = 300,

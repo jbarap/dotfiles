@@ -473,4 +473,22 @@ return {
     },
   },
 
+  -- Formatters
+  {
+    "stevearc/conform.nvim",
+    keys = {
+      { "<Leader>cf", function() require("conform").format({
+        lsp_fallback = true,
+      }) end },
+    },
+    opts = {
+      formatters_by_ft = {
+        lua = { "stylua" },
+        python = { "isort", "black" },
+        markdown = { "prettier" },
+        yaml = { "yaml" },
+      },
+    },
+  },
+
 }

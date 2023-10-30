@@ -44,9 +44,6 @@ return function(client, bufnr)
   buf_set_keymap("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
   buf_set_keymap("n", "[d", vim.diagnostic.goto_prev, { desc = "Prev diagnostic" })
 
-  -- Formatting
-  buf_set_keymap({ "n" , "v" }, "<leader>cf", function() vim.lsp.buf.format({ async = true }) end, { desc = "Code format" })
-
   -- Symbols
   buf_fzf_keymap("<Leader>fs", "lsp_document_symbols", {}, { desc = "Find symbols (lsp)" })
   buf_fzf_keymap("<Leader>fS", "lsp_workspace_symbols", {}, { desc = "Find symbols (lsp Workspace)" })

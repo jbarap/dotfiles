@@ -98,16 +98,7 @@ return {
           extra_args = { "--globals", "vim", "--allow-defined" },
         }),
         null_ls.builtins.diagnostics.staticcheck,
-
-        -- formatters
-        null_ls.builtins.formatting.black.with({
-          args = { "--quiet", "--line-length", 105, "-" },
-        }),
-        null_ls.builtins.formatting.stylua,
-        null_ls.builtins.formatting.prettier,
-        null_ls.builtins.formatting.gofmt, -- gofmt executable comes with go
       }
-
       if not vim.tbl_contains(require("plugins.lsp.servers").lsps_in_use, "pyright") then
         table.insert(sources, null_ls.builtins.diagnostics.mypy.with({
           extra_args = {

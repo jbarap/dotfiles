@@ -64,11 +64,12 @@ return {
         "terraform-ls",
         "clangd",
 
-        -- null-ls
+        -- linters/formatters
         "mypy",
         "pylint",
         "luacheck",
         "black",
+        "isort",
         "stylua",
         "prettier",
         "staticcheck",

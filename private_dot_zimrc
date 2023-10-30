@@ -17,9 +17,6 @@ zmodule utility
 # additional completion definitions for Zsh
 zmodule zsh-users/zsh-completions --fpath src
 
-# advanced vi mode
-zmodule jeffreytse/zsh-vi-mode
-
 # conda autocomplete
 zmodule conda-incubator/conda-zsh-completion -s 'conda-zsh-completion.plugin.zsh'
 
@@ -36,10 +33,15 @@ zmodule completion
 # NOTE: must be sourced after completion
 zmodule zsh-users/zsh-syntax-highlighting
 
+# advanced vi mode
+# NOTE: must be sourced after highlighting
+zmodule jeffreytse/zsh-vi-mode
+
 # history search (up arrow) for Zsh.
 # NOTE: must be sourced after zsh-users/zsh-syntax-highlighting
 zmodule zsh-users/zsh-history-substring-search
 
 # autosuggestions for Zsh.
+# NOTE: must be sourced after zsh vi mode
 zmodule zsh-users/zsh-autosuggestions
 

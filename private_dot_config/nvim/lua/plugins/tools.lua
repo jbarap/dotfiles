@@ -296,7 +296,7 @@ return {
           require('FTerm').scratch({ cmd = string.format("chezmoi apply -v %s", target) })
         end, {}
       )
-      vim.api.nvim_create_user_command('FTermToggle', require('FTerm').toggle, { bang = true })
+      vim.api.nvim_create_user_command('FTermToggle', function() require('FTerm').toggle() end, { bang = true })
     end,
     keys = {
       { "<Leader>ce", function() require("plugin_utils").run_code() end, desc = "Code execute" },

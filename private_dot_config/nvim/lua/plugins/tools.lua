@@ -271,6 +271,7 @@ return {
   -- Terminal
   {
     "numToStr/FTerm.nvim",
+    cmd = "FTermToggle",
     init = function ()
       vim.api.nvim_create_user_command(
         "ChezmoiApply",
@@ -295,6 +296,7 @@ return {
           require('FTerm').scratch({ cmd = string.format("chezmoi apply -v %s", target) })
         end, {}
       )
+      vim.api.nvim_create_user_command('FTermToggle', require('FTerm').toggle, { bang = true })
     end,
     keys = {
       { "<Leader>ce", function() require("plugin_utils").run_code() end, desc = "Code execute" },

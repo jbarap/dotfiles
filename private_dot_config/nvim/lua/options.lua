@@ -75,6 +75,7 @@ opt.sidescrolloff = 4
 -- Fillchars
 opt.fillchars = "diff:╱"
 opt.list = true
+-- for some reason the help menu shows ^I if tab is not explicitly "  "
 opt.listchars = { tab = "  " }
 
 -- Jumplist

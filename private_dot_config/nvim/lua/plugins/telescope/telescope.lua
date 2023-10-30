@@ -13,7 +13,11 @@ return {
         end,
       })
     end,
-    dependencies = { "nvim-lua/popup.nvim", "nvim-lua/plenary.nvim" },
+    dependencies = {
+      "nvim-lua/popup.nvim",
+      "nvim-lua/plenary.nvim",
+      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+    },
     config = function()
       local actions = require("telescope.actions")
       local layout_actions = require("telescope.actions.layout")
@@ -141,5 +145,4 @@ return {
       require("telescope").load_extension("projects")
     end,
   },
-  { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
 }

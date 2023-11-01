@@ -412,6 +412,12 @@ return {
           ["marker"] = { "fg", "TelescopeSelectionCaret" },
         },
 
+        previewers = {
+          builtin = {
+            syntax_limit_b = 1024*1024*5,
+          },
+        },
+
         files = {
           cwd_prompt_shorten_val = 5,
           git_icons = true,

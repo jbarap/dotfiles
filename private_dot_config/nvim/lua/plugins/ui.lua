@@ -506,7 +506,7 @@ return {
             action = "FzfLua files",
           },
           {
-            icon = "󰈭  ",
+            icon = "☰  ",
             desc = "Live Grep",
             key = "g",
             action = "FzfLua live_grep",

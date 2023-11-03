@@ -67,6 +67,7 @@ return {
         -- linters/formatters
         "mypy",
         "pylint",
+        "ruff",
         "luacheck",
         "black",
         "isort",

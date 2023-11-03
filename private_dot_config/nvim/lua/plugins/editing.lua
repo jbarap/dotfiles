@@ -505,7 +505,7 @@ return {
     opts = {
       formatters_by_ft = {
         lua = { "stylua" },
-        python = { "isort", "black" },
+        python = { "isort", "ruff_format" },
         markdown = { "prettier" },
         yaml = { "yaml" },
       },

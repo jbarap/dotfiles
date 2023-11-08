@@ -80,6 +80,12 @@ return {
         diffview = true,
         fzf_lua = true,
       },
+      mappings = {
+        finder = {
+          ["<c-j>"] = "Next",
+          ["<c-k>"] = "Previous",
+        },
+      },
       sections = {
         stashes = {
           folded = true
@@ -87,7 +93,11 @@ return {
         recent = {
           folded = true,
         },
-      }
+      },
+      signs = {
+        section = { "🠚", "🠛" },
+        item = { "●", "○" },
+      },
     }
   },
 

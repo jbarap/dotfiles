@@ -403,10 +403,19 @@ return {
     keys = {
       { "zR", function()
           require("ufo").openAllFolds()
-          require("indent_blankline").refresh(false)
-        end
+        end,
+        desc = "Open all folds",
       },
-      { "zM", function() require("ufo").closeAllFolds() end },
+      { "zM", function()
+          require("ufo").closeAllFolds()
+        end,
+        desc = "Close all folds",
+      },
+      { "zp", function()
+          require("ufo").peekFoldedLinesUnderCursor()
+        end,
+        desc = "Peek fold under cursor",
+      },
     },
     event = "BufRead",
     dependencies = { "kevinhwang91/promise-async" },
@@ -444,6 +453,12 @@ return {
       end
       require("ufo").setup({
         fold_virt_text_handler = handler,
+        preview = {
+          mappings = {
+            scrollU = "<A-k>",
+            scrollD = "<A-j>",
+          },
+        },
       })
     end,
   },

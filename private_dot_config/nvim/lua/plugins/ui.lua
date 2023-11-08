@@ -622,7 +622,6 @@ return {
           { mode = 'n', keys = '<Leader>gf', desc = '+Find' },
           { mode = 'n', keys = '<Leader>gh', desc = '+Hunk/Highlight' },
           { mode = 'n', keys = '<Leader>m', desc = '+Marks' },
-          { mode = 'n', keys = '<Leader>n', desc = '+Neotree' },
           { mode = 'n', keys = '<Leader>q', desc = '+Quickfix' },
           { mode = 'n', keys = '<Leader>r', desc = '+Remote' },
           { mode = 'n', keys = '<Leader>s', desc = '+Show' },

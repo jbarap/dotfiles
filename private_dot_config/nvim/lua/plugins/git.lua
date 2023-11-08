@@ -60,7 +60,7 @@ return {
     "rbong/vim-flog",
     cmd = { "Flog" },
     keys = {
-      { "<leader>gl", "<cmd>Flog -all<CR>", { desc = "Git log" } }
+      { "<leader>gl", "<cmd>Flog -all<CR>", desc = "Git log" }
     },
     dependencies = { "tpope/vim-fugitive" },
   },
@@ -70,7 +70,7 @@ return {
     "TimUntersberger/neogit",
     cmd = "Neogit",
     keys = {
-      { "<leader>gg", "<cmd>Neogit<CR>", { desc = "Git status" } }
+      { "<leader>gg", "<cmd>Neogit<CR>", desc = "Git status" }
     },
     dependencies = { "nvim-lua/plenary.nvim", "ibhagwan/fzf-lua" },
     opts = {

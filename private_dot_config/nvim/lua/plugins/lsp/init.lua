@@ -53,12 +53,13 @@ return {
   -- Code tree
   {
     "stevearc/aerial.nvim",
-    cmd = "AerialToggle",
+    cmd = { "AerialToggle", "AerialNavToggle" },
     keys = {
       { "<Leader>co", "<cmd>AerialToggle<CR>", desc = "Code outline" },
+      { "<Leader>cn", "<cmd>AerialNavToggle<CR>", desc = "Code navigate" },
     },
     opts = {
-      backends = { "lsp", "treesitter", "markdown" },
+      backends = { "lsp", "treesitter", "markdown", "man" },
       highlight_on_jump = 350,
       manage_folds = false,
       link_tree_to_folds = true,
@@ -80,6 +81,7 @@ return {
           require("aerial").select({ jump = false })
           vim.schedule(require("aerial").select)
         end,
+        ["<Tab>"] = "actions.tree_toggle",
       },
     },
   },

@@ -83,6 +83,17 @@ return {
         end,
         ["<Tab>"] = "actions.tree_toggle",
       },
+      nav = {
+        preview = true,
+        min_height = { 30, 0.5 },
+        max_height = { 30, 0.5 },
+        min_width = { 50, 0.2 },
+        max_width = { 50, 0.2 },
+        keymaps = {
+          ["q"] = "actions.close",
+          ["<Esc>"] = "actions.close",
+        },
+      },
     },
   },
 

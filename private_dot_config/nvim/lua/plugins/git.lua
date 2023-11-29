@@ -74,24 +74,27 @@ return {
     },
     dependencies = { "nvim-lua/plenary.nvim", "ibhagwan/fzf-lua" },
     opts = {
-      kind = "split",
       disable_hint = true,
       integrations = {
         diffview = true,
         fzf_lua = true,
       },
+      graph_style = "unicode",
       mappings = {
         finder = {
           ["<c-j>"] = "Next",
           ["<c-k>"] = "Previous",
         },
       },
+      status = {
+        recent_commit_count = 5,
+      },
       sections = {
         stashes = {
           folded = true
         },
         recent = {
-          folded = true,
+          folded = false,
         },
       },
       signs = {

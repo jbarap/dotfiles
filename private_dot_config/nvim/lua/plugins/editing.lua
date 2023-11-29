@@ -530,7 +530,7 @@ return {
     keys = {
       { "<Leader>cf", function() require("conform").format({
         lsp_fallback = true,
-      }) end },
+      }) end, mode = { "n", "v" }, desc = "Code format" },
     },
     opts = {
       formatters_by_ft = {

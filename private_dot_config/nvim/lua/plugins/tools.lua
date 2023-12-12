@@ -239,20 +239,20 @@ return {
     lazy = true,
     keys = {
       -- run
-      { "<Leader>trf", function() require("neotest").run.run(vim.fn.expand("%")) end, desc = "Test run (file)" },
-      { "<Leader>trn", function() require("neotest").run.run() end, desc = "Test run (nearest)" },
-      { "<Leader>trs", function() require("neotest").run.run({ suite = true }) end, desc = "Test run (full suite)" },
-      { "<Leader>trl", function() require("neotest").run.run_last() end, desc = "Test run (last)" },
+      { "<Leader>Trf", function() require("neotest").run.run(vim.fn.expand("%")) end, desc = "Test run (file)" },
+      { "<Leader>Trn", function() require("neotest").run.run() end, desc = "Test run (nearest)" },
+      { "<Leader>Trs", function() require("neotest").run.run({ suite = true }) end, desc = "Test run (full suite)" },
+      { "<Leader>Trl", function() require("neotest").run.run_last() end, desc = "Test run (last)" },
       -- debug
-      { "<Leader>tdf", function() require("neotest").run.run({ vim.fn.expand("%"), strategy = "dap" }) end, desc = "Test debug (file)" },
-      { "<Leader>tdn", function() require("neotest").run.run({ strategy = "dap" }) end, desc = "Test debug (nearest)" },
-      { "<Leader>tds", function() require("neotest").run.run({ suite = true, strategy = "dap" }) end, desc = "Test debug (full suite)" },
+      { "<Leader>Tdf", function() require("neotest").run.run({ vim.fn.expand("%"), strategy = "dap" }) end, desc = "Test debug (file)" },
+      { "<Leader>Tdn", function() require("neotest").run.run({ strategy = "dap" }) end, desc = "Test debug (nearest)" },
+      { "<Leader>Tds", function() require("neotest").run.run({ suite = true, strategy = "dap" }) end, desc = "Test debug (full suite)" },
       -- stop
-      { "<Leader>ts", function() require("neotest").run.stop() end, desc = "Test stop" },
+      { "<Leader>Ts", function() require("neotest").run.stop() end, desc = "Test stop" },
       -- output
-      { "<Leader>too", function() require("neotest").output.open({ enter = true }) end, desc = "Test output open" },
-      { "<Leader>top", function() require("neotest").output_panel.toggle() end, desc = "Test output panel" },
-      { "<Leader>tos", function() require("neotest").summary.toggle() end, desc = "Test output summary" },
+      { "<Leader>Too", function() require("neotest").output.open({ enter = true }) end, desc = "Test output open" },
+      { "<Leader>Top", function() require("neotest").output_panel.toggle() end, desc = "Test output panel" },
+      { "<Leader>Tos", function() require("neotest").summary.toggle() end, desc = "Test output summary" },
     },
     dependencies = {
       "nvim-lua/plenary.nvim",

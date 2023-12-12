@@ -22,7 +22,8 @@ set_keymap("n", "<Leader>bd", require("utils").buffer_delete, { desc = "Buffer d
 -- Tab navigation
 set_keymap("n", "<A->>", "<cmd>tabnext<CR>", { desc = "Tab next" })
 set_keymap("n", "<A-<>", "<cmd>tabprev<CR>", { desc = "Tab prev" })
-set_keymap("n", "<Leader>tc", "<cmd>tabnew<CR>", { desc = "Tab create" })
+set_keymap("n", "<Leader>ta", "<cmd>tabnew<CR>", { desc = "Tab add" })
+set_keymap("n", "<Leader>tx", "<cmd>tabclose<CR>", { desc = "Tab close" })
 
 -- Screen navigation
 set_keymap({ "n", "v" }, "<A-j>", "<C-d>", { remap = true, desc = "Move screen up" })
@@ -44,6 +45,7 @@ set_keymap("n", "<Leader>qq", require("utils").toggle_quickfix, { desc = "Quickf
 -- Diff
 set_keymap({ "n", "v" }, "<Leader>dp", "<cmd>diffput<CR>", { desc = "Diff put" })
 set_keymap({ "n", "v" }, "<Leader>dg", "<cmd>diffget<CR>", { desc = "Diff get" })
+set_keymap({ "n", "v" }, "<Leader>dt", "<cmd>diffthis<CR>", { desc = "Diff this" })
 
 -- Vim config
 set_keymap("n", "<Leader>ve", "<cmd>edit $MYVIMRC<CR>", { desc = "Vim edit config" })

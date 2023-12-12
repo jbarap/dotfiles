@@ -95,14 +95,14 @@ return {
     "nanozuki/tabby.nvim",
     lazy = false,
     keys = {
-      { "<Leader>tn", function()
+      { "<Leader>tr", function()
         vim.ui.input({ prompt = "Enter new tab name: " }, function(input)
           if input == nil or input == "" then
             return
           end
           vim.cmd(string.format("TabRename %s", input))
         end)
-      end, desc = "Tab (re)name" },
+      end, desc = "Tab rename" },
     },
     config = function ()
 
@@ -625,8 +625,9 @@ return {
           { mode = 'n', keys = '<Leader>q', desc = '+Quickfix' },
           { mode = 'n', keys = '<Leader>r', desc = '+Remote' },
           { mode = 'n', keys = '<Leader>s', desc = '+Show' },
-          { mode = 'n', keys = '<Leader>t', desc = '+Test/Tab' },
-          { mode = 'n', keys = '<Leader>tr', desc = '+Test Run' },
+          { mode = 'n', keys = '<Leader>t', desc = '+Tab' },
+          { mode = 'n', keys = '<Leader>T', desc = '+Test' },
+          { mode = 'n', keys = '<Leader>tR', desc = '+Test Run' },
           { mode = 'n', keys = '<Leader>td', desc = '+Test Debug' },
           { mode = 'n', keys = '<Leader>to', desc = '+Test Output' },
           { mode = 'n', keys = '<Leader>v', desc = '+Vim' },

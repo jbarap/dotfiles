@@ -72,40 +72,27 @@ return {
     },
   },
 
-  -- harpoon
+  -- Buffer navigation
   {
-    "MeanderingProgrammer/harpoon-core.nvim",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-    },
+    "ThePrimeagen/harpoon",
+    requires = { {"nvim-lua/plenary.nvim"} },
+    branch = "harpoon2",
     keys = {
-      { "<Leader>ma", function() require('harpoon-core.mark').add_file() end, desc = "Mark add" },
-      { "<Leader>mx", function() require('harpoon-core.mark').rm_file() end, desc = "Mark remove" },
-      { "<Leader>mm", function() require('harpoon-core.ui').toggle_quick_menu() end, desc = "Mark menu" },
-      { "<Leader>mp", function() require('harpoon-core.ui').nav_file(vim.v.count) end, desc = "Mark pick" },
-      { "<A-.>", function() require('harpoon-core.ui').nav_next() end, desc = "Mark next" },
-      { "<A-,>", function() require('harpoon-core.ui').nav_prev() end, desc = "Mark previous" },
+      { "<Leader>ma", function() require("harpoon"):list():append() end, desc = "Mark add" },
+      { "<Leader>mx", function() require("harpoon"):list():remove() end, desc = "Mark remove" },
+      { "<Leader>mm", function() require("harpoon").ui:toggle_quick_menu(require("harpoon"):list()) end, desc = "Mark menu" },
+      { "<Leader>mp", function() require("harpoon"):list():select(vim.v.count) end, desc = "Mark pick" },
+      { "<A-.>", function() require("harpoon"):list():next() end, desc = "Mark next" },
+      { "<A-,>", function() require("harpoon"):list():prev() end, desc = "Mark previous" },
     },
-    config = function()
-      require('harpoon-core').setup({
-        -- Make existing window active rather than creating a new window
-        use_existing = true,
-        -- Set marks specific to each git branch inside git repository
-        mark_branch = false,
-        -- Use the previous cursor position of marked files when opened
-        use_cursor = true,
-        -- Settings for popup window
-        menu = {
-          width = 60,
-          height = 10,
-        },
-        -- Highlight groups to use for various components
-        highlight_groups = {
-          window = 'HarpoonWindow',
-          border = 'HarpoonBorder',
+    config = function ()
+      local harpoon = require("harpoon")
+      harpoon:setup({
+        settings = {
+          save_on_toggle = true,
         },
       })
-    end,
+    end
   },
 
 }

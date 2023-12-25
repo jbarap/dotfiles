@@ -224,6 +224,7 @@ M._lazy_configs = {
             ["https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.1/schema.json"] = "*api*.{yml,yaml}",
             ["https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json"] = "*docker-compose*.{yml,yaml}",
             ["https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json"] = "*flow*.{yml,yaml}",
+            ["https://squidfunk.github.io/mkdocs-material/schema.json"] = "mkdocs.yml",
           },
           format = { enabled = false },
           validate = false, -- conflicts between Kubernetes resources and kustomization.yaml

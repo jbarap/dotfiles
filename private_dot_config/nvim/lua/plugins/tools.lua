@@ -44,6 +44,8 @@ return {
         ["<C-p>"] = "actions.preview",
         ["<C-c>"] = "actions.close",
         ["<C-r>"] = "actions.refresh",
+        ["<C-y>"] = "actions.copy_entry_path",
+        ["<C-q>"] = "actions.add_to_qflist",
         ["-"] = "actions.parent",
         ["_"] = "actions.open_cwd",
         ["`"] = "actions.cd",

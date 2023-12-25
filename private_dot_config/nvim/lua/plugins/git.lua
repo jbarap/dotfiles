@@ -32,11 +32,14 @@ return {
         end, { expr = true, desc = "Goto prev git hunk" })
 
         -- Actions
-        map({ 'n', 'v' }, '<leader>ghs', gs.stage_hunk, { desc = "Git hunk stage" })
-        map({ 'n', 'v' }, '<leader>ghx', gs.reset_hunk, { desc = "Git hunk reset" })
+        map("n", '<leader>ghs', gs.stage_hunk, { desc = "Git hunk stage" })
+        map("n", '<leader>ghx', gs.reset_hunk, { desc = "Git hunk reset" })
+        map('v', '<leader>ghs', function() gs.stage_hunk {vim.fn.line('.'), vim.fn.line('v')} end, { desc = "Git hunk stage" })
+        map('v', '<leader>ghr', function() gs.reset_hunk {vim.fn.line('.'), vim.fn.line('v')} end, { desc = "Git hunk reset" })
         map('n', '<leader>ghu', gs.undo_stage_hunk, { desc = "Git hunk undo stage" })
         map('n', '<leader>ghX', gs.reset_buffer, { desc = "Git hunk reset (buffer)" })
         map('n', '<leader>ghp', gs.preview_hunk, { desc = "Git hunk preview" })
+        map('n', '<leader>ghl', gs.preview_hunk_inline, { desc = "Git hunk preview (inline)" })
         map('n', '<leader>ghh', function()
           gs.toggle_numhl()
           gs.toggle_word_diff()

@@ -4,7 +4,7 @@ return {
     "SmiteshP/nvim-navic",
     lazy = true,
     opts = {
-      separator = " > ",
+      separator = " ➜ ",
       depth_limit = 0,
       depth_limit_indicator = "..",
       icons = {
@@ -101,6 +101,7 @@ return {
   {
     "nvimtools/none-ls.nvim",
     event = { "bufreadpre", "bufnewfile" },
+    commit = "fc0f601",  -- mypy broke due to: https://github.com/nvimtools/none-ls.nvim/commit/1fa06d350a36eb0901fe8edb50b9ba4a33e467e4
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function ()
       local null_ls = require("null-ls")
@@ -270,7 +271,6 @@ return {
       local base_options = {
         on_attach = require("plugins.lsp.on_attach"),
         capabilities = capabilities,
-        root_dir = require("project_nvim.project").find_pattern_root,
         flags = {
           debounce_text_changes = 200,
         },

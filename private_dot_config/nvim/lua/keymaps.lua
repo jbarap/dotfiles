@@ -24,6 +24,8 @@ set_keymap("n", "<A->>", "<cmd>tabnext<CR>", { desc = "Tab next" })
 set_keymap("n", "<A-<>", "<cmd>tabprev<CR>", { desc = "Tab prev" })
 set_keymap("n", "<Leader>ta", "<cmd>tabnew<CR>", { desc = "Tab add" })
 set_keymap("n", "<Leader>tx", "<cmd>tabclose<CR>", { desc = "Tab close" })
+set_keymap("n", "<Leader>tmh", "<cmd>-tabmove<CR>", { desc = "Tab move left" })
+set_keymap("n", "<Leader>tml", "<cmd>+tabmove<CR>", { desc = "Tab move right" })
 
 -- Screen navigation
 set_keymap({ "n", "v" }, "<A-j>", "<C-d>", { remap = true, desc = "Move screen up" })

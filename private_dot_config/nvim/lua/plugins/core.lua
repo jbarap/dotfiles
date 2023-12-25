@@ -1,16 +1,15 @@
 return {
+  -- Utility functions
   { "nvim-lua/plenary.nvim", lazy = true },
 
+  -- Icons
   { "nvim-tree/nvim-web-devicons", lazy = true },
 
+  -- Rooter
   {
-    "ahmedkhalf/project.nvim",
-    name = "project_nvim",
-    opts = {
-      manual_mode = false,
-      detection_methods = { "pattern" },
-      scope_chdir = 'tab',
-      patterns = {
+    "echasnovski/mini.misc",
+    config = function ()
+      local files = {
         "_darcs",
         ".project",
         ".chezmoiignore",
@@ -26,25 +25,15 @@ return {
         "pyproject.toml",
         "setup.cfg",
         "setup.py",
-      },
-      ignore_lsp = { "null-ls" },
-      silent_chdir = true,
-    },
+      }
+      require("mini.misc").setup_auto_root(files)
+    end
   },
 
+  -- Auto indent settings
   {
     "NMAC427/guess-indent.nvim",
     config = true,
-  },
-
-  {
-    "dstein64/vim-startuptime",
-    cmd = { "StartupTime" }
-  },
-
-  {
-    "nvim-lua/popup.nvim",
-    lazy = true,
   },
 
   {

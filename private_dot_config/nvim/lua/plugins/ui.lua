@@ -4,7 +4,7 @@ return {
     "rebelot/kanagawa.nvim",
     priority = 1000,
     config = function ()
-      require('kanagawa').setup({
+      require("kanagawa").setup({
         undercurl = true,
         commentStyle = { italic = true },
         functionStyle = {},
@@ -77,6 +77,30 @@ return {
 
             -- Diffview
             DiffviewCursorLine = { bg = "#252525" },
+
+            -- New treesitter highlight captures
+            ["@string.regexp"] = { link = "@string.regex" },
+            ["@variable.parameter"] = { link = "@parameter" },
+            ["@exception"] = { link = "@exception" },
+            ["@string.special.symbol"] = { link = "@symbol" },
+            ["@markup.strong"] = { link = "@text.strong" },
+            ["@markup.italic"] = { link = "@text.emphasis" },
+            ["@markup.heading"] = { link = "@text.title" },
+            ["@markup.raw"] = { link = "@text.literal" },
+            ["@markup.quote"] = { link = "@text.quote" },
+            ["@markup.math"] = { link = "@text.math" },
+            ["@markup.environment"] = { link = "@text.environment" },
+            ["@markup.environment.name"] = { link = "@text.environment.name" },
+            ["@markup.link.url"] = { link = "Special" },
+            ["@markup.link.label"] = { link = "Identifier" },
+            ["@comment.note"] = { link = "@text.note" },
+            ["@comment.warning"] = { link = "@text.warning" },
+            ["@comment.danger"] = { link = "@text.danger" },
+            ["@diff.plus"] = { link = "@text.diff.add" },
+            ["@diff.minus"] = { link = "@text.diff.delete" },
+
+            -- New python keyword imports
+            ["@keyword.import.python"] = { link = "PreProc" },
           }
         end,
       })
@@ -384,43 +408,71 @@ return {
   },
 
   -- Indent lines
+  -- {
+  --   "lukas-reineke/indent-blankline.nvim",
+  --   event = "VeryLazy",
+  --   enabled = true,  -- FIXME: noticeable performance hit
+  --   config = function()
+  --     require("ibl").setup({
+  --       viewport_buffer = {
+  --         min = 10,
+  --         max = 20,
+  --       },
+  --       debounce = 200,
+  --       indent = {
+  --         char = "▏",
+  --         tab_char = "▏",
+  --       },
+  --       scope = {
+  --         enabled = false,
+  --       },
+  --       exclude = {
+  --         filetypes = {
+  --           "aerial",
+  --           "alpha",
+  --           "dap-repl",
+  --           "dashboard",
+  --           "dockerfile",
+  --           "FTerm",
+  --           "help",
+  --           "man",
+  --           "neo-tree",
+  --           "NeogitCommitView",
+  --           "NeovitStatus",
+  --           "NvimTree",
+  --           "oil",
+  --           "packer",
+  --           "startup",
+  --           "TelescopePrompt",
+  --           "TelescopeResults",
+  --           "toggleterm",
+  --           "tsplayground",
+  --           "qf",
+  --         }
+  --       }
+  --     })
+  --   end
+  -- },
   {
-    "lukas-reineke/indent-blankline.nvim",
-    event = "VeryLazy",
-    enabled = true,  -- FIXME: noticeable performance hit
+    "shellRaining/hlchunk.nvim",
+    branch = "dev",
+    event = { "UIEnter" },
     config = function()
-      require("ibl").setup({
-        debounce = 300,
+      require("hlchunk").setup({
         indent = {
-          char = "▏",
-          tab_char = "▏",
+          enable = true,
+          chars = {
+            "▏",
+          },
         },
-        scope = {
-          enabled = false,
+        blank = {
+          enable = false,
         },
-        exclude = {
-          filetypes = {
-            "aerial",
-            "alpha",
-            "dap-repl",
-            "dashboard",
-            "dockerfile",
-            "FTerm",
-            "help",
-            "man",
-            "neo-tree",
-            "NeogitCommitView",
-            "NeovitStatus",
-            "NvimTree",
-            "oil",
-            "packer",
-            "startup",
-            "TelescopePrompt",
-            "TelescopeResults",
-            "toggleterm",
-            "tsplayground",
-            "qf",
-          }
+        chunk = {
+          enable = false,
+        },
+        line_num = {
+          enable = false,
         }
       })
     end

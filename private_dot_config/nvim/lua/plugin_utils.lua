@@ -9,8 +9,8 @@ function M.toggle_diff_view(mode)
   local bfr = vim.api.nvim_get_current_buf()
   local win = vim.api.nvim_get_current_win()
 
-  local buf_type = vim.api.nvim_buf_get_option(bfr, "filetype")
-  local win_diff = vim.api.nvim_win_get_option(win, "diff")
+  local buf_type = vim.api.nvim_get_option_value("filetype", { buf = bfr })
+  local win_diff = vim.api.nvim_get_option_value("diff", { win = win })
 
   local is_diffview = false
 
@@ -26,6 +26,30 @@ function M.toggle_diff_view(mode)
       vim.fn.feedkeys(":DiffviewOpen ")
     elseif mode == "file" then
       vim.fn.feedkeys(":DiffviewFileHistory ")
+    elseif mode == "pr" then
+      local base_branch = vim.fn.input({
+        prompt = "Base branch: ",
+        cancelreturn = "<canceled>",
+      })
+
+      if base_branch == "<canceled>" then
+        return
+      end
+
+      local base_commit = string.gsub(
+        vim.system(
+          {"git", "merge-base", "--fork-point", base_branch },
+          {text = true}
+        ):wait().stdout,
+        "\n",
+        ""
+      )
+      vim.notify(
+        string.format("Viewing changes since commit %s", base_commit),
+        vim.log.levels.INFO,
+        { title = "DiffView" }
+      )
+      vim.cmd(string.format("DiffviewOpen %s..HEAD", base_commit))
     end
   end
   vim.cmd("echon ''")

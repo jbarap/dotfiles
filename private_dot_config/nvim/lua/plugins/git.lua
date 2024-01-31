@@ -42,6 +42,7 @@ return {
         map('n', '<leader>ghl', gs.preview_hunk_inline, { desc = "Git hunk preview (inline)" })
         map('n', '<leader>ghh', function()
           gs.toggle_numhl()
+          gs.toggle_linehl()
           gs.toggle_word_diff()
           gs.toggle_deleted()
         end, { desc = "Git highlight toggle" })
@@ -125,6 +126,7 @@ return {
     keys = {
       { "<leader>dvo", function() require("plugin_utils").toggle_diff_view("diff") end, mode = { "n", "v" }, desc = "Diffview open" },
       { "<leader>dvf", function() require("plugin_utils").toggle_diff_view("file") end, mode = { "n", "v" }, desc = "Diffview file history" },
+      { "<leader>dvp", function() require("plugin_utils").toggle_diff_view("pr") end, mode = { "n", "v" }, desc = "Diffview PR" },
     },
     config = function()
       local actions = require("diffview.actions")

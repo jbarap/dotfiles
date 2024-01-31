@@ -5,6 +5,7 @@ return {
     dependencies = { "nvim-tree/nvim-web-devicons" },
     cmd = "Oil",
     keys = {
+      { "<BS>", function() require("oil").open() end, desc = "Open buffer's directory" },
       { "-", function() require("oil").open() end, desc = "Open buffer's directory" },
     },
     -- lazy setup: https://github.com/folke/lazy.nvim/issues/533#issuecomment-1489174249
@@ -46,6 +47,7 @@ return {
         ["<C-r>"] = "actions.refresh",
         ["<C-y>"] = "actions.copy_entry_path",
         ["<C-q>"] = "actions.add_to_qflist",
+        ["<BS>"] = "actions.parent",
         ["-"] = "actions.parent",
         ["_"] = "actions.open_cwd",
         ["`"] = "actions.cd",
@@ -423,6 +425,7 @@ return {
           },
         },
 
+        -- providers
         files = {
           cwd_prompt_shorten_val = 5,
           git_icons = true,
@@ -430,6 +433,10 @@ return {
 
         grep = {
           rg_glob = true,
+        },
+
+        lsp = {
+          includeDeclaration = false,
         },
 
         keymap = {

@@ -25,7 +25,10 @@ return function(client, bufnr)
   buf_fzf_keymap("gI", "lsp_implementations", {}, { desc = "Goto implementation" })
   buf_fzf_keymap("gt", "lsp_typedefs", {}, { desc = "Goto type definition" })
 
-  -- TODO: implement incoming/outgoing calls
+  -- Calls
+  buf_fzf_keymap("<Leader>fi", "lsp_incoming_calls", {}, { desc = "Find incoming calls (lsp)" })
+  buf_fzf_keymap("<Leader>fo", "lsp_outgoing_calls", {}, { desc = "Find outgoing calls (lsp)" })
+
   -- Information
   buf_set_keymap("n", "K", vim.lsp.buf.hover, { desc = "Hover information" })
   buf_set_keymap("i", "<C-k>", vim.lsp.buf.signature_help, { desc = "Signature help" })

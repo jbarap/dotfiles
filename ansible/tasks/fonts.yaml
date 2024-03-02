@@ -30,7 +30,7 @@
 - name: Download Nerd Font Symbols
   when: nerd_symbols_installed is failed
   ansible.builtin.get_url:
-    url: https://github.com/ryanoasis/nerd-fonts/releases/download/v{{nerd_symbols_version | default('3.0.1')}}/NerdFontsSymbolsOnly.tar.xz
+    url: https://github.com/ryanoasis/nerd-fonts/releases/download/v{{nerd_symbols_version | default('3.1.1')}}/NerdFontsSymbolsOnly.tar.xz
     dest: /tmp/nerd_font_symbols.tar.xz
 
 - name: Create Nerd Font Symbols dir

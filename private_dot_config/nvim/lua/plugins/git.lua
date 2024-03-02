@@ -7,6 +7,9 @@ return {
       watch_gitdir = {
         interval = 2000,
       },
+      current_line_blame_opts = {
+        ignore_whitespace = true,
+      },
       trouble = true,
       update_debounce = 1000,
       on_attach = function(bufnr)
@@ -33,9 +36,9 @@ return {
 
         -- Actions
         map("n", '<leader>ghs', gs.stage_hunk, { desc = "Git hunk stage" })
-        map("n", '<leader>ghx', gs.reset_hunk, { desc = "Git hunk reset" })
         map('v', '<leader>ghs', function() gs.stage_hunk {vim.fn.line('.'), vim.fn.line('v')} end, { desc = "Git hunk stage" })
-        map('v', '<leader>ghr', function() gs.reset_hunk {vim.fn.line('.'), vim.fn.line('v')} end, { desc = "Git hunk reset" })
+        map("n", '<leader>ghx', gs.reset_hunk, { desc = "Git hunk reset" })
+        map('v', '<leader>ghx', function() gs.reset_hunk {vim.fn.line('.'), vim.fn.line('v')} end, { desc = "Git hunk reset" })
         map('n', '<leader>ghu', gs.undo_stage_hunk, { desc = "Git hunk undo stage" })
         map('n', '<leader>ghX', gs.reset_buffer, { desc = "Git hunk reset (buffer)" })
         map('n', '<leader>ghp', gs.preview_hunk, { desc = "Git hunk preview" })

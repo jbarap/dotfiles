@@ -10,6 +10,8 @@
       - zoxide
       - xclip
       - git-absorb
+      - autopoint  # for fswatch
+      - texinfo  # for fswatch
     state: latest
 
 - name: Add fd alias
@@ -68,3 +70,22 @@
   when: lazydocker_exists
   ansible.builtin.shell: go install github.com/jesseduffield/lazydocker@latest
 
+# fswatch
+- name: Check if fswatch is installed
+  shell: "command -v fswatch"
+  register: fswatch_installed
+  ignore_errors: true
+
+- name: Clone fswatch
+  when: fswatch_installed is failed
+  ansible.builtin.git:
+    force: true
+    repo: https://github.com/emcrisostomo/fswatch
+    dest: "{{lookup('env', 'HOME')}}/tools/fswatch"
+
+- name: Configure, build, and install fswatch
+  when: fswatch_installed is failed
+  become: true
+  ansible.builtin.shell: >-
+    cd {{lookup('env', 'HOME')}}/tools/fswatch && 
+    ./autogen.sh && ./configure && make && make install

@@ -35,6 +35,17 @@ return {
           t({ "import pudb; pudb.set_trace()" }),
         }),
 
+        s("debugpy", {
+          t({
+            "# DEBUG: debugger setup",
+            "import debugpy",
+            "if not debugpy.is_client_connected():",
+            '\tdebugpy.listen(("localhost", 5678))',
+            '\tprint("[ATTACH NOW]")',
+            "debugpy.wait_for_client()",
+          }),
+        }),
+
         s("pprint", {
           t({ "import pprint; pprint.pprint(" }),
           i(1, "object_to_print"),
@@ -54,7 +65,6 @@ return {
           t({ "", '\t\t\t"args": [' }), i(5), t({ "]" }), t(","),
           t({ "", '\t\t\t"cwd": ' }), i(6, '"${workspaceFolder}"'), t(","),
           t({ "", '\t\t\t"env": {' }), i(7), t({ "}," }),
-          t({ "", '\t\t\t"pathMappings": [{ ' }), i(0, '"localRoot": "${workspaceFolder}", "remoteRoot": "."'), t({ " }]" }),
           t({ "", '\t\t}' }),
           t({ "", '\t]' }),
           t({ "", "}" }),

@@ -76,6 +76,7 @@ return {
       { "<Leader>dl", function() require("dap").step_into() end, desc = "Debug step into" },
       { "<Leader>dh", function() require("dap").step_out() end, desc = "Debug step out" },
       { "<Leader>dr", function() require("dap").repl.open() end, desc = "Debug repl" },
+      { "<Leader>dz", function() require("dap").run_to_cursor() end, desc = "Debug run to cursor" },
       { "<Leader>ds", function() require("dap").close(); require("dapui").close() end, desc = "Debug stop (and close)" },
     },
     config = function ()
@@ -347,6 +348,9 @@ return {
       end,
         desc = "Find files (all)",
       },
+      { "<Leader>fd", function() require("fzf-lua").files({
+        cwd = "~/Downloads/",
+      }) end, desc = "Find files (downloads)" },
 
       -- grep
       { "<Leader>fg", function() require("fzf-lua").live_grep({

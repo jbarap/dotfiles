@@ -77,6 +77,10 @@ return {
 
             -- Diffview
             DiffviewCursorLine = { bg = "#252525" },
+
+            -- LSP
+            ["@lsp.type.namespace"] = { fg = colors.palette.lotusRed4 },
+
           }
         end,
       })

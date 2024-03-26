@@ -368,10 +368,10 @@ return {
   {
     "gbprod/substitute.nvim",
     keys = {
-      { "<A-s>", function() require("substitute").operator() end, desc = "Substitute" },
-      { "<A-s><A-s>", function() require('substitute').line() end, desc = "Substitute (line)" },
-      { "<A-S>", function() require('substitute').eol() end, desc = "Substitute ('til EOL)" },
-      { "<A-s>", function() require('substitute').visual() end, mode = "x", desc = "Substitute (selection)" },
+      { "s", function() require("substitute").operator() end, desc = "Substitute" },
+      { "ss", function() require('substitute').line() end, desc = "Substitute (line)" },
+      { "S", function() require('substitute').eol() end, desc = "Substitute ('til EOL)" },
+      { "s", function() require('substitute').visual() end, mode = "x", desc = "Substitute (selection)" },
     },
     config = true,
   },

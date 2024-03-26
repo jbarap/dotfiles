@@ -50,49 +50,24 @@ return {
     },
   },
 
-  -- Quick navigation
-  {
-    "folke/flash.nvim",
-    event = "VeryLazy",
-    opts = {
-      modes = {
-        search = {
-          enabled = false,
-        },
-        char = {
-          enabled = false,
-        },
-      },
-    },
-    keys = {
-      { "s", mode = "n", function() require("flash").jump() end, desc = "Flash" },
-      { "S", mode = "n", function() require("flash").treesitter() end, desc = "Flash Treesitter" },
-      { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
-      { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-    },
-  },
-
   -- Buffer navigation
   {
-    "ThePrimeagen/harpoon",
-    requires = { {"nvim-lua/plenary.nvim"} },
-    branch = "harpoon2",
-    keys = {
-      { "<Leader>ma", function() require("harpoon"):list():append() end, desc = "Mark add" },
-      { "<Leader>mx", function() require("harpoon"):list():remove() end, desc = "Mark remove" },
-      { "<Leader>mm", function() require("harpoon").ui:toggle_quick_menu(require("harpoon"):list()) end, desc = "Mark menu" },
-      { "<Leader>mp", function() require("harpoon"):list():select(vim.v.count) end, desc = "Mark pick" },
-      { "<A-.>", function() require("harpoon"):list():next() end, desc = "Mark next" },
-      { "<A-,>", function() require("harpoon"):list():prev() end, desc = "Mark previous" },
+    "cbochs/grapple.nvim",
+    dependencies = {
+      { "nvim-tree/nvim-web-devicons", lazy = true },
     },
-    config = function ()
-      local harpoon = require("harpoon")
-      harpoon:setup({
-        settings = {
-          save_on_toggle = true,
-        },
-      })
-    end
-  },
+    cmd = "Grapple",
+    keys = {
+      { "<Leader>ma", function() require("grapple").tag() end, desc = "Mark add" },
+      { "<Leader>mx", function() require("grapple").untag() end, desc = "Mark remove" },
+      { "<Leader>mm", function() require("grapple").toggle_tags() end, desc = "Mark menu" },
+      { "<Leader>mp", function() require("grapple").select({ index = vim.v.count }) end, desc = "Mark pick" },
+      { "<A-.>", function() require("grapple").cycle("forward") end, desc = "Mark next" },
+      { "<A-,>", function() require("grapple").cycle("backward") end, desc = "Mark previous" },
+    },
+    opts = {
+      scope = "git_branch",
+    },
+  }
 
 }

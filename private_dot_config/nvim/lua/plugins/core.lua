@@ -43,6 +43,7 @@ return {
         -- lsp
         "jedi-language-server",
         "pyright",
+        "basedpyright",
         "python-lsp-server",
         "ruff-lsp",
         "gopls",
@@ -57,7 +58,7 @@ return {
         "mypy",
         "pylint",
         "ruff",
-        "luacheck",
+        "selene",
         "black",
         "isort",
         "stylua",

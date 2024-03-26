@@ -98,19 +98,22 @@ return {
   {
     "nvimtools/none-ls.nvim",
     event = { "bufreadpre", "bufnewfile" },
-    commit = "fc0f601",  -- mypy broke due to: https://github.com/nvimtools/none-ls.nvim/commit/1fa06d350a36eb0901fe8edb50b9ba4a33e467e4
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function ()
       local null_ls = require("null-ls")
 
       local sources = {
         -- linters
-        null_ls.builtins.diagnostics.luacheck.with({
-          extra_args = { "--globals", "vim", "--allow-defined" },
-        }),
+        -- null_ls.builtins.diagnostics.luacheck.with({
+        --   extra_args = { "--globals", "vim", "--allow-defined" },
+        -- }),
+        null_ls.builtins.diagnostics.selene,
         null_ls.builtins.diagnostics.staticcheck,
       }
-      if not vim.tbl_contains(require("plugins.lsp.servers").lsps_in_use, "pyright") then
+      if not (
+        vim.tbl_contains(require("plugins.lsp.servers").lsps_in_use, "pyright")
+        or vim.tbl_contains(require("plugins.lsp.servers").lsps_in_use, "basedpyright")
+      ) then
         table.insert(sources, null_ls.builtins.diagnostics.mypy.with({
           extra_args = {
             "--strict",

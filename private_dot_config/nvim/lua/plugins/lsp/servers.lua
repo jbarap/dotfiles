@@ -34,7 +34,8 @@ M.lsps_in_use = {
   "ruff_lsp",
   -- "jedi_language_server",
   -- "pylyzer",
-  "pyright",
+  -- "pyright",
+  "basedpyright",
   "lua_ls",
   "dockerls",
   "gopls",
@@ -84,6 +85,32 @@ M._lazy_configs = {
 
   pyright = function()
     return {
+      -- automatically identify virtualenvs set with pyenv
+      on_new_config = function (config, _)
+        local python_path
+        local virtual_env = vim.env.VIRTUAL_ENV or vim.env.PYENV_VIRTUAL_ENV
+        if virtual_env then
+          python_path = require("lspconfig.util").path.join(virtual_env, "bin", "python")
+        else
+          python_path = "python"
+        end
+        config.settings.python.pythonPath = python_path
+      end,
+      root_dir = function(fname)
+        return M.find_root(utils.tbl_concat(common_patterns, python_patterns), fname)
+      end
+    }
+  end,
+
+  basedpyright = function()
+    return {
+      settings = {
+        basedpyright = {
+          analysis = {
+            typeCheckingMode = "standard",
+          },
+        },
+      },
       -- automatically identify virtualenvs set with pyenv
       on_new_config = function (config, _)
         local python_path

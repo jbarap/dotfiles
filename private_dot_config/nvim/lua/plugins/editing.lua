@@ -262,7 +262,7 @@ return {
       cmp.event:on('confirm_done', function(event)
         local ok, ls_name = pcall(ls_name_from_event, event)
         -- avoid adding pairs to LSPs that already add pairs themselves
-        if ok and vim.tbl_contains({ "rust_analyzer", "lua_ls" }, ls_name) then
+        if ok and vim.tbl_contains({ "rust_analyzer", "lua_ls", "jedi_language_server" }, ls_name) then
           return
         end
 

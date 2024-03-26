@@ -10,6 +10,10 @@ return {
       current_line_blame_opts = {
         ignore_whitespace = true,
       },
+      signs = {
+        untracked = { text = '╎' },
+      },
+      attach_to_untracked = true,
       trouble = true,
       update_debounce = 1000,
       on_attach = function(bufnr)

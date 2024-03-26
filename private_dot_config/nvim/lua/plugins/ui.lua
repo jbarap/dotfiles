@@ -160,7 +160,34 @@ return {
             },
             hl = theme.fill,
           }
-        end
+        end,
+        {
+          tab_name = {
+            name_fallback = function (tabid)
+              local tabn = vim.api.nvim_tabpage_get_number(tabid)
+              if tabn == 1 then
+                return "main"
+              elseif tabn == 2 then
+                return "exploration"
+              end
+
+              local api = require("tabby.module.api")
+              local buf_name = require('tabby.feature.buf_name')
+              local wins = api.get_tab_wins(tabid)
+              local cur_win = api.get_tab_current_win(tabid)
+              local name = ''
+              if api.is_float_win(cur_win) then
+                name = '[Floating]'
+              else
+                name = buf_name.get(cur_win)
+              end
+              if #wins > 1 then
+                name = string.format('%s[%d+]', name, #wins - 1)
+              end
+              return name
+            end
+          }
+        }
       )
 
     end

@@ -1,0 +1,10 @@
+#!/bin/env bash
+
+videos=${@:-"*.mp4"}
+prefix=${COMPRESS_PREFIX:-"compressed_"}
+crf=${COMPRESS_CRF:-"28"}
+
+for file in $videos; do
+    echo ffmpeg -i "$file" -vcodec libx265 -crf "$crf" "$prefix$file"
+done
+

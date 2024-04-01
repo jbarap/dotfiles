@@ -66,6 +66,9 @@ return {
   -- Debugging
   {
     "mfussenegger/nvim-dap",
+    dependencies = {
+      { "rcarriga/nvim-dap-ui", dependencies = {"mfussenegger/nvim-dap", "nvim-neotest/nvim-nio"} },
+    },
     lazy = true,
     keys = {
       { "<Leader>db", function() require("dap").toggle_breakpoint() end, desc = "Debug breakpoint" },

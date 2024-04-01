@@ -62,8 +62,13 @@ return {
             -- Search
             Search = { bg = "#1c284a" },
             Substitute = { bg = "#4d1d28" },
+
             -- Diffs
             DiffDelete = { fg = "NONE" },
+            Added = { link = "diffAdded" },
+            Changed = { link = "diffChanged" },
+            Removed = { link = "diffRemoved" },
+
             -- Windows
             WinSeparator = { fg = "#252525" },
 

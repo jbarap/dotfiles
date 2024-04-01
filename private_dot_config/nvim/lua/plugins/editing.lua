@@ -181,6 +181,16 @@ return {
           })),
         },
 
+        completion = {
+          winblend = 10,
+        },
+
+        view = {
+          entries = {
+            follow_cursor = true,
+          },
+        },
+
         sources = {
           { name = "luasnip" },
           { name = "nvim_lua" },

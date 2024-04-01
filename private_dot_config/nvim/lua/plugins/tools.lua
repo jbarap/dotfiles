@@ -232,14 +232,25 @@ return {
       end
     end,
   },
-  {
-    "rcarriga/nvim-dap-ui",
-    lazy = true,
-    dependencies = { "mfussenegger/nvim-dap" },
-  },
 
-  -- check "benlubas/molten-nvim"
-  -- check ahmedkhalf/jupyter-nvim
+  -- Python-specific
+  -- check "benlubas/molten-nvim" and "jmbuhr/otter.nvim"
+  {
+    "GCBallesteros/jupytext.nvim",
+    event = { "BufReadCmd *.ipynb" },
+    config = function ()
+      require("jupytext").setup({
+        style = "markdown",
+        output_extension = "md",
+        force_ft = "markdown",
+      })
+
+      -- Load treesitter, as it's lazy loaded on BufReadPost, but this plugin doesn't
+      -- execute it, missing the highlights
+      require("nvim-treesitter")
+
+    end
+  },
 
   -- Tests
   {

@@ -1,3 +1,6 @@
+# general
+*.ignore.*
+
 # python
 .python-version
 **/__pycache__/*

@@ -10,6 +10,7 @@
       - zoxide
       - xclip
       - git-absorb
+      - pipx
       - autopoint  # for fswatch
       - texinfo  # for fswatch
     state: latest
@@ -19,6 +20,16 @@
     path: "{{lookup('env', 'HOME')}}/.local/bin/fd"
     src: "/usr/bin/fdfind"
     state: link
+
+# pipx
+- name: Check pipx
+  ansible.builtin.shell: command -v pipx
+  register: pipx_exists
+  ignore_errors: true
+
+# - name: Pipx setup (1/2)
+#   when: pipx_exists is failed
+#   ansible.builtin.shell: pipx ensurepath
 
 # AWS cli
 - name: Check AWS CLI

@@ -1,0 +1,30 @@
+[core]
+    pager = delta
+	excludesfile = ~/.gitignore
+[alias]
+	co = checkout
+	st = status
+	ci = commit
+	br = branch
+	last = log -1 HEAD
+	cm = commit -m
+	wt = worktree
+	clone-for-worktree = "!sh $HOME/scripts/git-clone-for-worktrees.sh"
+[branch]
+	autoSetupRebase = always
+[user]
+	email = {{ .email }}
+	name = Juan Barajas
+[fetch]
+	prune = true
+[init]
+	defaultBranch = main
+[pull]
+	rebase = true
+[rebase]
+	autoStash = true
+	updateRefs = true
+[delta]
+    navigate = true
+[interactive]
+    diffFilter = delta --color-only

@@ -1,0 +1,6 @@
+{{ $email := promptString "email" -}}
+
+data:
+    email: {{ $email | quote }}
+diff:
+  command: delta

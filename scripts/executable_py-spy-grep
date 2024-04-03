@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+PID=$(pgrep -a python | fzf | awk '{print $1}')
+
+if [[ -z $PID ]]; then
+    echo "Invalid PID, select a process to monitor"
+    exit 1
+fi
+
+sudo env "PATH=$PATH" py-spy top --pid $PID

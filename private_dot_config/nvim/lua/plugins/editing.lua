@@ -15,6 +15,23 @@ return {
           i(1),
         }),
 
+        s({ trig = "argscript", name = "Script with args" }, {
+          t({
+            "def _parse_args() -> argparse.Namespace:",
+            "\tparser = argparse.ArgumentParser()",
+            "\tparser.add_argument()",
+            "\treturn parser.parse_args()",
+            "",
+            "",
+            "def main():",
+            "\targs = _parse_args()",
+            "",
+            "",
+            "if __name__ == '__main__':",
+            "\tmain()",
+          }),
+        }),
+
         s("env", {
           t({ "#!/usr/bin/env python", "" }),
         }),

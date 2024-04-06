@@ -87,7 +87,10 @@ opt.jumpoptions = "stack"
 vim.filetype.add({
   filename = {
     ["MLproject"] = "yaml",
-  }
+  },
+  pattern = {
+    [".*%.json%.cfg"] = "json",
+  },
 })
 
 -- disable netrw

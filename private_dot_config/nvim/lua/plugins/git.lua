@@ -17,7 +17,7 @@ return {
       trouble = true,
       update_debounce = 1000,
       on_attach = function(bufnr)
-        local gs = package.loaded.gitsigns
+        local gitsigns = require('gitsigns')
 
         local function map(mode, l, r, opts)
           opts = opts or {}
@@ -27,38 +27,43 @@ return {
 
         -- Navigation
         map('n', ']h', function()
-          if vim.wo.diff then return ']h' end
-          vim.schedule(function() gs.next_hunk() end)
-          return '<Ignore>'
-        end, { expr = true, desc = "Goto next git hunk" })
+          if vim.wo.diff then
+            vim.cmd.normal({']h', bang = true})
+          else
+            gitsigns.nav_hunk('next')
+          end
+        end)
+
 
         map('n', '[h', function()
-          if vim.wo.diff then return '[h' end
-          vim.schedule(function() gs.prev_hunk() end)
-          return '<Ignore>'
-        end, { expr = true, desc = "Goto prev git hunk" })
+          if vim.wo.diff then
+            vim.cmd.normal({'[h', bang = true})
+          else
+            gitsigns.nav_hunk('prev')
+          end
+        end)
 
         -- Actions
-        map("n", '<leader>ghs', gs.stage_hunk, { desc = "Git hunk stage" })
-        map('v', '<leader>ghs', function() gs.stage_hunk {vim.fn.line('.'), vim.fn.line('v')} end, { desc = "Git hunk stage" })
-        map("n", '<leader>ghx', gs.reset_hunk, { desc = "Git hunk reset" })
-        map('v', '<leader>ghx', function() gs.reset_hunk {vim.fn.line('.'), vim.fn.line('v')} end, { desc = "Git hunk reset" })
-        map('n', '<leader>ghu', gs.undo_stage_hunk, { desc = "Git hunk undo stage" })
-        map('n', '<leader>ghX', gs.reset_buffer, { desc = "Git hunk reset (buffer)" })
-        map('n', '<leader>ghp', gs.preview_hunk, { desc = "Git hunk preview" })
-        map('n', '<leader>ghl', gs.preview_hunk_inline, { desc = "Git hunk preview (inline)" })
+        map("n", '<leader>ghs', gitsigns.stage_hunk, { desc = "Git hunk stage" })
+        map('v', '<leader>ghs', function() gitsigns.stage_hunk {vim.fn.line('.'), vim.fn.line('v')} end, { desc = "Git hunk stage" })
+        map("n", '<leader>ghx', gitsigns.reset_hunk, { desc = "Git hunk reset" })
+        map('v', '<leader>ghx', function() gitsigns.reset_hunk {vim.fn.line('.'), vim.fn.line('v')} end, { desc = "Git hunk reset" })
+        map('n', '<leader>ghu', gitsigns.undo_stage_hunk, { desc = "Git hunk undo stage" })
+        map('n', '<leader>ghX', gitsigns.reset_buffer, { desc = "Git hunk reset (buffer)" })
+        map('n', '<leader>ghp', gitsigns.preview_hunk, { desc = "Git hunk preview" })
+        map('n', '<leader>ghl', gitsigns.preview_hunk_inline, { desc = "Git hunk preview (inline)" })
         map('n', '<leader>ghh', function()
-          gs.toggle_numhl()
-          gs.toggle_linehl()
-          gs.toggle_word_diff()
-          gs.toggle_deleted()
+          gitsigns.toggle_numhl()
+          gitsigns.toggle_linehl()
+          gitsigns.toggle_word_diff()
+          gitsigns.toggle_deleted()
         end, { desc = "Git highlight toggle" })
         map('n', '<leader>ghq', function()
-          gs.setqflist("attached")
+          gitsigns.setqflist("attached")
           vim.cmd("copen")
         end, { desc = "Git hunk to quickfix" })
-        map('n', '<leader>gbl', function() gs.blame_line { full = true } end, { desc = "Git blame line" })
-        map('n', '<leader>gbb', gs.toggle_current_line_blame, { desc = "Git blame line (toggle)" })
+        map('n', '<leader>gbl', function() gitsigns.blame_line { full = true } end, { desc = "Git blame line" })
+        map('n', '<leader>gbb', gitsigns.toggle_current_line_blame, { desc = "Git blame line (toggle)" })
 
         -- Text object
         map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')

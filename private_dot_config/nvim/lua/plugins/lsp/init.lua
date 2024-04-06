@@ -150,42 +150,6 @@ return {
         border = "rounded",
       })
 
-      --          Diagnostics
-      -- ──────────────────────────────
-      vim.fn.sign_define("DiagnosticSignError", { text = "☓", texthl = "DiagnosticSignError" })
-
-      vim.fn.sign_define("DiagnosticSignWarn", { text = "!", texthl = "DiagnosticSignWarn" })
-
-      vim.fn.sign_define("DiagnosticSignInfo", { text = "ℹ", texthl = "DiagnosticSignInfo" })
-
-      vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
-
-      vim.diagnostic.config({
-        underline = true,
-        virtual_text = false,
-        signs = true,
-        update_in_insert = false,
-        severity_sort = false,
-        float = {
-          -- header = true,
-          border = "rounded",
-          format = function(diagnostic)
-            local extra_info = {}
-
-            if diagnostic.code ~= nil then
-              table.insert(extra_info, "C:" .. diagnostic.code)
-            end
-
-            if diagnostic.source ~= nil then
-              table.insert(extra_info, "S:" .. diagnostic.source)
-            end
-
-            return string.format("%s (%s)", diagnostic.message, table.concat(extra_info, ", "))
-          end,
-          suffix = "",
-        },
-      })
-
       --             LSPs
       -- ──────────────────────────────
       local language_servers = require("plugins.lsp.servers")

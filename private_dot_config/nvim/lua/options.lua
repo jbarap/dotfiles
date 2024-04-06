@@ -65,6 +65,7 @@ opt.hlsearch = true
 opt.incsearch = true
 opt.ignorecase = true
 opt.smartcase = true
+opt.wrapscan = false
 
 -- Faster update time
 opt.updatetime = 200

@@ -53,11 +53,11 @@ opt.wrap = false
 -- Line numbers
 opt.number = true
 
--- Folding (with Treesitter)
--- opt.foldmethod = "expr"
--- opt.foldexpr = "nvim_treesitter#foldexpr()"
+-- Folding
+opt.foldmethod = "expr"
+opt.foldexpr = "nvim_treesitter#foldexpr()"
 opt.foldlevel = 99
--- opt.foldenable = true  -- start with all folded
+opt.foldenable = true
 opt.foldtext = ""
 
 -- Search
@@ -100,15 +100,6 @@ vim.g.loaded_netrwPlugin = 1
 -- Diff options
 -- oddly enough, this option isn't set as a table
 opt.diffopt = "filler,vertical,closeoff,internal,indent-heuristic,algorithm:patience,linematch:60"
-
--- Folds
--- display the number of lines folded after the fold
-function _G.custom_fold_expr()
-  local line = vim.fn.getline(vim.v.foldstart)
-  local sub = vim.fn.substitute(line, [[/*|*/|{{{\d=]], "", "g")
-  return sub .. " (" .. tostring(vim.v.foldend - vim.v.foldstart) .. " lines)"
-end
-opt.foldtext = "v:lua.custom_fold_expr()"
 
 -- Highlight text on yank
 utils.create_augroup("highlight_on_yank", {

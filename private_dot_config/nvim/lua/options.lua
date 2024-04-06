@@ -58,6 +58,7 @@ opt.number = true
 -- opt.foldexpr = "nvim_treesitter#foldexpr()"
 opt.foldlevel = 99
 -- opt.foldenable = true  -- start with all folded
+opt.foldtext = ""
 
 -- Search
 opt.hlsearch = true
@@ -73,7 +74,7 @@ opt.scrolloff = 5
 opt.sidescrolloff = 4
 
 -- Fillchars
-opt.fillchars = "diff:╱"
+opt.fillchars = "diff:╱,fold: "
 opt.list = true
 -- for some reason the help menu shows ^I if tab is not explicitly "  "
 opt.listchars = { tab = "  " }

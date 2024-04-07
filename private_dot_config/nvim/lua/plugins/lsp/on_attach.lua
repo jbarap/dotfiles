@@ -42,11 +42,6 @@ return function(client, bufnr)
   buf_set_keymap("n", "<Leader>cr", vim.lsp.buf.rename, { desc = "Code rename (lsp)" })
   buf_set_keymap({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code actions" })
 
-  -- Diagnostics
-  buf_set_keymap("n", "<Leader>sl",  function() vim.diagnostic.open_float({ scope = "line", }) end, { desc = "Show diagnostics (line)" })
-  buf_set_keymap("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
-  buf_set_keymap("n", "[d", vim.diagnostic.goto_prev, { desc = "Prev diagnostic" })
-
   -- Symbols
   buf_fzf_keymap("<Leader>fs", "lsp_document_symbols", {}, { desc = "Find symbols (lsp)" })
   buf_fzf_keymap("<Leader>fS", "lsp_workspace_symbols", {}, { desc = "Find symbols (lsp Workspace)" })

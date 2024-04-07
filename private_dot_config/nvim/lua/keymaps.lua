@@ -49,6 +49,12 @@ set_keymap({ "n", "v" }, "<Leader>dp", "<cmd>diffput<CR>", { desc = "Diff put" }
 set_keymap({ "n", "v" }, "<Leader>dg", "<cmd>diffget<CR>", { desc = "Diff get" })
 set_keymap({ "n", "v" }, "<Leader>dt", "<cmd>diffthis<CR>", { desc = "Diff this" })
 
+-- Diagnostics
+set_keymap("n", "<Leader>sl",  function() vim.diagnostic.open_float({ scope = "line", }) end, { desc = "Show diagnostics (line)" })
+set_keymap("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
+set_keymap("n", "[d", vim.diagnostic.goto_prev, { desc = "Prev diagnostic" })
+
+
 -- Vim config
 set_keymap("n", "<Leader>ve", "<cmd>edit $MYVIMRC<CR>", { desc = "Vim edit config" })
 

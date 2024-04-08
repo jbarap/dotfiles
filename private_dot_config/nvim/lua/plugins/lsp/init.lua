@@ -42,7 +42,7 @@ return {
         callback = function(args)
           local buffer = args.buf
           local client = vim.lsp.get_client_by_id(args.data.client_id)
-          if client.server_capabilities.documentSymbolProvider then
+          if client ~= nil and client.server_capabilities.documentSymbolProvider then
             require("nvim-navic").attach(client, buffer)
           end
         end,
@@ -104,9 +104,6 @@ return {
 
       local sources = {
         -- linters
-        -- null_ls.builtins.diagnostics.luacheck.with({
-        --   extra_args = { "--globals", "vim", "--allow-defined" },
-        -- }),
         null_ls.builtins.diagnostics.selene,
         null_ls.builtins.diagnostics.staticcheck,
       }

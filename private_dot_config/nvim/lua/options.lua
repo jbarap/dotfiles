@@ -131,20 +131,21 @@ vim.diagnostic.config({
   update_in_insert = false,
   severity_sort = false,
   float = {
-    -- header = true,
     border = "rounded",
     format = function(diagnostic)
-      local extra_info = {}
+      local info = {
+        string.format("󰍩 [%s]", diagnostic.message)
+      }
 
       if diagnostic.code ~= nil then
-        table.insert(extra_info, string.format("C[%s]", diagnostic.code))
+        table.insert(info, string.format(" [%s]", diagnostic.code))
       end
 
       if diagnostic.source ~= nil then
-        table.insert(extra_info, string.format("🗲[%s]", diagnostic.source))
+        table.insert(info, string.format("🗲 [%s]", diagnostic.source))
       end
 
-      return string.format("%s ⮕ %s", diagnostic.message, table.concat(extra_info, ", "))
+      return table.concat(info, " ")
     end,
     suffix = "",
   },

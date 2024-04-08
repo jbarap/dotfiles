@@ -4,8 +4,8 @@ return function(client, bufnr)
     vim.keymap.set(mode, lhs, rhs, vim.tbl_extend("force", { buffer = bufnr }, opts))
   end
 
-  local function buf_set_option(...)
-    vim.api.nvim_buf_set_option(bufnr, ...)
+  local function buf_set_option(name, value)
+    vim.api.nvim_set_option_value(name, value, { buf = bufnr })
   end
 
   local function buf_fzf_keymap(lhs, function_name, function_opts, keymap_opts)

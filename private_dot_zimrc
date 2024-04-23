@@ -8,6 +8,8 @@ zmodule environment
 zmodule input
 # utility aliases, functions, and colors
 zmodule utility
+# prompt
+zmodule romkatv/powerlevel10k --use degit
 
 
 # ----------

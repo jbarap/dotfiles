@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # --------
 # Options
 # --------
@@ -68,10 +75,9 @@ source ~/.aliases.zsh
 # -----------
 
 # starship
-if command_exists "starship"; then
-    eval "$(starship init zsh)"
-fi
-# eval "$(starship init zsh)"
+# if command_exists "starship"; then
+#     eval "$(starship init zsh)"
+# fi
 
 # conda
 # TODO: clean this mess up and check for conda installation before attempting to run
@@ -164,3 +170,6 @@ fi
 
 # change autocompletion group division style
 zstyle ':completion:*' format '%F{green}-- %d --%f'
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

@@ -103,6 +103,27 @@ M._lazy_configs = {
   end,
 
   basedpyright = function()
+
+    -- highlight self as a builtin variable
+    local function ts_highlight_self(args)
+      local token = args.data.token
+      if token.type ~= "parameter" then return end
+
+      -- TODO: check performance impact of getting text so frequently
+      local text = vim.api.nvim_buf_get_text(
+        args.buf, token.line, token.start_col, token.line, token.end_col, {})[1]
+
+      if text ~= "self" then return end
+
+      vim.lsp.semantic_tokens.highlight_token(
+        token, args.buf, args.data.client_id, "@variable.builtin"
+      )
+    end
+
+    vim.api.nvim_create_autocmd("LspTokenUpdate", {
+      callback = ts_highlight_self,
+    })
+
     return {
       settings = {
         basedpyright = {
@@ -121,6 +142,7 @@ M._lazy_configs = {
           python_path = "python"
         end
         config.settings.python.pythonPath = python_path
+
       end,
       root_dir = function(fname)
         return M.find_root(utils.tbl_concat(common_patterns, python_patterns), fname)

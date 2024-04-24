@@ -12,7 +12,7 @@
   vars:
     golang_version: "1.20.4"
     hack_version: "3.003"
-    nerd_symbols_version: "3.1.1"
+    nerd_symbols_version: "3.2.1"
     bottom_version: "0.9.1"
 
   # TODO: validate that the playbook is not being ran as root

@@ -46,6 +46,11 @@ return {
         ["<C-c>"] = "actions.close",
         ["<C-r>"] = "actions.refresh",
         ["<C-y>"] = "actions.copy_entry_path",
+        ["<C-S-y>"] = { callback = function()
+          require("oil.actions").copy_entry_path.callback()
+          vim.fn.setreg("+", vim.fn.getreg(vim.v.register))
+        end,
+        desc = "Yank the filepath of the entry under the cursor to the system clipboard"},
         ["<C-q>"] = "actions.add_to_qflist",
         ["<BS>"] = "actions.parent",
         ["-"] = "actions.parent",

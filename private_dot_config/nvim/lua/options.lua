@@ -151,3 +151,9 @@ vim.diagnostic.config({
   },
 })
 
+
+-- EditorConfig
+-- don't change textwidth, and change colorcolumn instead
+require("editorconfig").properties.max_line_length = function(bufnr, val, opts)
+  vim.api.nvim_set_option_value("colorcolumn", string.format("%s", val), {})
+end

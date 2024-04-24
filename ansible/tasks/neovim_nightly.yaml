@@ -38,6 +38,6 @@
   become: true
   ansible.builtin.shell: >-
     cd {{lookup('env', 'HOME')}}/tools/neovim && 
-    make CMAKE_BUILD_TYPE=RelWithDebInfo && 
+    make CMAKE_BUILD_TYPE=Release && 
     cd build && 
     cpack -G DEB && sudo dpkg -i nvim-linux64.deb

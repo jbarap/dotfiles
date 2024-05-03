@@ -1,6 +1,8 @@
 [core]
 	pager = delta
 	excludesfile = {{ .chezmoi.homeDir }}/.gitignore
+[commit]
+	template = {{ .chezmoi.homeDir }}/.git_commit_template
 [alias]
 	co = checkout
 	st = status

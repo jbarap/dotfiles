@@ -31,6 +31,7 @@ alias pipgrep="pip list | grep -i"
 
 # mamba
 alias mm="micromamba"
+alias conda="micromamba"
 
 # viztracer
 alias vtrace="viztracer --output_file ./profile.json --min_duration 25 --max_stack_depth 25 --"

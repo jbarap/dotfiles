@@ -91,14 +91,13 @@ return {
     end
   },
 
+  -- Autopairs
   {
-    "altermo/ultimate-autopair.nvim",
-    event = "InsertEnter",
+    "echasnovski/mini.pairs",
     config = function ()
-      require('ultimate-autopair').setup({
-        { '__', '__', cmap=false, newline=false, space=true, ft={ "python" } },
+      require("mini.pairs").setup({
       })
-    end,
+    end
   },
 
   -- Autocomplete
@@ -287,24 +286,23 @@ return {
         },
       })
 
-      -- Ultimate autopairs support
-      -- while: https://github.com/altermo/ultimate-autopair.nvim/issues/5 is resolved
-      local ind = cmp.lsp.CompletionItemKind
+      -- Auto-close parenthesis on completion confirmation
+      local item_kind = cmp.lsp.CompletionItemKind
 
       local function ls_name_from_event(event)
         return event.entry.source.source.client.config.name
       end
 
-      -- Add parenthesis on completion confirmation
       cmp.event:on('confirm_done', function(event)
         local ok, ls_name = pcall(ls_name_from_event, event)
-        -- avoid adding pairs to LSPs that already add pairs themselves
+
+        -- don't add pairs to LSPs that already add pairs themselves
         if ok and vim.tbl_contains({ "rust_analyzer", "lua_ls", "jedi_language_server" }, ls_name) then
           return
         end
 
         local completion_kind = event.entry:get_completion_item().kind
-        if vim.tbl_contains({ ind.Function, ind.Method }, completion_kind) then
+        if vim.tbl_contains({ item_kind.Function, item_kind.Method }, completion_kind) then
           local left = vim.api.nvim_replace_termcodes("<Left>", true, true, true)
           vim.api.nvim_feedkeys("()" .. left, "n", false)
         end

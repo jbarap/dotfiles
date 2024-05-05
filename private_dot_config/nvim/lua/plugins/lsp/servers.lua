@@ -104,7 +104,7 @@ M._lazy_configs = {
 
   basedpyright = function()
 
-    -- highlight self as a builtin variable
+    -- highlight self and cls as a builtin variables
     local function ts_highlight_self(args)
       local token = args.data.token
       if token.type ~= "parameter" then return end
@@ -113,7 +113,7 @@ M._lazy_configs = {
       local text = vim.api.nvim_buf_get_text(
         args.buf, token.line, token.start_col, token.line, token.end_col, {})[1]
 
-      if text ~= "self" then return end
+      if text ~= "self" and text ~= "cls" then return end
 
       vim.lsp.semantic_tokens.highlight_token(
         token, args.buf, args.data.client_id, "@variable.builtin"

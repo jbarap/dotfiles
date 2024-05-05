@@ -355,14 +355,54 @@ return {
   {
     "ibhagwan/fzf-lua",
     dependencies = { "nvim-tree/nvim-web-devicons" },
+    init = function ()
+      _G._usr_fzf_files = function (func_opts)
+        local fzf_opts = {}
+        local cmd_tbl = {
+          "fd",
+          "--color=never",
+          "--type f",
+          "--follow",
+        }
+
+        if func_opts.ignore then
+          cmd_tbl[#cmd_tbl+1] = "--ignore"
+        else
+          cmd_tbl[#cmd_tbl+1] = "--no-ignore"
+        end
+
+        if func_opts.hidden then
+          cmd_tbl[#cmd_tbl+1] = "--hidden"
+        end
+
+        if func_opts.exclude then
+          if type(func_opts.exclude) == "string" then
+            func_opts.exclude = {func_opts.exclude}
+          end
+          for _, pattern in ipairs(func_opts.exclude) do
+            cmd_tbl[#cmd_tbl+1] = string.format([[--exclude '%s']], pattern)
+          end
+        end
+
+        fzf_opts.cmd = table.concat(cmd_tbl, " ")
+        require("fzf-lua").files(fzf_opts)
+      end
+    end,
     keys = {
       -- files
-      { "<Leader>ff", function() require("fzf-lua").files({
-        cmd = "fd --type f --ignore --follow",
-      }) end, desc = "Find files" },
+      { "<Leader>ff", function()
+        _G._usr_fzf_files({
+          ignore = true,
+          hidden = false,
+          pretty = false,
+        })
+      end, desc = "Find files" },
       { "<Leader>fF", function()
-        require("fzf-lua").files({
-          cmd = "fd --type f --hidden --no-ignore --follow",
+        _G._usr_fzf_files({
+          ignore = false,
+          hidden = true,
+          pretty = false,
+          exclude = { ".git/*", "**/.mypy_cache/*" },
         })
       end,
         desc = "Find files (all)",
@@ -452,16 +492,28 @@ return {
         files = {
           cwd_prompt_shorten_val = 5,
           git_icons = true,
+          formatter = "path.filename_first",
         },
 
         grep = {
           rg_glob = true,
+          formatter = "path.filename_first",
         },
 
         lsp = {
           includeDeclaration = false,
+          formatter = "path.filename_first",
         },
 
+        buffers = {
+          formatter = "path.filename_first",
+        },
+
+        tabs = {
+          formatter = "path.filename_first",
+        },
+
+        -- keymaps
         keymap = {
           builtin = {
             ["<F1>"] = "toggle-help",
@@ -471,8 +523,10 @@ return {
             ["<C-p>"] = "toggle-preview",
             ["<C-r>"] = "toggle-preview-ccw",
             ["<F6>"] = "toggle-preview-cw",
-            ["<A-j>"] = "preview-page-down",
-            ["<A-k>"] = "preview-page-up",
+            ["<A-j>"] = "preview-down",
+            ["<A-k>"] = "preview-up",
+            ["<C-d>"] = "preview-page-down",
+            ["<C-u>"] = "preview-page-up",
             ["<S-left>"] = "preview-page-reset",
           },
           fzf = {

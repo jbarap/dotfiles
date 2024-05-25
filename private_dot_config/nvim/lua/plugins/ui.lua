@@ -198,13 +198,22 @@ return {
     end
   },
 
-  -- Markdown preview
+  -- Markdown preview and render
   {
     "iamcco/markdown-preview.nvim",
     config = function ()
       vim.g.mkdp_auto_close = 0
     end,
     build = function() vim.fn["mkdp#util#install"]() end,
+  },
+  {
+    "MeanderingProgrammer/markdown.nvim",
+    ft = "markdown",
+    name = "render-markdown",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    config = function()
+      require("render-markdown").setup({})
+    end,
   },
 
   -- Statusline/Winbar

@@ -143,6 +143,8 @@ return {
         TypeParameter = ""
       }
 
+      local max_buffer_size = 1024 * 1024 -- 1 Megabyte max
+
       cmp.setup({
         mapping = {
           ["<C-p>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }),
@@ -212,10 +214,20 @@ return {
           { name = "nvim_lua" },
           { name = "nvim_lsp", keyword_length = 3 },
           { name = "path" },
+          -- buffer source is sloooow on large files
           {
             name = "buffer",
             option = {
               keyword_length = 5,
+              get_bufnrs = function()
+                local buf = vim.api.nvim_get_current_buf()
+                local byte_size = vim.api.nvim_buf_get_offset(buf, vim.api.nvim_buf_line_count(buf))
+                if byte_size > max_buffer_size then
+                  return {}
+                end
+                return { buf }
+              end,
+              indexing_interval = 1000,
             },
             keyword_length = 5,
             max_item_count = 20,

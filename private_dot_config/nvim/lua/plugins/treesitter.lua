@@ -7,11 +7,9 @@ return {
     dependencies = {
       {
         "yioneko/nvim-yati",
+        event = { "BufReadPost", "BufNewFile" },
       },
-      {
-        "yioneko/vim-tmindent",
-        config = true,
-      },
+      { "nvim-treesitter/nvim-treesitter-textobjects" },
     },
     keys = {
       { "<CR>", desc = "Increment selection" },
@@ -36,6 +34,10 @@ return {
         return is_big
       end
 
+      local function disable_for_lang(lang, black_list)
+        return vim.tbl_contains(black_list, lang)
+      end
+
       require("nvim-treesitter.configs").setup({
         ensure_installed = "all",
         ignore_install = { "comment" },
@@ -43,7 +45,10 @@ return {
         -- highlight performance is slow on big files
         highlight = {
           enable = true,
-          disable = disable_on_big_file,
+          disable = function (lang, bufnr)
+            return disable_on_big_file(lang, bufnr)
+              or disable_for_lang(lang, { "dockerfile" })
+          end,
         },
 
         playground = {
@@ -62,7 +67,7 @@ return {
           },
         },
 
-        -- indenting with TS is really slow for some reason, look for alternatives
+        -- indenting with TS is really slow for some reason
         indent = {
           enable = false,
         },
@@ -71,10 +76,7 @@ return {
           enable = true,
           disable = disable_on_big_file,
           default_lazy = true,
-          default_fallback = function(lnum, computed, bufnr)
-            -- TODO: check what tmindent returns when it fails, and add default as second fallback
-            return require("tmindent").get_indent(lnum, bufnr) + computed
-          end,
+          default_fallback = "auto",
         },
 
         textobjects = {
@@ -137,18 +139,5 @@ return {
 
       })
     end
-  },
-
-  -- Indentation module
-  {
-    "yioneko/nvim-yati",
-    event = { "BufReadPost", "BufNewFile" },
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
-  },
-  {
-    "yioneko/vim-tmindent",
-    event = { "BufReadPost", "BufNewFile" },
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
-    config = true,
   },
 }

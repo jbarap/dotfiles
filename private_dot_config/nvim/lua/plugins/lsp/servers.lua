@@ -31,7 +31,8 @@ local python_patterns = {
 }
 
 M.lsps_in_use = {
-  "ruff_lsp",
+  "ruff",
+  -- "ruff_lsp",
   -- "jedi_language_server",
   -- "pylyzer",
   -- "pyright",
@@ -205,6 +206,17 @@ M._lazy_configs = {
 
         config.settings.interpreter = python_path
       end,
+      root_dir = function(fname)
+        return M.find_root(utils.tbl_concat(common_patterns, python_patterns), fname)
+      end,
+      on_init = function(client)
+        client.server_capabilities.hoverProvider = false
+      end,
+    }
+  end,
+
+  ruff = function ()
+    return {
       root_dir = function(fname)
         return M.find_root(utils.tbl_concat(common_patterns, python_patterns), fname)
       end,

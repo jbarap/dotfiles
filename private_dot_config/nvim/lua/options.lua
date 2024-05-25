@@ -12,7 +12,7 @@ opt.splitbelow = true
 opt.splitright = true
 
 -- Resize sign column limit
-opt.signcolumn = "yes:1"
+opt.signcolumn = "yes:2"
 
 -- Color line/column
 opt.colorcolumn = "90"
@@ -32,6 +32,7 @@ opt.hidden = true
 
 -- Enable mouse support
 opt.mouse = "a"
+opt.mousemodel = "extend"
 
 -- Auto read file changes
 opt.autoread = true
@@ -71,11 +72,11 @@ opt.wrapscan = true
 opt.updatetime = 200
 
 -- Scroll offsets
-opt.scrolloff = 5
+opt.scrolloff = 10
 opt.sidescrolloff = 4
 
 -- Fillchars
-opt.fillchars = "diff:╱,fold: "
+opt.fillchars = "eob: ,fold: ,foldopen:,foldsep: ,foldclose:,diff:╱"
 opt.list = true
 -- for some reason the help menu shows ^I if tab is not explicitly "  "
 opt.listchars = { tab = "  " }
@@ -116,18 +117,17 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 -- Diagnostics
-vim.fn.sign_define("DiagnosticSignError", { text = "☓", texthl = "DiagnosticSignError" })
-
-vim.fn.sign_define("DiagnosticSignWarn", { text = "!", texthl = "DiagnosticSignWarn" })
-
-vim.fn.sign_define("DiagnosticSignInfo", { text = "ℹ", texthl = "DiagnosticSignInfo" })
-
-vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
-
 vim.diagnostic.config({
   underline = true,
   virtual_text = false,
-  signs = true,
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = "",
+      [vim.diagnostic.severity.WARN] = "󱈸",
+      [vim.diagnostic.severity.INFO] = "",
+      [vim.diagnostic.severity.HINT] = "",
+    },
+  },
   update_in_insert = false,
   severity_sort = false,
   float = {

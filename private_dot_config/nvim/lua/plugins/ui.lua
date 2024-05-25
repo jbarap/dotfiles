@@ -1,5 +1,5 @@
 return {
-  -- colorscheme
+  -- Colorscheme
   {
     "rebelot/kanagawa.nvim",
     priority = 1000,
@@ -25,7 +25,7 @@ return {
             sumiInk1 = "#111111",
             sumiInk2 = "#131313",
             sumiInk3 = "#151515", -- Normal bg
-            sumiInk4 = "#181818", -- Gutter gb
+            sumiInk4 = "#191919", -- Gutter bg
             sumiInk5 = "#23232e",
             sumiInk6 = "#54546d", -- Used as darkish fg
           },
@@ -691,4 +691,74 @@ return {
     end
   },
 
+  -- Statuscol config util
+  {
+    "luukvbaal/statuscol.nvim",
+    event = { "VimEnter" }, -- Ideally, this would be VeryLazy, but ignored ft don't work
+    branch = "0.10",
+    config = function()
+      local builtin = require('statuscol.builtin')
+      require('statuscol').setup {
+        ft_ignore = {
+          "dashboard",
+          "NeogitStatus",
+          "NeogitLogView",
+        },
+        relculright = true,
+        segments = {
+          -- gitsigns status
+          {
+            sign = {
+              namespace = { 'gitsigns' },
+              maxwidth = 1,
+              colwidth = 1,
+              auto = false,
+            },
+            click = 'v:lua.ScSa',
+          },
+          -- diagnostics
+          {
+            sign = {
+              namespace = { "diagnostic" },
+              maxwidth = 1,
+              colwidth = 2,
+              auto = false,
+            },
+            click = 'v:lua.ScSa',
+          },
+          -- other symbols
+          {
+            sign = {
+              name = { ".*" },
+              maxwidth = 2,
+              colwidth = 1,
+              auto = true,
+            },
+            click = "v:lua.ScSa",
+          },
+          -- line number
+          {
+            text = { builtin.lnumfunc, " " },
+            click = "v:lua.ScLa",
+            condition = {
+              true,
+              builtin.not_empty,
+            },
+          },
+          {
+            text = { builtin.foldfunc, " " },
+            condition = {
+              function(args)
+                return args.fold.width ~= 0
+              end,
+              function(args)
+                return args.fold.width ~= 0
+              end,
+            },
+            click = "v:lua.ScFa",
+          },
+        },
+      }
+    end
+  },
 }

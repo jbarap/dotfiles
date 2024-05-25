@@ -27,29 +27,42 @@ function M.toggle_diff_view(mode)
     elseif mode == "file" then
       vim.fn.feedkeys(":DiffviewFileHistory ")
     elseif mode == "pr" then
-      local base_branch = vim.fn.input({
-        prompt = "Base branch: ",
-        cancelreturn = "<canceled>",
-      })
 
-      if base_branch == "<canceled>" then
-        return
-      end
+      vim.ui.select({"all", "per-commit"}, {
+          prompt = "PR review mode:"
+        },
+        function(choice)
+          if not choice then
+            return
+          end
 
-      local base_commit = string.gsub(
-        vim.system(
-          {"git", "merge-base", "--fork-point", base_branch },
-          {text = true}
-        ):wait().stdout,
-        "\n",
-        ""
+          local base_ref = vim.fn.input({
+            prompt = "Base ref (nothing for origin/HEAD): ",
+            cancelreturn = "",
+          })
+
+          if base_ref == "" then
+            base_ref = "origin/HEAD"
+          end
+
+          vim.notify(
+            string.format("Viewing changes since merge-base for %s", base_ref),
+            vim.log.levels.INFO,
+            { title = "DiffView" }
+          )
+
+          local cmd
+          if choice == "all" then
+            cmd = string.format("DiffviewOpen %s...HEAD --imply-local", base_ref)
+          else
+            cmd = string.format("DiffviewFileHistory --range=%s...HEAD --right-only --no-merges", base_ref)
+          end
+          vim.cmd(cmd)
+        end
       )
-      vim.notify(
-        string.format("Viewing changes since commit %s", base_commit),
-        vim.log.levels.INFO,
-        { title = "DiffView" }
-      )
-      vim.cmd(string.format("DiffviewOpen %s..HEAD", base_commit))
+
+
+
     end
   end
   vim.cmd("echon ''")

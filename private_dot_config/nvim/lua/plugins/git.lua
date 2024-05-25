@@ -13,6 +13,7 @@ return {
       signs = {
         untracked = { text = '╎' },
       },
+      _signs_staged_enable = true,
       attach_to_untracked = true,
       trouble = true,
       update_debounce = 1000,
@@ -160,7 +161,7 @@ return {
         use_icons = true,
         file_panel = {
           win_config = {
-            position = "bottom",
+            position = "left",
             width = 35,
             height = 10,
           }
@@ -207,7 +208,7 @@ return {
           },
         },
         default_args = {
-          DiffviewOpen = { "--untracked-files=no" },
+          DiffviewOpen = { "--untracked-files=no", "--imply-local" },
           -- DiffviewFileHistory = { "--base=LOCAL" }
         },
       })

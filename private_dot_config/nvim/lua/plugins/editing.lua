@@ -400,6 +400,8 @@ return {
   -- Better folding
   {
     "kevinhwang91/nvim-ufo",
+    dependencies = "kevinhwang91/promise-async",
+    event = "VeryLazy",
     keys = {
       { "zR", function()
           require("ufo").openAllFolds()
@@ -416,20 +418,54 @@ return {
         end,
         desc = "Peek fold under cursor",
       },
+      -- For hover, see LSP's on_attach mappings
     },
-    event = "BufRead",
-    dependencies = { "kevinhwang91/promise-async" },
-    config = function ()
-      vim.o.foldmethod = "manual"
-      vim.o.foldexpr = "0"
-
+    opts = {
+      provider_selector = function(bufnr, filetype, buftype)
+        return { "treesitter", "indent" }
+      end,
+      open_fold_hl_timeout = 400,
+      close_fold_kinds_for_ft = {
+        "imports",
+      },
+      preview = {
+        win_config = {
+          border = { "", "─", "", "", "", "─", "", "" },
+          winblend = 0,
+        },
+        mappings = {
+          scrollU = "<M-k>",
+          scrollD = "<M-j>",
+          jumpTop = "[",
+          jumpBot = "]",
+        },
+      },
+    },
+    init = function()
+      -- folding options setup to make ufo work
       vim.o.foldcolumn = "0"
-      vim.o.foldlevel = 99
+      vim.o.foldlevel = 99 -- Using ufo provider needs a large value
       vim.o.foldlevelstart = 99
       vim.o.foldenable = true
+    end,
+    config = function(_, opts)
+      -- pretty handler that aligns virtual text with textwidth, colorcolumn, or win width
       local handler = function(virtText, lnum, endLnum, width, truncate)
+        local align_limiter
+        local text_width = vim.opt.textwidth["_value"]
+        local colorcolumn = vim.opt.colorcolumn["_value"]
+        if text_width ~= 0 and text_width then
+          align_limiter = text_width
+        elseif colorcolumn ~= 0 and colorcolumn then
+          align_limiter = colorcolumn
+        else
+          align_limiter = vim.api.nvim_win_get_width(0)
+        end
+
         local newVirtText = {}
-        local suffix = ('  (%d lines) '):format(endLnum - lnum)
+        local totalLines = vim.api.nvim_buf_line_count(0)
+        local foldedLines = endLnum - lnum
+        local suffix = (" 󰁂 %d %d%%"):format(foldedLines, foldedLines / totalLines * 100)
         local sufWidth = vim.fn.strdisplaywidth(suffix)
         local targetWidth = width - sufWidth
         local curWidth = 0
@@ -445,24 +481,19 @@ return {
             chunkWidth = vim.fn.strdisplaywidth(chunkText)
             -- str width returned from truncate() may less than 2nd argument, need padding
             if curWidth + chunkWidth < targetWidth then
-              suffix = suffix .. (' '):rep(targetWidth - curWidth - chunkWidth)
+              suffix = suffix .. (" "):rep(targetWidth - curWidth - chunkWidth)
             end
             break
           end
           curWidth = curWidth + chunkWidth
         end
-        table.insert(newVirtText, { suffix, 'MoreMsg' })
+        local rAlignAppndx = math.max(math.min(align_limiter, width - 1) - curWidth - sufWidth, 0)
+        suffix = (" "):rep(rAlignAppndx) .. suffix
+        table.insert(newVirtText, { suffix, "MoreMsg" })
         return newVirtText
       end
-      require("ufo").setup({
-        fold_virt_text_handler = handler,
-        preview = {
-          mappings = {
-            scrollU = "<A-k>",
-            scrollD = "<A-j>",
-          },
-        },
-      })
+      opts["fold_virt_text_handler"] = handler
+      require("ufo").setup(opts)
     end,
   },
 

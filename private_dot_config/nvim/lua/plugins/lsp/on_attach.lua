@@ -31,7 +31,19 @@ return function(client, bufnr)
 
   -- Information
   buf_set_keymap("n", "K", vim.lsp.buf.hover, { desc = "Hover information" })
-  buf_set_keymap("i", "<C-k>", vim.lsp.buf.signature_help, { desc = "Signature help" })
+  buf_set_keymap("n", "K", function()
+    -- peek folded lines if using ufo
+    local ufo = require("utils").safe_load("ufo")
+    if ufo ~= nil then
+      local winid = require("ufo").peekFoldedLinesUnderCursor()
+      if winid then
+        return
+      end
+    end
+
+    -- LSP hover if not available
+    vim.lsp.buf.hover()
+    end, { desc = "Hover information" })
 
   -- Workspace
   buf_set_keymap("n", "<Leader>wa", vim.lsp.buf.add_workspace_folder, { desc = "Workspace add folder" })

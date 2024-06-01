@@ -254,12 +254,7 @@ M._lazy_configs = {
   end,
 
   dockerls = function()
-    return {
-      -- disable semantic highlighting because it looks worse than regular
-      on_init = function(client)
-        client.server_capabilities.semanticTokensProvider = nil
-      end,
-    }
+    return {}
   end,
 
   yamlls = function()

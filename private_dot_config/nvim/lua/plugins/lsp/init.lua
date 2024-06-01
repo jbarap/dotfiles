@@ -1,4 +1,121 @@
+local set_keymap = vim.keymap.set
+local del_keymap = vim.keymap.del
+
 return {
+  -- Lsp config
+  {
+    "neovim/nvim-lspconfig",
+    event = { "BufReadPre", "BufNewFile" },
+    init = function ()
+      -- Delete unused builtin keymaps
+      del_keymap("n", "grr")  -- references
+      del_keymap("n", "grn")  -- rename
+      del_keymap("n", "gra")  -- code actions
+
+      -- Set up keymaps
+      vim.api.nvim_create_autocmd("LspAttach", {
+        callback = function(args)
+          local bufnr = args.buf
+
+          local function buf_fzf_keymap(lhs, function_name, function_opts, keymap_opts)
+            function_opts = function_opts or {}
+            keymap_opts = keymap_opts or {}
+            vim.keymap.set("n", lhs, function()
+              require("fzf-lua")[function_name](function_opts)
+            end, vim.tbl_extend("force", { buffer = bufnr }, keymap_opts))
+          end
+
+          -- Hover
+          set_keymap("n", "K", function()
+            -- peek folded lines if using ufo
+            local ufo = require("utils").safe_load("ufo")
+            if ufo ~= nil then
+              local winid = require("ufo").peekFoldedLinesUnderCursor()
+              if winid then
+                return
+              end
+            end
+            -- LSP hover as fallback
+            vim.lsp.buf.hover()
+          end, { desc = "Hover information" })
+
+          -- Signature help
+          set_keymap("i", "<C-k>", vim.lsp.buf.signature_help, { desc = "Signature help" })
+
+          -- Rename
+          set_keymap("n", "<Leader>cr", vim.lsp.buf.rename, { desc = "Code rename (lsp)" , buffer = true })
+
+          -- Code actions
+          set_keymap({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code actions", buffer = true })
+
+          -- Inlay hints
+          set_keymap("n", "<Leader>ch", function()
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({}))
+          end, { desc = "Code hints toggle", buffer = true })
+
+          -- Get/Go
+          buf_fzf_keymap("gr", "lsp_references", {}, { desc = "Goto references" })
+          buf_fzf_keymap("gd", "lsp_definitions", {}, { desc = "Goto definition" })
+          buf_fzf_keymap("gD", "lsp_declarations", {}, { desc = "Goto declaration" })
+          buf_fzf_keymap("gI", "lsp_implementations", {}, { desc = "Goto implementation" })
+          buf_fzf_keymap("gt", "lsp_typedefs", {}, { desc = "Goto type definition" })
+
+          -- Calls
+          buf_fzf_keymap("<Leader>fi", "lsp_incoming_calls", {}, { desc = "Find incoming calls (lsp)" })
+          buf_fzf_keymap("<Leader>fo", "lsp_outgoing_calls", {}, { desc = "Find outgoing calls (lsp)" })
+
+          -- Symbols
+          buf_fzf_keymap("<Leader>fs", "lsp_document_symbols", {}, { desc = "Find symbols (lsp)" })
+          buf_fzf_keymap("<Leader>fS", "lsp_workspace_symbols", {}, { desc = "Find symbols (lsp Workspace)" })
+
+          -- Set up nvim-navic integration
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+          if client ~= nil and client.server_capabilities.documentSymbolProvider then
+            require("nvim-navic").attach(client, bufnr)
+          end
+        end,
+      })
+
+      -- Handlers
+      vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+        border = "rounded",
+      })
+      vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
+        border = "rounded",
+      })
+
+    end,
+    config = function()
+      -- Set up language servers
+      local language_servers = require("plugins.lsp.servers")
+
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+
+      -- for nvim_ufo compatibility
+      capabilities.textDocument.foldingRange = {
+        dynamicRegistration = false,
+        lineFoldingOnly = true
+      }
+      -- for autocompletion with nvim-cmp
+      capabilities = vim.tbl_deep_extend("force", capabilities, require('cmp_nvim_lsp').default_capabilities())
+
+      -- initialization for all servers
+      local base_options = {
+        capabilities = capabilities,
+        flags = {
+          debounce_text_changes = 200,
+        },
+      }
+
+      for _, name in ipairs(language_servers.lsps_in_use) do
+        local server_config = language_servers.configs[name]
+        local opts = vim.tbl_extend("keep", server_config, base_options or {})
+        require("lspconfig")[name].setup(opts)
+      end
+
+    end
+  },
+
   -- Breadcrumbs
   {
     "SmiteshP/nvim-navic",
@@ -36,21 +153,9 @@ return {
         TypeParameter = ' '
       },
     },
-    init = function()
-      -- from LazyVim
-      vim.api.nvim_create_autocmd("LspAttach", {
-        callback = function(args)
-          local buffer = args.buf
-          local client = vim.lsp.get_client_by_id(args.data.client_id)
-          if client ~= nil and client.server_capabilities.documentSymbolProvider then
-            require("nvim-navic").attach(client, buffer)
-          end
-        end,
-      })
-    end
   },
 
-  -- Code tree
+  -- Symbol tree
   {
     "stevearc/aerial.nvim",
     cmd = { "AerialToggle", "AerialNavToggle" },
@@ -94,7 +199,7 @@ return {
     },
   },
 
-  -- External commands as diagnostics/code actions/completion
+  -- External tools as diagnostics/code actions/completion
   {
     "nvimtools/none-ls.nvim",
     event = { "bufreadpre", "bufnewfile" },
@@ -125,59 +230,10 @@ return {
         debounce = 200,
         debug = false,
         default_timeout = 20000,
-        on_attach = require("plugins.lsp.on_attach"),
         save_after_format = false,
         sources = sources,
       })
     end,
-  },
-
-  -- Lsp config
-  {
-    "neovim/nvim-lspconfig",
-    event = { "BufReadPre", "BufNewFile" },
-    config = function()
-      --             Handlers
-      -- ──────────────────────────────
-      vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-        border = "rounded",
-      })
-
-      vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-        border = "rounded",
-      })
-
-      --             LSPs
-      -- ──────────────────────────────
-      local language_servers = require("plugins.lsp.servers")
-
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-
-      -- for nvim_ufo compatibility
-      capabilities.textDocument.foldingRange = {
-        dynamicRegistration = false,
-        lineFoldingOnly = true
-      }
-      -- for autocompletion with nvim-cmp
-      capabilities = vim.tbl_deep_extend("force", capabilities, require('cmp_nvim_lsp').default_capabilities())
-
-      local base_options = {
-        on_attach = require("plugins.lsp.on_attach"),
-        capabilities = capabilities,
-        flags = {
-          debounce_text_changes = 200,
-        },
-      }
-
-      -- initialization for all servers
-      for _, name in ipairs(language_servers.lsps_in_use) do
-        local server_config = language_servers.configs[name]
-
-        local opts = vim.tbl_extend("keep", server_config, base_options or {})
-        require("lspconfig")[name].setup(opts)
-      end
-
-    end
   },
 
 }

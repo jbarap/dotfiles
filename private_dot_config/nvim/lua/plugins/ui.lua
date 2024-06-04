@@ -120,17 +120,17 @@ return {
       local theme = {
         fill = 'TabLineFill',
         head = "TabLine",
-        current_tab = { fg="#000000", bg="#7e9cd8", style="bold" },
+        current_tab = { fg="#000000", bg="#5776b5", style="bold" },
         tab = 'TabLine',
         win = 'TabLine',
         tail = 'TabLine',
       }
 
-      require('tabby.tabline').set(
-        function(line)
+      require("tabby").setup({
+        line = function(line)
           return {
             {
-              { ' ⧉ ', hl = theme.head },
+              { '  ', hl = theme.head },
               line.sep('', theme.head, theme.fill),
             },
             line.wins_in_tab(line.api.get_current_tab()).foreach(function(win)
@@ -161,12 +161,12 @@ return {
             end),
             {
               line.sep('', theme.tail, theme.fill),
-              { '  ', hl = theme.tail },
+              { ' 󰹍  ', hl = theme.tail },
             },
             hl = theme.fill,
           }
         end,
-        {
+        option = {
           tab_name = {
             name_fallback = function (tabid)
               local tabn = vim.api.nvim_tabpage_get_number(tabid)
@@ -191,10 +191,9 @@ return {
               end
               return name
             end
-          }
-        }
-      )
-
+          },
+        },
+      })
     end
   },
 

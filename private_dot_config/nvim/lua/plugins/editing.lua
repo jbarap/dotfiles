@@ -211,7 +211,7 @@ return {
 
         sources = {
           { name = "luasnip" },
-          { name = "nvim_lua" },
+          { name = "lazydev", group_index = 0 },
           { name = "nvim_lsp", keyword_length = 3 },
           { name = "path" },
           -- buffer source is sloooow on large files
@@ -271,7 +271,7 @@ return {
             vim_item.menu = ({
               buffer = "()",
               nvim_lsp = "()",
-              nvim_lua = "()",
+              lazydev = "()",
             })[entry.source.name]
 
             return vim_item
@@ -399,7 +399,7 @@ return {
         end,
         desc = "Peek fold under cursor",
       },
-      -- For hover, see LSP's on_attach mappings
+      -- For hover, see LSP's hover mapping
     },
     opts = {
       provider_selector = function(bufnr, filetype, buftype)

@@ -1,4 +1,3 @@
-local set_keymap = vim.keymap.set
 local del_keymap = vim.keymap.del
 
 return {
@@ -17,6 +16,13 @@ return {
         callback = function(args)
           local bufnr = args.buf
 
+          local function buf_set_keymap(lhs, rhs, opts, mode)
+            opts = type(opts) == 'string' and { desc = opts, buffer = bufnr }
+              or vim.tbl_extend('error', opts --[[@as table]], { buffer = bufnr })
+            mode = mode or 'n'
+            vim.keymap.set(mode, lhs, rhs, opts)
+          end
+
           local function buf_fzf_keymap(lhs, function_name, function_opts, keymap_opts)
             function_opts = function_opts or {}
             keymap_opts = keymap_opts or {}
@@ -26,41 +32,58 @@ return {
           end
 
           -- Hover
-          set_keymap("n", "K", function()
-            -- peek folded lines if using ufo
-            local ufo = require("utils").safe_load("ufo")
-            if ufo ~= nil then
-              local winid = require("ufo").peekFoldedLinesUnderCursor()
-              if winid then
-                return
+          buf_set_keymap("K",
+            function()
+              -- peek folded lines if using ufo
+              local ufo = require("utils").safe_load("ufo")
+              if ufo ~= nil then
+                local winid = require("ufo").peekFoldedLinesUnderCursor()
+                if winid then
+                  return
+                end
               end
-            end
-            -- LSP hover as fallback
-            vim.lsp.buf.hover()
-          end, { desc = "Hover information" })
+              -- LSP hover as fallback
+              vim.lsp.buf.hover()
+            end,
+            "Hover information"
+          )
 
           -- Signature help
-          set_keymap("i", "<C-k>", vim.lsp.buf.signature_help, { desc = "Signature help" })
+          buf_set_keymap("<C-k>",
+            vim.lsp.buf.signature_help,
+            "Signature help",
+            "i"
+          )
 
           -- Rename
-          set_keymap("n", "<Leader>cr", vim.lsp.buf.rename, { desc = "Code rename (lsp)" , buffer = true })
+          buf_set_keymap("<Leader>cr",
+            vim.lsp.buf.rename,
+            "Code rename (lsp)"
+          )
 
           -- Code actions
-          set_keymap({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code actions", buffer = true })
+          buf_set_keymap("<leader>ca",
+            vim.lsp.buf.code_action,
+            "Code actions",
+            { "n", "v" }
+          )
 
           -- Inlay hints
-          set_keymap("n", "<Leader>ch", function()
-            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({}))
-          end, { desc = "Code hints toggle", buffer = true })
+          buf_set_keymap("<Leader>ch",
+            function()
+              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({}))
+            end,
+            "Code hints toggle"
+          )
 
-          -- Get/Go
+          -- Goto
           buf_fzf_keymap("gr", "lsp_references", {}, { desc = "Goto references" })
           buf_fzf_keymap("gd", "lsp_definitions", {}, { desc = "Goto definition" })
           buf_fzf_keymap("gD", "lsp_declarations", {}, { desc = "Goto declaration" })
           buf_fzf_keymap("gI", "lsp_implementations", {}, { desc = "Goto implementation" })
           buf_fzf_keymap("gt", "lsp_typedefs", {}, { desc = "Goto type definition" })
 
-          -- Calls
+          -- Incoming/outgoing calls
           buf_fzf_keymap("<Leader>fi", "lsp_incoming_calls", {}, { desc = "Find incoming calls (lsp)" })
           buf_fzf_keymap("<Leader>fo", "lsp_outgoing_calls", {}, { desc = "Find outgoing calls (lsp)" })
 
@@ -114,6 +137,12 @@ return {
       end
 
     end
+  },
+
+  -- LuaLS setup for Neovim
+  {
+    "folke/lazydev.nvim",
+    ft = "lua",
   },
 
   -- Breadcrumbs

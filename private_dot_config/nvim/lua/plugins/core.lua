@@ -36,6 +36,7 @@ return {
     config = true,
   },
 
+  -- Dependency manager
   {
     "williamboman/mason.nvim",
     init = function ()
@@ -64,6 +65,9 @@ return {
         "stylua",
         "prettier",
         "staticcheck",
+
+        -- DAP
+        "debugpy",
       }
 
       vim.api.nvim_create_user_command("MasonInstallMissing", function()

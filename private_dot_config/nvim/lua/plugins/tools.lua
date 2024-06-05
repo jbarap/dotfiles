@@ -100,8 +100,7 @@ return {
       -- ──────────────────────────────
       dap.adapters.python_launch = {
         type = "executable",
-        command = vim.fn.expand("python3"),
-        args = { "-m", "debugpy.adapter" },
+        command = vim.fn.expand("debugpy-adapter"),  -- Installed by Mason, injected to PATH
         initialize_timeout_sec = 5,
       }
       dap.adapters.python_attach = function (callback, user_config)

@@ -51,8 +51,12 @@ set_keymap({ "n", "v" }, "<Leader>dt", "<cmd>diffthis<CR>", { desc = "Diff this"
 
 -- Diagnostics
 set_keymap("n", "<Leader>sl",  function() vim.diagnostic.open_float({ scope = "line", }) end, { desc = "Show diagnostics (line)" })
-set_keymap("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
-set_keymap("n", "[d", vim.diagnostic.goto_prev, { desc = "Prev diagnostic" })
+set_keymap("n", "]d", function()
+  vim.diagnostic.jump({count = 1, float = true})
+end, { desc = "Next diagnostic" })
+set_keymap("n", "[d", function()
+  vim.diagnostic.jump({count = -1, float = true})
+end, { desc = "Prev diagnostic" })
 
 
 -- Vim config

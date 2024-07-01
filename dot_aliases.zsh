@@ -17,6 +17,7 @@ alias cnv="chezmoi edit"
 # git
 alias g="git"
 alias wkt="git-fzf worktree list"
+alias lz="lazygit"
 
 # neovim
 alias nv="nvim"
@@ -28,6 +29,7 @@ alias ipy="ipython"
 alias jl="jupyter-lab"
 alias pt="poetry"
 alias pipgrep="pip list | grep -i"
+alias spy='sudo env "PATH=$PATH" py-spy'
 
 # mamba
 alias mm="micromamba"

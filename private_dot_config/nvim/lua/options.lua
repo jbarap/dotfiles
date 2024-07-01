@@ -23,6 +23,7 @@ opt.splitkeep = "topline"
 -- Completion menu
 opt.pumheight = 20
 opt.pumblend = 10
+opt.completeopt = "menu,menuone,noselect,popup,fuzzy"
 
 -- Set encoding
 opt.encoding = "utf-8"

@@ -9,13 +9,11 @@ return {
         hide_cursor = false,
         pre_hook = function()
           vim.opt.eventignore:append({
-            'WinScrolled',
             'CursorMoved',
           })
         end,
         post_hook = function()
           vim.opt.eventignore:remove({
-            'WinScrolled',
             'CursorMoved',
           })
         end,

@@ -92,9 +92,11 @@ return {
       local dapui = require("dapui")
 
       vim.cmd("au FileType dap-repl lua require('dap.ext.autocompl').attach()")
-      vim.fn.sign_define("DapBreakpoint", { text = "🔺", texthl = "", linehl = "", numhl = "" })
 
-      -- TODO: add a check for debugpy installation in the current environment
+      -- sign customization
+      vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "Error", linehl = "", numhl = "" })
+      vim.fn.sign_define("DapBreakpointCondition", { text = "", texthl = "Error", linehl = "", numhl = "" })
+      vim.fn.sign_define("DapBreakpointRejected", { text = "", texthl = "Error", linehl = "", numhl = "" })
 
       --          adapters
       -- ──────────────────────────────
@@ -124,9 +126,6 @@ return {
 
       -- use python_launch as the default python adapter
       dap.adapters.python = dap.adapters.python_launch
-
-      -- load launch.json
-      require('dap.ext.vscode').load_launchjs(vim.fn.getcwd() .. '/.vscode/launch.json')
 
       --          configs
       -- ──────────────────────────────
@@ -221,15 +220,6 @@ return {
         },
       })
 
-      -- load launch.json
-      require('dap.ext.vscode').load_launchjs(
-        vim.fn.getcwd() .. '/.vscode/launch.json',
-        {
-          python_launch = { "python" },
-          python_attach = { "python" },
-        }
-      )
-
       -- start ui automatically
       dap.listeners.after["event_initialized"]["custom_dapui"] = function()
         dapui.open()
@@ -298,6 +288,11 @@ return {
   {
     "numToStr/FTerm.nvim",
     cmd = "FTermToggle",
+    keys = {
+      { "<Leader>ce", function() require("plugin_utils").run_code() end, desc = "Code execute" },
+      { "<c-_>", function() require("FTerm").toggle() end, mode = { "n", "t" }, desc = "Terminal toggle" },
+      { "<Leader>gz", function() require("FTerm").run("lazygit") end, mode = { "n", "t" }, desc = "Lazygit" },
+    },
     init = function ()
       vim.api.nvim_create_user_command(
         "ChezmoiApply",
@@ -324,10 +319,6 @@ return {
       )
       vim.api.nvim_create_user_command('FTermToggle', function() require('FTerm').toggle() end, { bang = true })
     end,
-    keys = {
-      { "<Leader>ce", function() require("plugin_utils").run_code() end, desc = "Code execute" },
-      { "<c-_>", function() require("FTerm").toggle() end, mode = { "n", "t" }, desc = "Terminal toggle" },
-    },
     opts = {
       border = 'rounded',
       blend = 3,
@@ -355,7 +346,7 @@ return {
     "ibhagwan/fzf-lua",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     init = function ()
-      _G._usr_fzf_files = function (func_opts)
+      _G._usr_fzflua_files = function (func_opts)
         local fzf_opts = {}
         local cmd_tbl = {
           "fd",
@@ -390,14 +381,14 @@ return {
     keys = {
       -- files
       { "<Leader>ff", function()
-        _G._usr_fzf_files({
+        _G._usr_fzflua_files({
           ignore = true,
           hidden = false,
           pretty = false,
         })
       end, desc = "Find files" },
       { "<Leader>fF", function()
-        _G._usr_fzf_files({
+        _G._usr_fzflua_files({
           ignore = false,
           hidden = true,
           pretty = false,
@@ -467,7 +458,7 @@ return {
 
         fzf_opts = {
           ["--layout"] = "reverse",
-          ["--pointer"] = "➜ ",
+          ["--pointer"] = "➜",
         },
 
         fzf_colors = {
@@ -491,25 +482,25 @@ return {
         files = {
           cwd_prompt_shorten_val = 5,
           git_icons = true,
-          formatter = "path.filename_first",
+          formatter = "path.dirname_first",
         },
 
         grep = {
           rg_glob = true,
-          formatter = "path.filename_first",
+          formatter = "path.dirname_first",
         },
 
         lsp = {
           includeDeclaration = false,
-          formatter = "path.filename_first",
+          formatter = "path.dirname_first",
         },
 
         buffers = {
-          formatter = "path.filename_first",
+          formatter = "path.dirname_first",
         },
 
         tabs = {
-          formatter = "path.filename_first",
+          formatter = "path.dirname_first",
         },
 
         -- keymaps
@@ -551,6 +542,7 @@ return {
             ["ctrl-v"] = actions.file_vsplit,
             ["ctrl-t"] = actions.file_tabedit,
             ["ctrl-q"] = actions.file_sel_to_qf,
+            ["alt-q"] = { fn = actions.file_sel_to_qf, prefix = "select-all+accept" },
             ["alt-l"] = actions.file_sel_to_ll,
           },
           buffers = {
@@ -565,7 +557,7 @@ return {
     end,
   },
 
-  -- Perf result visualizer
+  -- Profilers
   {
     "t-troebst/perfanno.nvim",
     cmd = {
@@ -580,6 +572,50 @@ return {
         line_highlights = util.make_bg_highlights(bgcolor, "#CC3300", 10),
         vt_highlight = util.make_fg_highlight("#CC3300"),
       })
+    end
+  },
+  {
+    "stevearc/profile.nvim",
+    priority = 1001,  -- highest priority plugin, so it loads before the others
+    -- low enough overhead to not really require lazy loading
+    config = function ()
+      -- NVIM_PROFILE=1 nv to start nvim
+      -- f1 to toggle start/stop
+      -- outputs are HUGE
+      local should_profile = os.getenv("NVIM_PROFILE")
+      if should_profile then
+        require("profile").instrument_autocmds()
+        if should_profile:lower():match("^start") then
+          require("profile").start("*")
+        else
+          require("profile").instrument("*")
+        end
+      end
+
+      local function toggle_profile()
+        local prof = require("profile")
+        if prof.is_recording() then
+          prof.stop()
+          vim.ui.input({ prompt = "Save profile to:", completion = "file", default = "profile.json" }, function(filename)
+            if filename then
+              prof.export(filename)
+              vim.notify(string.format("Wrote %s", filename))
+            end
+          end)
+        else
+          prof.start("*")
+        end
+      end
+      vim.keymap.set("", "<f1>", toggle_profile)
+    end
+  },
+
+  -- Find and replace
+  {
+    "MagicDuck/grug-far.nvim",
+    cmd = "GrugFar",
+    config = function ()
+      require('grug-far').setup({})
     end
   },
 

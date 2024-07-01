@@ -73,15 +73,27 @@ return {
       ls.add_snippets("json", {
         s({ trig = "debugpython", name = "Python debug" }, {
           t({ "{" }),
+          t({ "", '\t"$schema": "https://raw.githubusercontent.com/mfussenegger/dapconfig-schema/master/dapconfig-schema.json",' }),
           t({ "", '\t"configurations": [' }),
           t({ "", '\t\t{' }),
-          t({ "", '\t\t\t"name": ' }), i(1, '"Project launch"'), t(","),
-          t({ "", '\t\t\t"type": ' }), i(2, '"python_launch"'), t(","),
-          t({ "", '\t\t\t"request": ' }), i(3, '"launch"'), t(","),
-          t({ "", '\t\t\t"program": ' }), i(4, '"${workspaceFolder}/${file}"'), t(","),
+          t({ "", '\t\t\t"name": "' }), i(1, 'Project launch'), t('",'),
+          t({ "", '\t\t\t"type": "' }), i(2, 'python_launch'), t('",'),
+          t({ "", '\t\t\t"request": "' }), i(3, 'launch'), t('",'),
+          t({ "", '\t\t\t"program": "' }), i(4, '${file}'), t('",'),
           t({ "", '\t\t\t"args": [' }), i(5), t({ "]" }), t(","),
-          t({ "", '\t\t\t"cwd": ' }), i(6, '"${workspaceFolder}"'), t(","),
-          t({ "", '\t\t\t"env": {' }), i(7), t({ "}," }),
+          t({ "", '\t\t\t"cwd": "' }), i(6, '${workspaceFolder}'), t('",'),
+          t({ "", '\t\t\t"env": {' }), i(7), t({ "}" }),
+          t({ "", '\t\t},' }),
+          t({ "", '\t\t{' }),
+          t({ "", '\t\t\t"name": "' }), i(1, 'Project attach remote'), t('",'),
+          t({ "", '\t\t\t"type": "' }), i(2, 'python_attach'), t('",'),
+          t({ "", '\t\t\t"request": "' }), i(3, 'attach'), t('",'),
+          t({ "", '\t\t\t"pathMappings": [' }),
+          t({ "", '\t\t\t\t{' }),
+          t({ "", '\t\t\t\t\t"localRoot": "${workspaceFolder}",' }),
+          t({ "", '\t\t\t\t\t"remoteRoot": "."' }),
+          t({ "", '\t\t\t\t}' }),
+          t({ "", '\t\t\t]' }),
           t({ "", '\t\t}' }),
           t({ "", '\t]' }),
           t({ "", "}" }),
@@ -446,7 +458,7 @@ return {
         local newVirtText = {}
         local totalLines = vim.api.nvim_buf_line_count(0)
         local foldedLines = endLnum - lnum
-        local suffix = (" 󰁂 %d %d%%"):format(foldedLines, foldedLines / totalLines * 100)
+        local suffix = (" 󰁂 %d (%d%%)"):format(foldedLines, foldedLines / totalLines * 100)
         local sufWidth = vim.fn.strdisplaywidth(suffix)
         local targetWidth = width - sufWidth
         local curWidth = 0

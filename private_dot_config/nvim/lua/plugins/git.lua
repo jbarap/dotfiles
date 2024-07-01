@@ -13,7 +13,7 @@ return {
       signs = {
         untracked = { text = '╎' },
       },
-      _signs_staged_enable = true,
+      signs_staged_enable = true,
       attach_to_untracked = true,
       trouble = true,
       update_debounce = 1000,
@@ -64,7 +64,7 @@ return {
           vim.cmd("copen")
         end, { desc = "Git hunk to quickfix" })
         map('n', '<leader>gbl', function() gitsigns.blame_line { full = true } end, { desc = "Git blame line" })
-        map('n', '<leader>gbb', gitsigns.toggle_current_line_blame, { desc = "Git blame line (toggle)" })
+        map('n', '<leader>gbb', gitsigns.blame, { desc = "Git blame (toggle)" })
 
         -- Text object
         map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
@@ -84,7 +84,7 @@ return {
 
   -- Main git interactions
   {
-    "TimUntersberger/neogit",
+    "NeogitOrg/neogit",
     cmd = "Neogit",
     keys = {
       { "<leader>gg", "<cmd>Neogit<CR>", desc = "Git status" }

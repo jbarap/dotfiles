@@ -93,13 +93,18 @@ return {
     end
   },
 
-  -- color picker
+  -- Color picker
   {
-    "uga-rosa/ccc.nvim",
-    cmd = { "CccPick", "CccConvert", "CccHighlighterToggle" },
-    config = true,
+    "brenoprata10/nvim-highlight-colors",
+    cmd = { "HighlightColors" },
+    config = function ()
+      require('nvim-highlight-colors').setup({
+        render = "background",
+      })
+    end,
   },
 
+  -- Tabline
   {
     "nanozuki/tabby.nvim",
     lazy = false,
@@ -197,7 +202,7 @@ return {
     end
   },
 
-  -- Markdown preview and render
+  -- Markdown preview and renderer
   {
     "iamcco/markdown-preview.nvim",
     config = function ()
@@ -206,13 +211,29 @@ return {
     build = function() vim.fn["mkdp#util#install"]() end,
   },
   {
-    "MeanderingProgrammer/markdown.nvim",
+    "OXY2DEV/markview.nvim",
     ft = "markdown",
-    name = "render-markdown",
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
-    config = function()
-      require("render-markdown").setup({})
-    end,
+    dependencies = {
+        "nvim-tree/nvim-web-devicons",
+    },
+    config = function ()
+      require("markview").setup({
+        code_block = {
+          pad_char = "",
+        },
+        list_item = {
+          marker_plus = {
+            add_padding = false,
+          },
+          marker_minus = {
+            add_padding = false,
+          },
+          marker_star = {
+            add_padding = false,
+          },
+        },
+      })
+    end
   },
 
   -- Statusline/Winbar
@@ -535,7 +556,9 @@ return {
             icon = "🕮  ",
             desc = "Find File",
             key = "f",
-            action = "FzfLua files",
+            action = function ()
+              _G._usr_fzflua_files({ ignore = true, hidden = false })
+            end,
           },
           {
             icon = "🗛  ",
@@ -573,7 +596,13 @@ return {
 
     opts = {
       select = {
-        backend = { "telescope", "builtin" },
+        backend = { "fzf_lua", "telescope", "builtin" },
+        fzf_lua = {
+          winopts = {
+            height = 0.5,
+            width = 0.5,
+          },
+        },
       },
     }
   },
@@ -581,9 +610,9 @@ return {
   -- Diagnostics window
   {
     "folke/trouble.nvim",
-    cmd = "TroubleToggle",
+    cmd = "Trouble",
     keys = {
-      { "<leader>so", "<cmd>TroubleToggle<cr>", desc = "Show diagnostics (outline)" },
+      { "<leader>so", "<cmd>Trouble diagnostics<cr>", desc = "Show diagnostics (outline)" },
     },
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {
@@ -680,6 +709,7 @@ return {
     end
   },
 
+  -- Pretty notifications
   {
     "rcarriga/nvim-notify",
     event = "VeryLazy",
@@ -709,6 +739,9 @@ return {
       require('statuscol').setup {
         ft_ignore = {
           "dashboard",
+          "starter",
+          "man",
+          "help",
           "NeogitStatus",
           "NeogitLogView",
         },
@@ -739,7 +772,7 @@ return {
             sign = {
               name = { ".*" },
               maxwidth = 2,
-              colwidth = 1,
+              colwidth = 2,
               auto = true,
             },
             click = "v:lua.ScSa",

@@ -51,3 +51,6 @@ alias compose-run="docker compose run --rm"
 
 # kubernetes
 alias mkctl="microk8s kubectl"
+
+# bat
+alias cat="batcat"

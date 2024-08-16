@@ -74,13 +74,57 @@ return {
 
   -- Commit and branch visualizer
   {
-    "rbong/vim-flog",
-    cmd = { "Flog" },
+    "isakbm/gitgraph.nvim",
+    dependencies = { "sindrets/diffview.nvim" },
     keys = {
-      { "<leader>gl", "<cmd>Flog -all<CR>", desc = "Git log" }
+      { "<leader>gl", function()
+        require("gitgraph").draw({}, { all = true, max_count = 5000 })
+      end, desc = "Git log" }
     },
-    dependencies = { "tpope/vim-fugitive" },
+    opts = {
+      symbols = {
+        merge_commit = '',
+        commit = '',
+        merge_commit_end = '',
+        commit_end = '',
+
+        -- Advanced symbols
+        GVER = '',
+        GHOR = '',
+        GCLD = '',
+        GCRD = '╭',
+        GCLU = '',
+        GCRU = '',
+        GLRU = '',
+        GLRD = '',
+        GLUD = '',
+        GRUD = '',
+        GFORKU = '',
+        GFORKD = '',
+        GRUDCD = '',
+        GRUDCU = '',
+        GLUDCD = '',
+        GLUDCU = '',
+        GLRDCL = '',
+        GLRDCR = '',
+        GLRUCL = '',
+        GLRUCR = '',
+      },
+      format = {
+        timestamp = "%H:%M:%S %d-%m-%Y",
+        fields = { "hash", "timestamp", "author", "branch_name", "tag" },
+      },
+      hooks = {
+        on_select_commit = function(commit)
+          print("selected commit:", commit.hash)
+        end,
+        on_select_range_commit = function(from, to)
+          print("selected range:", from.hash, to.hash)
+        end,
+      },
+    },
   },
+
 
   -- Main git interactions
   {
@@ -123,12 +167,10 @@ return {
 
   -- Backup git porcelain
   {
-    "tpope/vim-fugitive",
+    "echasnovski/mini-git",
     cmd = "Git",
-    init = function()
-      -- override fugitive's buffer local keymaps
-      vim.cmd("autocmd User FugitiveIndex nmap <buffer> <Tab> =")
-      vim.cmd("autocmd User FugitiveIndex nmap <buffer> q <cmd>q<CR>")
+    config = function ()
+      require("mini.git").setup({})
     end
   },
 

@@ -534,20 +534,12 @@ return {
 
   -- Quickfix improvements
   {
-    "kevinhwang91/nvim-bqf",
+    "stevearc/quicker.nvim",
     opts = {
-      auto_resize_height = false,
-      func_map = {
-        pscrollup = "<M-k>",
-        pscrolldown = "<M-j>",
-      }
-    }
-  },
-  {
-    "gabrielpoca/replacer.nvim",
-    lazy = true,
-    keys = {
-      { "<leader>qe", function() require("replacer").run() end, nowait = true, desc = "Quickfix edit" },
+      highlight = {
+        lsp = false,
+        load_buffers = false,
+      },
     },
   },
 

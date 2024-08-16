@@ -1,3 +1,5 @@
+local utils = require("utils")
+
 local set_keymap = vim.keymap.set
 
 local M = {}
@@ -36,12 +38,25 @@ function M.toggle_diff_view(mode)
             return
           end
 
+          local is_in_repo = vim.system(
+            {"git", "rev-parse", "--is-inside-work-tree"},
+            {}
+          ):wait().code == 0
+          if not is_in_repo then
+            vim.notify("Not in git repo", vim.log.levels.WARN)
+            return
+          end
+
           local base_ref = vim.fn.input({
             prompt = "Base ref (nothing for origin/HEAD): ",
-            cancelreturn = "",
+            cancelreturn = "<cancel>",
+            -- completion function defined in utils
+            completion = "custom,v:lua._usr_git_refs_completion"
           })
 
-          if base_ref == "" then
+          if base_ref == "<cancel>" then
+            return
+          elseif base_ref == "" then
             base_ref = "origin/HEAD"
           end
 
@@ -58,10 +73,15 @@ function M.toggle_diff_view(mode)
             cmd = string.format("DiffviewFileHistory --range=%s...HEAD --right-only --no-merges", base_ref)
           end
           vim.cmd(cmd)
+
+          -- change gitsigns base for all buffers
+          local ok, gitsigns = pcall(require, "gitsigns")
+          if ok then
+            gitsigns.change_base(utils.get_merge_base(base_ref), true)
+          end
+
         end
       )
-
-
 
     end
   end

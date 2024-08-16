@@ -143,6 +143,31 @@ M.get_python_executable = function(bin_name)
 end
 
 
+--          Git
+-- ──────────────────────────────
+function M.get_merge_base(branch)
+  if branch == "" then
+    branch = "origin/HEAD"
+  end
+
+  return string.gsub(
+    vim.system(
+      {"git", "merge-base", "--fork-point", branch },
+      {text = true}
+    ):wait().stdout,
+    "\n",
+    ""
+  )
+end
+
+function _G._usr_git_refs_completion (_, _, _)
+  local git_refs = vim.system(
+    {"git", "rev-parse", "--symbolic", "--branches", "--tags", "--remotes"},
+    {text = true}
+  ):wait().stdout
+  return git_refs
+end
+
 --          buffer delete
 -- ──────────────────────────────
 

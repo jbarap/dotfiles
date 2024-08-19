@@ -1,3 +1,4 @@
+# hack
 # TODO: parametrize this process with fonts as font-name: download-url
 - name: Check for Hack
   ansible.builtin.shell: test -n "$(fc-list | grep -i hack | head -n 1)"
@@ -22,6 +23,31 @@
     src: /tmp/hack_font.zip
     dest: "{{lookup('env', 'HOME')}}/.local/share/fonts/hack"
 
+# jetbrains mono
+- name: Check for Jetbrains mono
+  ansible.builtin.shell: test -n "$(fc-list | grep -i jetbrainsmono | head -n 1)"
+  register: jetbrainsmono_installed
+  ignore_errors: true
+
+- name: Download Jetbrains mono
+  when: jetbrainsmono_installed is failed
+  ansible.builtin.get_url:
+    url: https://download.jetbrains.com/fonts/JetBrainsMono-2.304.zip
+    dest: /tmp/JetBrainsMono.zip
+
+- name: Create Jetbrains mono dir
+  when: jetbrainsmono_installed is failed
+  ansible.builtin.file:
+    path: "{{lookup('env', 'HOME')}}/.local/share/fonts/jetbrains_mono"
+    state: directory
+
+- name: Unarchive Jetbrains mono dir
+  when: jetbrainsmono_installed is failed
+  ansible.builtin.unarchive:
+    src: /tmp/JetBrainsMono.zip
+    dest: "{{lookup('env', 'HOME')}}/.local/share/fonts/jetbrains_mono"
+
+# symbols
 - name: Check for Nerd Font Symbols
   ansible.builtin.shell: test -n "$(fc-list | grep -i symbolsnerdfont | head -n 1)"
   register: nerd_symbols_installed

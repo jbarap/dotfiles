@@ -152,7 +152,7 @@ function M.get_merge_base(branch)
 
   return string.gsub(
     vim.system(
-      {"git", "merge-base", "--fork-point", branch },
+      {"git", "merge-base", "HEAD", branch },
       {text = true}
     ):wait().stdout,
     "\n",

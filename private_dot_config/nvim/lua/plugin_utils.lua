@@ -77,7 +77,10 @@ function M.toggle_diff_view(mode)
           -- change gitsigns base for all buffers
           local ok, gitsigns = pcall(require, "gitsigns")
           if ok then
-            gitsigns.change_base(utils.get_merge_base(base_ref), true)
+            local merge_base = utils.get_merge_base(base_ref)
+            gitsigns.change_base(merge_base, true)
+          else
+            vim.notify("Gitsigns missing", vim.log.levels.WARN)
           end
 
         end

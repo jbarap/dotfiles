@@ -3,7 +3,10 @@ return {
   { "nvim-lua/plenary.nvim", lazy = true },
 
   -- Icons
-  { "nvim-tree/nvim-web-devicons", lazy = true },
+  {
+    "nvim-tree/nvim-web-devicons",
+    lazy = true,
+  },
 
   -- Rooter
   {
@@ -65,6 +68,7 @@ return {
         "stylua",
         "prettier",
         "staticcheck",
+        "biome",
 
         -- DAP
         "debugpy",

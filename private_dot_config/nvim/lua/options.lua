@@ -2,7 +2,7 @@ local utils = require("utils")
 local opt = vim.opt
 
 -- Variables
-vim.g.python3_host_prog = "python3"
+vim.g.python3_host_prog = vim.env.HOME .. "/venvs/neovim/bin/python"
 
 -- Colors
 opt.termguicolors = true
@@ -71,16 +71,17 @@ opt.wrapscan = true
 
 -- Faster update time
 opt.updatetime = 200
+opt.termsync = false
 
 -- Scroll offsets
 opt.scrolloff = 10
 opt.sidescrolloff = 4
 
 -- Fillchars
-opt.fillchars = "eob: ,fold: ,foldopen:,foldsep: ,foldclose:,diff:╱"
+opt.fillchars = "eob: ,fold: ,foldopen:,foldsep: ,foldclose:,diff:╱,msgsep:─"
 opt.list = true
 -- for some reason the help menu shows ^I if tab is not explicitly "  "
-opt.listchars = { tab = "  " }
+opt.listchars = { tab = "  ", space = " ", nbsp = " " }
 
 -- Jumplist
 opt.jumpoptions = "stack"
@@ -101,7 +102,7 @@ vim.g.loaded_netrwPlugin = 1
 
 -- Diff options
 -- oddly enough, this option isn't set as a table
-opt.diffopt = "filler,vertical,closeoff,internal,indent-heuristic,algorithm:patience,linematch:60"
+opt.diffopt = "filler,vertical,closeoff,internal,indent-heuristic,algorithm:patience,linematch:100"
 
 -- Highlight text on yank
 utils.create_augroup("highlight_on_yank", {

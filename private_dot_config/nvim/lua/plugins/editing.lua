@@ -106,6 +106,7 @@ return {
   -- Autopairs
   {
     "echasnovski/mini.pairs",
+    event = "InsertEnter",
     config = function ()
       require("mini.pairs").setup({
       })
@@ -114,7 +115,8 @@ return {
 
   -- Autocomplete
   {
-    "hrsh7th/nvim-cmp",
+    "iguanacucumber/magazine.nvim",
+    enabled = false,
     event = "InsertEnter",
     dependencies = {
       "hrsh7th/cmp-buffer",
@@ -334,11 +336,120 @@ return {
     end
   },
 
+  {
+    "saghen/blink.cmp",
+    enabled = true,
+    event = "InsertEnter",
+
+    -- TODO:change this if building becomes easier
+    build = "rustup run nightly cargo build --release",
+
+    config = function ()
+      require("blink.cmp").setup(
+        {
+          keymap = {
+            ["<CR>"] = { "accept", "fallback" },
+            ["<C-space>"] = { "show", "hide" },
+            ["<C-j>"] = { "select_next", "fallback" },
+            ["<C-k>"] = { "select_prev", "fallback" },
+            ["<M-k>"] = { "scroll_documentation_up", "fallback" },
+            ["<M-j>"] = { "scroll_documentation_down", "fallback" },
+            ["<Tab>"] = { "snippet_forward", "fallback" },
+            ["<S-Tab>"] = { "snippet_backward", "fallback" },
+          },
+          sources = {
+            completion = {
+              enabled_providers = { "lsp", "path", "snippets", "buffer" },
+            },
+
+            providers = {
+              lsp = {
+                name = "LSP",
+              },
+              path = {
+                name = "Path",
+              },
+              snippets = {
+                name = "Snippets",
+                score_offset = -3,
+              },
+              buffer = {
+                name = "Buffer",
+                keyword_length = 3,
+                fallback_for = { "lsp" },
+              },
+            },
+          },
+          windows = {
+            autocomplete = {
+              border = "rounded",
+              winblend = 10,
+              winhighlight = "Normal:BlinkCmpMenu,FloatBorder:FloatBorder,CursorLine:BlinkCmpMenuSelection,Search:None",
+              selection = "auto_insert",
+            },
+            documentation = {
+              border = "rounded",
+              max_width = 100,
+              auto_show = true,
+            },
+          },
+          highlight = {
+            use_nvim_cmp_as_default = true,
+          },
+          nerd_font_variant = "mono",
+          accept = {
+            -- experimental
+            auto_brackets = {
+              enabled = true,
+            },
+          },
+          trigger = {
+            signature_help = {
+              enabled = false,
+            },
+          },
+          kind_icons = {
+            Text = "󰉿",
+            Method = "󰊕",
+            Function = "󰊕",
+            Constructor = "󰒓",
+
+            Field = "󰜢",
+            Property = "󰜢",
+            Variable = "󰀫",
+
+            Class = "󰠱",
+            Interface = "",
+            Struct = "󰙅",
+            Module = "",
+
+            Unit = "󰑭",
+            Value = "󰎠",
+            Enum = "",
+            EnumMember = "",
+
+            Keyword = "󰌋",
+            Constant = "󰏿",
+
+            Snippet = "",
+            Color = "󰏘",
+            File = "󰈙",
+            Reference = "󰈇",
+            Folder = "󰉋",
+            Event = "",
+            Operator = "󰆕",
+            TypeParameter = "󰬛",
+          },
+        }
+      )
+    end,
+  },
+
   -- Surround
   {
     "echasnovski/mini.surround",
     config = function ()
-      require('mini.surround').setup({
+      require("mini.surround").setup({
         custom_surroundings = {
           -- don't insert space on opening brackets
           ["("] = { output = { left = "(", right = ")" } },
@@ -427,22 +538,6 @@ return {
       provider_selector = function(bufnr, filetype, buftype)
         return { "treesitter", "indent" }
       end,
-      open_fold_hl_timeout = 400,
-      close_fold_kinds_for_ft = {
-        "imports",
-      },
-      preview = {
-        win_config = {
-          border = { "", "─", "", "", "", "─", "", "" },
-          winblend = 0,
-        },
-        mappings = {
-          scrollU = "<M-k>",
-          scrollD = "<M-j>",
-          jumpTop = "[",
-          jumpBot = "]",
-        },
-      },
     },
     init = function()
       -- folding options setup to make ufo work
@@ -566,6 +661,7 @@ return {
         lua = { "stylua" },
         python = { "isort", "ruff_format" },
         markdown = { "prettier" },
+        json = { "biome" },
         yaml = { "yaml" },
       },
     },

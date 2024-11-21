@@ -1,16 +1,9 @@
-local del_keymap = vim.keymap.del
-
 return {
   -- Lsp config
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     init = function ()
-      -- Delete unused builtin keymaps
-      del_keymap("n", "grr")  -- references
-      del_keymap("n", "grn")  -- rename
-      del_keymap("n", "gra")  -- code actions
-
       -- Set up keymaps
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
@@ -35,37 +28,24 @@ return {
           buf_set_keymap("K",
             function()
               -- peek folded lines if using ufo
-              local ufo = require("utils").safe_load("ufo")
-              if ufo ~= nil then
-                local winid = require("ufo").peekFoldedLinesUnderCursor()
+              local ok, ufo = pcall(require, "ufo")
+              if ok then
+                local winid = ufo.peekFoldedLinesUnderCursor()
                 if winid then
                   return
                 end
               end
               -- LSP hover as fallback
-              vim.lsp.buf.hover()
+              vim.lsp.buf.hover({ border = "rounded" })
             end,
             "Hover information"
           )
 
           -- Signature help
-          buf_set_keymap("<C-k>",
+          buf_set_keymap("<C-S-k>",
             vim.lsp.buf.signature_help,
             "Signature help",
             "i"
-          )
-
-          -- Rename
-          buf_set_keymap("<Leader>cr",
-            vim.lsp.buf.rename,
-            "Code rename (lsp)"
-          )
-
-          -- Code actions
-          buf_set_keymap("<leader>ca",
-            vim.lsp.buf.code_action,
-            "Code actions",
-            { "n", "v" }
           )
 
           -- Inlay hints
@@ -77,7 +57,7 @@ return {
           )
 
           -- Goto
-          buf_fzf_keymap("gr", "lsp_references", {}, { desc = "Goto references" })
+          buf_fzf_keymap("grr", "lsp_references", {}, { desc = "Goto references" })
           buf_fzf_keymap("gd", "lsp_definitions", {}, { desc = "Goto definition" })
           buf_fzf_keymap("gD", "lsp_declarations", {}, { desc = "Goto declaration" })
           buf_fzf_keymap("gI", "lsp_implementations", {}, { desc = "Goto implementation" })
@@ -120,7 +100,10 @@ return {
         lineFoldingOnly = true
       }
       -- for autocompletion with nvim-cmp
-      capabilities = vim.tbl_deep_extend("force", capabilities, require('cmp_nvim_lsp').default_capabilities())
+      local ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+      if ok then
+        capabilities = vim.tbl_deep_extend("force", capabilities, cmp_nvim_lsp.default_capabilities())
+      end
 
       -- initialization for all servers
       local base_options = {
@@ -150,6 +133,7 @@ return {
     "SmiteshP/nvim-navic",
     lazy = true,
     opts = {
+      lazy_update_context = true,
       separator = " ➜ ",
       depth_limit = 0,
       depth_limit_indicator = "..",

@@ -3,24 +3,25 @@ return {
   {
     "karb94/neoscroll.nvim",
     event = "VeryLazy",
+    keys = {
+      { "<C-u>", function() require("neoscroll").ctrl_u({ duration = 200}) end, desc = "Scroll up" },
+      { "<C-d>", function() require("neoscroll").ctrl_d({ duration = 200}) end, desc = "Scroll down" },
+      { "zz", function() require("neoscroll").zz({ duration = 200}) end, desc = "Center view" },
+    },
     config = function()
       require("neoscroll").setup({
         cursor_scrolls_alone = true,
         hide_cursor = false,
-        pre_hook = function()
-          vim.opt.eventignore:append({
-            'CursorMoved',
-          })
-        end,
-        post_hook = function()
-          vim.opt.eventignore:remove({
-            'CursorMoved',
-          })
-        end,
-      })
-      require("neoscroll.config").set_mappings({
-        ["<C-u>"] = { "scroll", { "-vim.wo.scroll", "true", "200" } },
-        ["<C-d>"] = { "scroll", { "vim.wo.scroll", "true", "200" } },
+        -- pre_hook = function()
+        --   vim.opt.eventignore:append({
+        --     'CursorMoved',
+        --   })
+        -- end,
+        -- post_hook = function()
+        --   vim.opt.eventignore:remove({
+        --     'CursorMoved',
+        --   })
+        -- end,
       })
     end
   },

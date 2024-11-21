@@ -4,9 +4,6 @@ return {
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" },
     opts = {
-      watch_gitdir = {
-        interval = 2000,
-      },
       current_line_blame_opts = {
         ignore_whitespace = true,
       },
@@ -16,7 +13,6 @@ return {
       signs_staged_enable = true,
       attach_to_untracked = true,
       trouble = true,
-      update_debounce = 1000,
       on_attach = function(bufnr)
         local gitsigns = require('gitsigns')
 
@@ -140,12 +136,21 @@ return {
         diffview = true,
         fzf_lua = true,
       },
-      graph_style = "unicode",
+      graph_style = "kitty",
       mappings = {
         finder = {
           ["<c-j>"] = "Next",
           ["<c-k>"] = "Previous",
         },
+      },
+      highlight = {
+        red = "#E06C75",
+        orange = "#ffcb6b",
+        yellow = "#FFE082",
+        green = "#C3E88D",
+        cyan = "#89ddff",
+        blue = "#82AAFF",
+        purple = "#C792EA",
       },
       status = {
         recent_commit_count = 5,

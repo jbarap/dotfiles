@@ -2,6 +2,7 @@ local set_keymap = vim.keymap.set
 
 -- Set mapleader to space
 vim.g.mapleader = " "
+vim.g.maplocalleader = ","
 
 --        Mappings
 -- ──────────────────────────────
@@ -12,7 +13,6 @@ set_keymap("i", "JK", "<ESC>", { desc = "Exit insert mode" })
 -- Indent
 set_keymap("i", "<S-Tab>", "<C-d>", { desc = "Remove an indent level", remap = true })
 
-set_keymap("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit insert mode from terminal" })
 
 -- Buffer nagivation
 set_keymap("n", "<Leader>b.", "<cmd>bnext<CR>", { desc = "Buffer next" })
@@ -40,8 +40,6 @@ set_keymap("n", "<C-k>", "<cmd>wincmd k<CR>", { desc = "Win move up" })
 set_keymap("n", "<C-l>", "<cmd>wincmd l<CR>", { desc = "Win move to right" })
 
 -- QuickFix
-set_keymap("n", "]q", "<cmd>cn<CR>", { desc = "Quickfix next" })
-set_keymap("n", "[q", "<cmd>cp<CR>", { desc = "Quickfix prev" })
 set_keymap("n", "<Leader>qq", require("utils").toggle_quickfix, { desc = "Quickfix toggle" })
 
 -- Diff

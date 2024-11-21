@@ -35,6 +35,9 @@ return {
       columns = {
         "icon",
       },
+      lsp_file_methods = {
+        timeout_ms = 5000,
+      },
       delete_to_trash = false,
       keymaps = {
         ["g?"] = "actions.show_help",
@@ -290,8 +293,9 @@ return {
     cmd = "FTermToggle",
     keys = {
       { "<Leader>ce", function() require("plugin_utils").run_code() end, desc = "Code execute" },
+      -- two mappings for toggle to allow support for kitty and tmux (which interpret keys differently)
       { "<c-_>", function() require("FTerm").toggle() end, mode = { "n", "t" }, desc = "Terminal toggle" },
-      { "<Leader>gz", function() require("FTerm").run("lazygit") end, mode = { "n", "t" }, desc = "Lazygit" },
+      { "<c-/>", function() require("FTerm").toggle() end, mode = { "n", "t" }, desc = "Terminal toggle" },
     },
     init = function ()
       vim.api.nvim_create_user_command(
@@ -338,8 +342,30 @@ return {
     end,
     cmd = { "ARshowConf", "ARsyncUp", "ARsyncDown" },
   },
-  -- check: https://github.com/chipsenkbeil/distant.nvim
-  -- check: https://github.com/miversen33/netman.nvim
+  {
+    "amitds1997/remote-nvim.nvim",
+    cmd = { "RemoteStart", "RemoteStop", "RemoteCleanup", "RemoteConfigDel", "RemoteInfo" },
+    enabled = false,
+    -- version = "*",
+    version = "v0.3.9",  -- to mitigate bug where config copying fails
+    dependencies = {
+      "nvim-lua/plenary.nvim", -- For standard functions
+      "MunifTanjim/nui.nvim", -- To build the plugin UI
+      "nvim-telescope/telescope.nvim", -- For picking b/w different remote methods
+    },
+    opts = {
+      client_callback = function(port, workspace_config)
+        local cmd = ("kitty -e nvim --server localhost:%s --remote-ui"):format(port)
+        vim.fn.jobstart(cmd, {
+          detach = true,
+          on_exit = function(job_id, exit_code, event_type)
+            -- This function will be called when the job exits
+            print("Client", job_id, "exited with code", exit_code, "Event type:", event_type)
+          end,
+        })
+      end,
+    },
+  },
 
   -- Fzf lua
   {
@@ -618,5 +644,46 @@ return {
       require('grug-far').setup({})
     end
   },
+
+  {
+    "olimorris/codecompanion.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      "hrsh7th/nvim-cmp", -- Optional: For using slash commands and variables in the chat buffer
+      "nvim-telescope/telescope.nvim", -- Optional: For using slash commands
+    },
+    cmd = { "CodeCompanionChat", "CodeCompanion", "CodeCompanionActions" },
+    opts = {
+      strategies = {
+        chat = {
+          adapter = "ollama",
+        },
+        inline = {
+          adapter = "ollama",
+        },
+        agent = {
+          adapter = "ollama",
+        },
+      },
+      display = {
+        chat = {
+          render_headers = false,
+        },
+      },
+      adapters = {
+        ollama = function ()
+          return require("codecompanion.adapters").extend("ollama", {
+            schema = {
+              model = {
+                default = "qwen2.5-coder",
+              },
+            },
+          })
+        end,
+      },
+    },
+  },
+
 
 }

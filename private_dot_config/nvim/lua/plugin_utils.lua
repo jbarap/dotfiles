@@ -22,8 +22,13 @@ function M.toggle_diff_view(mode)
 
   if is_diffview then
     vim.cmd("silent DiffviewClose")
-
   else
+    if buf_type == "snacks_dashboard" then
+      -- Snacks dashboard will hide many UI elements, and only restores them once its
+      -- buffer is deleted, so we delete it manually to restore them
+      vim.cmd("bd")
+    end
+
     if mode == "diff" then
       vim.fn.feedkeys(":DiffviewOpen ")
     elseif mode == "file" then

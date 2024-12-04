@@ -5,8 +5,20 @@ return {
     dependencies = { "nvim-tree/nvim-web-devicons" },
     cmd = "Oil",
     keys = {
-      { "<BS>", function() require("oil").open() end, desc = "Open buffer's directory" },
-      { "-", function() require("oil").open() end, desc = "Open buffer's directory" },
+      {
+        "<BS>",
+        function()
+          require("oil").open()
+        end,
+        desc = "Open buffer's directory",
+      },
+      {
+        "-",
+        function()
+          require("oil").open()
+        end,
+        desc = "Open buffer's directory",
+      },
     },
     -- lazy setup: https://github.com/folke/lazy.nvim/issues/533#issuecomment-1489174249
     init = function()
@@ -49,11 +61,13 @@ return {
         ["<C-c>"] = "actions.close",
         ["<C-r>"] = "actions.refresh",
         ["<C-y>"] = "actions.copy_entry_path",
-        ["<C-S-y>"] = { callback = function()
-          require("oil.actions").copy_entry_path.callback()
-          vim.fn.setreg("+", vim.fn.getreg(vim.v.register))
-        end,
-        desc = "Yank the filepath of the entry under the cursor to the system clipboard"},
+        ["<C-S-y>"] = {
+          callback = function()
+            require("oil.actions").copy_entry_path.callback()
+            vim.fn.setreg("+", vim.fn.getreg(vim.v.register))
+          end,
+          desc = "Yank the filepath of the entry under the cursor to the system clipboard",
+        },
         ["<C-q>"] = "actions.add_to_qflist",
         ["<BS>"] = "actions.parent",
         ["-"] = "actions.parent",
@@ -75,22 +89,84 @@ return {
   {
     "mfussenegger/nvim-dap",
     dependencies = {
-      { "rcarriga/nvim-dap-ui", dependencies = {"mfussenegger/nvim-dap", "nvim-neotest/nvim-nio"} },
+      { "rcarriga/nvim-dap-ui", dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" } },
     },
     lazy = true,
     keys = {
-      { "<Leader>db", function() require("dap").toggle_breakpoint() end, desc = "Debug breakpoint" },
-      { "<Leader>dc", function() require("dap").continue() end, desc = "Debug continue (or start)" },
-      { "<Leader>dj", function() require("dap").step_over() end, desc = "Debug step over" },
-      { "<Leader>di", function() require("dapui").eval() end, mode = { "n", "v" }, desc = "Debug inspect" },
-      { "<Leader>do", function() require("dapui").float_element() end, desc = "Debug open float" },
-      { "<Leader>dl", function() require("dap").step_into() end, desc = "Debug step into" },
-      { "<Leader>dh", function() require("dap").step_out() end, desc = "Debug step out" },
-      { "<Leader>dr", function() require("dap").repl.open() end, desc = "Debug repl" },
-      { "<Leader>dz", function() require("dap").run_to_cursor() end, desc = "Debug run to cursor" },
-      { "<Leader>ds", function() require("dap").close(); require("dapui").close() end, desc = "Debug stop (and close)" },
+      {
+        "<Leader>db",
+        function()
+          require("dap").toggle_breakpoint()
+        end,
+        desc = "Debug breakpoint",
+      },
+      {
+        "<Leader>dc",
+        function()
+          require("dap").continue()
+        end,
+        desc = "Debug continue (or start)",
+      },
+      {
+        "<Leader>dj",
+        function()
+          require("dap").step_over()
+        end,
+        desc = "Debug step over",
+      },
+      {
+        "<Leader>di",
+        function()
+          require("dapui").eval()
+        end,
+        mode = { "n", "v" },
+        desc = "Debug inspect",
+      },
+      {
+        "<Leader>do",
+        function()
+          require("dapui").float_element()
+        end,
+        desc = "Debug open float",
+      },
+      {
+        "<Leader>dl",
+        function()
+          require("dap").step_into()
+        end,
+        desc = "Debug step into",
+      },
+      {
+        "<Leader>dh",
+        function()
+          require("dap").step_out()
+        end,
+        desc = "Debug step out",
+      },
+      {
+        "<Leader>dr",
+        function()
+          require("dap").repl.open()
+        end,
+        desc = "Debug repl",
+      },
+      {
+        "<Leader>dz",
+        function()
+          require("dap").run_to_cursor()
+        end,
+        desc = "Debug run to cursor",
+      },
+      {
+        "<Leader>ds",
+        function()
+          require("dap").close()
+          require("dapui").close()
+        end,
+        desc = "Debug stop (and close)",
+      },
     },
-    config = function ()
+    config = function()
       local dap = require("dap")
       local dapui = require("dapui")
 
@@ -105,11 +181,11 @@ return {
       -- ──────────────────────────────
       dap.adapters.python_launch = {
         type = "executable",
-        command = vim.fn.expand("debugpy-adapter"),  -- Installed by Mason, injected to PATH
+        command = vim.fn.expand("debugpy-adapter"), -- Installed by Mason, injected to PATH
         initialize_timeout_sec = 5,
       }
-      dap.adapters.python_attach = function (callback, user_config)
-        local address = vim.fn.input({ prompt = "Address (default 127.0.0.1:5678): "})
+      dap.adapters.python_attach = function(callback, user_config)
+        local address = vim.fn.input({ prompt = "Address (default 127.0.0.1:5678): " })
         local host
         local port
 
@@ -138,8 +214,8 @@ return {
           type = "python_launch",
           request = "launch",
           program = "${file}",
-          args = function ()
-            local args = vim.fn.input({ prompt = "Script args: "})
+          args = function()
+            local args = vim.fn.input({ prompt = "Script args: " })
             args = vim.fn.split(args, " ")
             return args
           end,
@@ -157,8 +233,8 @@ return {
             name = string.gsub(name, "\\", ".")
             return name
           end,
-          args = function ()
-            local args = vim.fn.input({ prompt = "Module args: "})
+          args = function()
+            local args = vim.fn.input({ prompt = "Module args: " })
             args = vim.fn.split(args, " ")
             return args
           end,
@@ -190,7 +266,7 @@ return {
               { id = "scopes", size = 0.4 },
               { id = "breakpoints", size = 0.1 },
               { id = "stacks", size = 0.2 },
-              { id = "watches" , size = 0.2 },
+              { id = "watches", size = 0.2 },
             },
             size = 40,
             position = "left",
@@ -201,7 +277,7 @@ return {
             },
             size = 10,
             position = "bottom",
-          }
+          },
         },
         controls = {
           enabled = true,
@@ -235,7 +311,7 @@ return {
   {
     "GCBallesteros/jupytext.nvim",
     event = { "BufReadCmd *.ipynb" },
-    config = function ()
+    config = function()
       require("jupytext").setup({
         style = "markdown",
         output_extension = "md",
@@ -245,8 +321,7 @@ return {
       -- Load treesitter, as it's lazy loaded on BufReadPost, but this plugin doesn't
       -- execute it, missing the highlights
       require("nvim-treesitter")
-
-    end
+    end,
   },
 
   -- Tests
@@ -255,20 +330,86 @@ return {
     lazy = true,
     keys = {
       -- run
-      { "<Leader>Trf", function() require("neotest").run.run(vim.fn.expand("%")) end, desc = "Test run (file)" },
-      { "<Leader>Trn", function() require("neotest").run.run() end, desc = "Test run (nearest)" },
-      { "<Leader>Trs", function() require("neotest").run.run({ suite = true }) end, desc = "Test run (full suite)" },
-      { "<Leader>Trl", function() require("neotest").run.run_last() end, desc = "Test run (last)" },
+      {
+        "<Leader>Trf",
+        function()
+          require("neotest").run.run(vim.fn.expand("%"))
+        end,
+        desc = "Test run (file)",
+      },
+      {
+        "<Leader>Trn",
+        function()
+          require("neotest").run.run()
+        end,
+        desc = "Test run (nearest)",
+      },
+      {
+        "<Leader>Trs",
+        function()
+          require("neotest").run.run({ suite = true })
+        end,
+        desc = "Test run (full suite)",
+      },
+      {
+        "<Leader>Trl",
+        function()
+          require("neotest").run.run_last()
+        end,
+        desc = "Test run (last)",
+      },
       -- debug
-      { "<Leader>Tdf", function() require("neotest").run.run({ vim.fn.expand("%"), strategy = "dap" }) end, desc = "Test debug (file)" },
-      { "<Leader>Tdn", function() require("neotest").run.run({ strategy = "dap" }) end, desc = "Test debug (nearest)" },
-      { "<Leader>Tds", function() require("neotest").run.run({ suite = true, strategy = "dap" }) end, desc = "Test debug (full suite)" },
+      {
+        "<Leader>Tdf",
+        function()
+          require("neotest").run.run({ vim.fn.expand("%"), strategy = "dap" })
+        end,
+        desc = "Test debug (file)",
+      },
+      {
+        "<Leader>Tdn",
+        function()
+          require("neotest").run.run({ strategy = "dap" })
+        end,
+        desc = "Test debug (nearest)",
+      },
+      {
+        "<Leader>Tds",
+        function()
+          require("neotest").run.run({ suite = true, strategy = "dap" })
+        end,
+        desc = "Test debug (full suite)",
+      },
       -- stop
-      { "<Leader>Ts", function() require("neotest").run.stop() end, desc = "Test stop" },
+      {
+        "<Leader>Ts",
+        function()
+          require("neotest").run.stop()
+        end,
+        desc = "Test stop",
+      },
       -- output
-      { "<Leader>Too", function() require("neotest").output.open({ enter = true }) end, desc = "Test output open" },
-      { "<Leader>Top", function() require("neotest").output_panel.toggle() end, desc = "Test output panel" },
-      { "<Leader>Tos", function() require("neotest").summary.toggle() end, desc = "Test output summary" },
+      {
+        "<Leader>Too",
+        function()
+          require("neotest").output.open({ enter = true })
+        end,
+        desc = "Test output open",
+      },
+      {
+        "<Leader>Top",
+        function()
+          require("neotest").output_panel.toggle()
+        end,
+        desc = "Test output panel",
+      },
+      {
+        "<Leader>Tos",
+        function()
+          require("neotest").summary.toggle()
+        end,
+        desc = "Test output summary",
+      },
     },
     dependencies = {
       "nvim-lua/plenary.nvim",
@@ -284,7 +425,7 @@ return {
           }),
         },
       })
-    end
+    end,
   },
 
   -- Terminal
@@ -292,41 +433,60 @@ return {
     "numToStr/FTerm.nvim",
     cmd = "FTermToggle",
     keys = {
-      { "<Leader>ce", function() require("plugin_utils").run_code() end, desc = "Code execute" },
-      -- two mappings for toggle to allow support for kitty and tmux (which interpret keys differently)
-      { "<c-_>", function() require("FTerm").toggle() end, mode = { "n", "t" }, desc = "Terminal toggle" },
-      { "<c-/>", function() require("FTerm").toggle() end, mode = { "n", "t" }, desc = "Terminal toggle" },
-    },
-    init = function ()
-      vim.api.nvim_create_user_command(
-        "ChezmoiApply",
+      {
+        "<Leader>ce",
         function()
-          local dir_is_managed = vim.system({
-            "sh", "-c", 'test -n "$(chezmoi managed $(chezmoi target-path .))"'
-          }):wait().code == 0
+          require("plugin_utils").run_code()
+        end,
+        desc = "Code execute",
+      },
+      -- two mappings for toggle to allow support for kitty and tmux (which interpret keys differently)
+      {
+        "<c-_>",
+        function()
+          require("FTerm").toggle()
+        end,
+        mode = { "n", "t" },
+        desc = "Terminal toggle",
+      },
+      {
+        "<c-/>",
+        function()
+          require("FTerm").toggle()
+        end,
+        mode = { "n", "t" },
+        desc = "Terminal toggle",
+      },
+    },
+    init = function()
+      vim.api.nvim_create_user_command("ChezmoiApply", function()
+        local dir_is_managed = vim
+          .system({
+            "sh",
+            "-c",
+            'test -n "$(chezmoi managed $(chezmoi target-path .))"',
+          })
+          :wait().code == 0
 
-          -- Fallback on applying on a file-basis
-          local target = "."
-          if not dir_is_managed then
-            target = vim.fn.expand("%")
-          end
+        -- Fallback on applying on a file-basis
+        local target = "."
+        if not dir_is_managed then
+          target = vim.fn.expand("%")
+        end
 
-          target = string.gsub(
-            vim.system({"chezmoi", "target-path", target }, {text = true}):wait().stdout,
-            "\n",
-            ""
-          )
-          vim.notify(string.format("Applying changes to %s", target), vim.log.levels.INFO, { title = "Chezmoi" })
+        target = string.gsub(vim.system({ "chezmoi", "target-path", target }, { text = true }):wait().stdout, "\n", "")
+        vim.notify(string.format("Applying changes to %s", target), vim.log.levels.INFO, { title = "Chezmoi" })
 
-          require('FTerm').scratch({ cmd = string.format("chezmoi apply -v %s", target) })
-        end, {}
-      )
-      vim.api.nvim_create_user_command('FTermToggle', function() require('FTerm').toggle() end, { bang = true })
+        require("FTerm").scratch({ cmd = string.format("chezmoi apply -v %s", target) })
+      end, {})
+      vim.api.nvim_create_user_command("FTermToggle", function()
+        require("FTerm").toggle()
+      end, { bang = true })
     end,
     opts = {
-      border = 'rounded',
+      border = "rounded",
       blend = 3,
-      dimensions  = {
+      dimensions = {
         height = 0.9,
         width = 0.9,
       },
@@ -336,7 +496,7 @@ return {
   -- Remote
   {
     "kenn7/vim-arsync",
-    init = function ()
+    init = function()
       vim.keymap.set("n", "<Leader>rP", "<cmd>ARsyncUp<CR>", { desc = "Remote push (rsync)" })
       vim.keymap.set("n", "<Leader>rp", "<cmd>ARsyncDown<CR>", { desc = "Remote pull (rsync)" })
     end,
@@ -347,7 +507,7 @@ return {
     cmd = { "RemoteStart", "RemoteStop", "RemoteCleanup", "RemoteConfigDel", "RemoteInfo" },
     enabled = false,
     -- version = "*",
-    version = "v0.3.9",  -- to mitigate bug where config copying fails
+    version = "v0.3.9", -- to mitigate bug where config copying fails
     dependencies = {
       "nvim-lua/plenary.nvim", -- For standard functions
       "MunifTanjim/nui.nvim", -- To build the plugin UI
@@ -371,8 +531,8 @@ return {
   {
     "ibhagwan/fzf-lua",
     dependencies = { "nvim-tree/nvim-web-devicons" },
-    init = function ()
-      _G._usr_fzflua_files = function (func_opts)
+    init = function()
+      _G._usr_fzflua_files = function(func_opts)
         local fzf_opts = {}
         local cmd_tbl = {
           "fd",
@@ -382,21 +542,21 @@ return {
         }
 
         if func_opts.ignore then
-          cmd_tbl[#cmd_tbl+1] = "--ignore"
+          cmd_tbl[#cmd_tbl + 1] = "--ignore"
         else
-          cmd_tbl[#cmd_tbl+1] = "--no-ignore"
+          cmd_tbl[#cmd_tbl + 1] = "--no-ignore"
         end
 
         if func_opts.hidden then
-          cmd_tbl[#cmd_tbl+1] = "--hidden"
+          cmd_tbl[#cmd_tbl + 1] = "--hidden"
         end
 
         if func_opts.exclude then
           if type(func_opts.exclude) == "string" then
-            func_opts.exclude = {func_opts.exclude}
+            func_opts.exclude = { func_opts.exclude }
           end
           for _, pattern in ipairs(func_opts.exclude) do
-            cmd_tbl[#cmd_tbl+1] = string.format([[--exclude '%s']], pattern)
+            cmd_tbl[#cmd_tbl + 1] = string.format([[--exclude '%s']], pattern)
           end
         end
 
@@ -406,58 +566,130 @@ return {
     end,
     keys = {
       -- files
-      { "<Leader>ff", function()
-        _G._usr_fzflua_files({
-          ignore = true,
-          hidden = false,
-          pretty = false,
-        })
-      end, desc = "Find files" },
-      { "<Leader>fF", function()
-        _G._usr_fzflua_files({
-          ignore = false,
-          hidden = true,
-          pretty = false,
-          exclude = { ".git/*", "**/.mypy_cache/*" },
-        })
-      end,
+      {
+        "<Leader>ff",
+        function()
+          _G._usr_fzflua_files({
+            ignore = true,
+            hidden = false,
+            pretty = false,
+          })
+        end,
+        desc = "Find files",
+      },
+      {
+        "<Leader>fF",
+        function()
+          _G._usr_fzflua_files({
+            ignore = false,
+            hidden = true,
+            pretty = false,
+            exclude = { ".git/*", "**/.mypy_cache/*" },
+          })
+        end,
         desc = "Find files (all)",
       },
-      { "<Leader>fd", function() require("fzf-lua").files({
-        cwd = "~/Downloads/",
-      }) end, desc = "Find files (downloads)" },
+      {
+        "<Leader>fd",
+        function()
+          require("fzf-lua").files({
+            cwd = "~/Downloads/",
+          })
+        end,
+        desc = "Find files (downloads)",
+      },
 
       -- grep
-      { "<Leader>fg", function() require("fzf-lua").live_grep({
-        cmd = "rg --column --line-number --no-heading --color=always --smart-case --max-columns=4096",
-      }) end, desc = "Find grep" },
-      { "<Leader>fG", function()
-        require("fzf-lua").live_grep({
-        cmd = "rg --column --line-number --no-heading --color=always --smart-case --max-columns=4096 " ..
-          "--no-ignore --hidden",
-        })
-      end, desc = "Find grep (all)" },
+      {
+        "<Leader>fg",
+        function()
+          require("fzf-lua").live_grep({
+            cmd = "rg --column --line-number --no-heading --color=always --smart-case --max-columns=4096",
+          })
+        end,
+        desc = "Find grep",
+      },
+      {
+        "<Leader>fG",
+        function()
+          require("fzf-lua").live_grep({
+            cmd = "rg --column --line-number --no-heading --color=always --smart-case --max-columns=4096 "
+              .. "--no-ignore --hidden",
+          })
+        end,
+        desc = "Find grep (all)",
+      },
 
-      { "<Leader>f<C-g>", function() require("plugin_utils").rg_dir() end, desc = "Find grep (in dir)" },
-      { "<Leader>fW", function() require("fzf-lua").grep_cword() end,
+      {
+        "<Leader>f<C-g>",
+        function()
+          require("plugin_utils").rg_dir()
+        end,
+        desc = "Find grep (in dir)",
+      },
+      {
+        "<Leader>fW",
+        function()
+          require("fzf-lua").grep_cword()
+        end,
         desc = "Find word under cursor (in project)",
         mode = { "n" },
       },
-      { "<Leader>fW", function() require("fzf-lua").grep_visual() end,
+      {
+        "<Leader>fW",
+        function()
+          require("fzf-lua").grep_visual()
+        end,
         desc = "Find word under cursor (in project)",
         mode = { "v" },
       },
 
       -- git
-      { "<Leader>gff", function() require("fzf-lua").git_files() end, desc = "Git find files" },
-      { "<Leader>gfc", function() require("fzf-lua").git_bcommits() end, desc = "Git find commits (buffer)" },
-      { "<Leader>gfC", function() require("fzf-lua").git_commits() end, desc = "Git find commits (all)" },
-      { "<Leader>gfb", function() require("fzf-lua").git_branches() end, desc = "Git find branches (all)" },
+      {
+        "<Leader>gff",
+        function()
+          require("fzf-lua").git_files()
+        end,
+        desc = "Git find files",
+      },
+      {
+        "<Leader>gfc",
+        function()
+          require("fzf-lua").git_bcommits()
+        end,
+        desc = "Git find commits (buffer)",
+      },
+      {
+        "<Leader>gfC",
+        function()
+          require("fzf-lua").git_commits()
+        end,
+        desc = "Git find commits (all)",
+      },
+      {
+        "<Leader>gfb",
+        function()
+          require("fzf-lua").git_branches()
+        end,
+        desc = "Git find branches (all)",
+      },
 
       -- extra
-      { "<Leader>fb", function() require("fzf-lua").buffers({ sort_lastused=true }) end, desc = "Find buffers" },
+      {
+        "<Leader>fb",
+        function()
+          require("fzf-lua").buffers({ sort_lastused = true })
+        end,
+        desc = "Find buffers",
+      },
       -- TODO: replace with fzf implementation if it gets pretty
-      { "<Leader>fz", function() require("telescope.builtin").current_buffer_fuzzy_find() end, desc = "Find fuZzy (in buffer)" },
+      {
+        "<Leader>fz",
+        function()
+          require("telescope.builtin").current_buffer_fuzzy_find()
+        end,
+        desc = "Find fuZzy (in buffer)",
+      },
     },
     cmd = "FzfLua",
     config = function()
@@ -481,6 +713,10 @@ return {
             vertical = "down:60%",
           },
         },
+        hls = {
+          title = "Folded",
+          preview_title = "Folded",
+        },
 
         fzf_opts = {
           ["--layout"] = "reverse",
@@ -500,7 +736,7 @@ return {
 
         previewers = {
           builtin = {
-            syntax_limit_b = 1024*1024*5,
+            syntax_limit_b = 1024 * 1024 * 5,
           },
         },
 
@@ -576,9 +812,8 @@ return {
             ["ctrl-x"] = actions.buf_split,
             ["ctrl-v"] = actions.buf_vsplit,
             ["ctrl-t"] = actions.buf_tabedit,
-          }
+          },
         },
-
       })
     end,
   },
@@ -587,10 +822,14 @@ return {
   {
     "t-troebst/perfanno.nvim",
     cmd = {
-      "PerfLoadCallGraph", "PerfLoadFlameGraph", "PerfLuaProfileStart",
-      "PerfPickEvent", "PerfCycleFormat", "PerfHottestLines"
+      "PerfLoadCallGraph",
+      "PerfLoadFlameGraph",
+      "PerfLuaProfileStart",
+      "PerfPickEvent",
+      "PerfCycleFormat",
+      "PerfHottestLines",
     },
-    config = function ()
+    config = function()
       local util = require("perfanno.util")
       local bgcolor = vim.fn.synIDattr(vim.fn.hlID("Normal"), "bg", "gui")
 
@@ -598,13 +837,13 @@ return {
         line_highlights = util.make_bg_highlights(bgcolor, "#CC3300", 10),
         vt_highlight = util.make_fg_highlight("#CC3300"),
       })
-    end
+    end,
   },
   {
     "stevearc/profile.nvim",
-    priority = 1001,  -- highest priority plugin, so it loads before the others
+    priority = 1001, -- highest priority plugin, so it loads before the others
     -- low enough overhead to not really require lazy loading
-    config = function ()
+    config = function()
       -- NVIM_PROFILE=1 nv to start nvim
       -- f1 to toggle start/stop
       -- outputs are HUGE
@@ -622,27 +861,30 @@ return {
         local prof = require("profile")
         if prof.is_recording() then
           prof.stop()
-          vim.ui.input({ prompt = "Save profile to:", completion = "file", default = "profile.json" }, function(filename)
-            if filename then
-              prof.export(filename)
-              vim.notify(string.format("Wrote %s", filename))
+          vim.ui.input(
+            { prompt = "Save profile to:", completion = "file", default = "profile.json" },
+            function(filename)
+              if filename then
+                prof.export(filename)
+                vim.notify(string.format("Wrote %s", filename))
+              end
             end
-          end)
+          )
         else
           prof.start("*")
         end
       end
       vim.keymap.set("", "<f1>", toggle_profile)
-    end
+    end,
   },
 
   -- Find and replace
   {
     "MagicDuck/grug-far.nvim",
     cmd = "GrugFar",
-    config = function ()
-      require('grug-far').setup({})
-    end
+    config = function()
+      require("grug-far").setup({})
+    end,
   },
 
   {
@@ -650,8 +892,6 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
-      "hrsh7th/nvim-cmp", -- Optional: For using slash commands and variables in the chat buffer
-      "nvim-telescope/telescope.nvim", -- Optional: For using slash commands
     },
     cmd = { "CodeCompanionChat", "CodeCompanion", "CodeCompanionActions" },
     opts = {
@@ -672,7 +912,7 @@ return {
         },
       },
       adapters = {
-        ollama = function ()
+        ollama = function()
           return require("codecompanion.adapters").extend("ollama", {
             schema = {
               model = {
@@ -685,5 +925,71 @@ return {
     },
   },
 
-
+  -- Misc goodies
+  {
+    "folke/snacks.nvim",
+    priority = 1000,
+    lazy = false,
+    keys = {
+      { "<leader>pp",  function() Snacks.toggle.profiler() end, desc = "Toggle profiler" },  -- FIXME: doesn't do anything
+    },
+    init = function ()
+      vim.api.nvim_create_user_command("Notifications",
+        function() Snacks.notifier.show_history() end,
+        {}
+      )
+    end,
+    opts = {
+      -- Disabled
+      quickfile = { enabled = false },
+      statuscolumn = { enabled = false },
+      words = { enabled = false },
+      -- Enabled
+      bigfile = { enabled = true },
+      notifier = {
+        enabled = true,
+        timeout = 3000,
+      },
+      profiler = {
+        pick = {
+          picker = "trouble",
+        },
+      },
+      dashboard = {
+        enabled = true,
+        width = 30,
+        preset = {
+          pick = "fzf-lua",
+          keys = {
+            { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
+            { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
+            { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
+            { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
+            { icon = "󰒲 ", key = "l", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
+            { icon = " ", key = "h", desc = "Highlights", action = ":FzfLua highlights" },
+            { icon = " ", key = "q", desc = "Quit", action = ":qa" },
+          },
+          header = [[
+^ ^
+(O,O)
+(   )
+-"-"-]],
+        },
+        sections = {
+          { section = "header" },
+          { section = "keys", gap = 1, padding = 1 },
+          {
+            padding = { 1, 2 },
+            text = {
+              {
+                "Better than yesterday.",
+                hl = "SnacksDashboardFooter",
+                align = "center",
+              },
+            },
+          },
+        },
+      },
+    },
+  },
 }

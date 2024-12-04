@@ -52,6 +52,7 @@ return {
         overrides = function (colors)
           return {
             NormalNC = { bg = colors.palette.sumiInk2 },
+
             -- Cursor
             CursorLine = { bg = colors.palette.sumiInk4 },
             ColorColumn = { bg = colors.palette.sumiInk4 },
@@ -76,6 +77,13 @@ return {
             TelescopeSelection = { bg = "#202020" },
             TelescopeMatching = { fg = "#7fb4ca" },
 
+            -- Dashboard
+            SnacksDashboardDesc = { link = "DashboardDesc" },
+            SnacksDashboardIcon = { link = "DashboardIcon" },
+            SnacksDashboardKey = { link = "DashboardKey" },
+            SnacksDashboardHeader = { link = "DashboardHeader" },
+            SnacksDashboardFooter = { link = "DashboardFooter" },
+
             -- Cmp
             Pmenu = { bg = "#0a0a0a" },
             PmenuSbar = { bg = "#252525" },
@@ -86,6 +94,9 @@ return {
             -- LSP
             ["@lsp.type.namespace"] = { fg = colors.palette.lotusRed4 },
 
+            -- TS
+            ["@module"] = { link = "@lsp.type.namespace" },
+
           }
         end,
       })
@@ -93,15 +104,31 @@ return {
     end
   },
 
-  -- Color picker
+  -- Pattern highlighter
   {
-    "brenoprata10/nvim-highlight-colors",
-    cmd = { "HighlightColors" },
-    config = function ()
-      require('nvim-highlight-colors').setup({
-        render = "background",
-      })
+    "echasnovski/mini.hipatterns",
+    lazy = true,
+    init = function ()
+      vim.api.nvim_create_user_command(
+        "HighlightPatternsToggle",
+        function() require("mini.hipatterns").toggle() end,
+        {})
     end,
+    config = function ()
+      local hipatterns = require('mini.hipatterns')
+      hipatterns.setup({
+        highlighters = {
+          -- Highlight standalone 'FIXME', 'HACK', 'TODO', 'NOTE'
+          fixme = { pattern = '%f[%w]()FIXME()%f[%W]', group = 'MiniHipatternsFixme' },
+          hack  = { pattern = '%f[%w]()HACK()%f[%W]',  group = 'MiniHipatternsHack'  },
+          todo  = { pattern = '%f[%w]()TODO()%f[%W]',  group = 'MiniHipatternsTodo'  },
+          note  = { pattern = '%f[%w]()NOTE()%f[%W]',  group = 'MiniHipatternsNote'  },
+
+          -- Highlight hex color strings (`#rrggbb`) using that color
+          hex_color = hipatterns.gen_highlighter.hex_color(),
+        },
+      })
+    end
   },
 
   -- Tabline
@@ -123,50 +150,56 @@ return {
       vim.o.showtabline = 2
 
       local theme = {
-        fill = 'TabLineFill',
-        head = "TabLine",
-        current_tab = { fg="#000000", bg="#5776b5", style="bold" },
-        tab = 'TabLine',
-        win = 'TabLine',
-        tail = 'TabLine',
+        fill = "TabLineFill",
+        current_tab = { fg = "#938aa9", bg = "#151515", style = "bold" },
+        other_tab = { fg = "#666666", bg = "#151515" },
+        accent = { bg = "#7e9cd8" },
+        tab = "TabLine",
+        win = "TabLine",
+        tail = "TabLine",
       }
 
       require("tabby").setup({
         line = function(line)
           return {
             {
-              { '  ', hl = theme.head },
-              line.sep('', theme.head, theme.fill),
+              { "  ", hl = theme.current_tab },
+              line.sep(" ", theme.fill, theme.fill),
             },
             line.wins_in_tab(line.api.get_current_tab()).foreach(function(win)
-              local hl = win.is_current() and theme.current_tab or theme.tab
+              local win_is_current = win.is_current()
+              local text_hl = win_is_current and theme.current_tab or theme.other_tab
+              local sep_hl = win_is_current and theme.accent or theme.fill
 
               return {
-                line.sep('', hl, theme.fill),
-                win.is_current() and '' or '',
+                line.sep("▏", sep_hl, theme.fill),
+                win.is_current() and "" or "",
                 win.buf_name(),
-                win.buf().is_changed() and '🞱' or "",
-                line.sep('', hl, theme.fill),
-                hl = hl,
-                margin = ' ',
+                win.buf().is_changed() and "🞱" or "",
+                line.sep("▏", sep_hl, theme.fill),
+                hl = text_hl,
+                margin = " ",
               }
             end),
             line.spacer(),
             line.tabs().foreach(function(tab)
-              local hl = tab.is_current() and theme.current_tab or theme.tab
+              local tab_is_current = tab.is_current()
+              local text_hl = tab_is_current and theme.current_tab or theme.other_tab
+              local sep_hl = tab_is_current and theme.accent or theme.fill
+
               return {
-                line.sep('', hl, theme.fill),
-                tab.is_current() and '' or '󰆣',
+                line.sep("▏", sep_hl, theme.fill),
+                tab.is_current() and "" or "",
                 tab.number(),
                 tab.name(),
-                line.sep('', hl, theme.fill),
-                hl = hl,
-                margin = ' ',
+                line.sep("▏", sep_hl, theme.fill),
+                hl = text_hl,
+                margin = " ",
               }
             end),
             {
-              line.sep('', theme.tail, theme.fill),
-              { ' 󰹍  ', hl = theme.tail },
+              line.sep(" ", theme.fill, theme.fill),
+              { " 󰹍  ", hl = theme.current_tab },
             },
             hl = theme.fill,
           }
@@ -197,6 +230,9 @@ return {
               return name
             end
           },
+          buf_name = {
+            mode = "unique",
+          },
         },
       })
     end
@@ -204,6 +240,7 @@ return {
 
   -- Markdown preview and renderer
   {
+    -- consider: https://github.com/brianhuster/live-preview.nvim
     "iamcco/markdown-preview.nvim",
     config = function ()
       vim.g.mkdp_auto_close = 0
@@ -211,29 +248,33 @@ return {
     build = function() vim.fn["mkdp#util#install"]() end,
   },
   {
-    "OXY2DEV/markview.nvim",
-    ft = "markdown",
+    "MeanderingProgrammer/render-markdown.nvim",
     dependencies = {
-        "nvim-tree/nvim-web-devicons",
-    },
-    config = function ()
-      require("markview").setup({
-        code_block = {
-          pad_char = "",
-        },
-        list_item = {
-          marker_plus = {
-            add_padding = false,
-          },
-          marker_minus = {
-            add_padding = false,
-          },
-          marker_star = {
-            add_padding = false,
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-tree/nvim-web-devicons",
+    }, -- if you prefer nvim-web-devicons
+    ft = { "markdown", "codecompanion", "Avante" },
+    config = function()
+      require("render-markdown").setup({
+        file_types = { "markdown", "Avante" },
+        win_options = {
+          conceallevel = {
+            rendered = 2, -- Correctly shows spaces when concealing &nbsp
           },
         },
+
+        -- for pretty rendering of blink.cmp documentation windows
+        overrides = {
+          buftype = {
+            nofile = {
+              render_modes = { "n", "c", "i" },
+            },
+          },
+          filetype = {},
+        },
+
       })
-    end
+    end,
   },
 
   -- Statusline/Winbar
@@ -274,18 +315,17 @@ return {
 
       ---@type nougat.color
       local color = {
-        fg = "#abb2bf",
-        faded_fg = "#8b95a7",
-        bg = "#1e2024",
-        green = "#98c379",
-        yellow = "#e5c07b",
-        purple = "#c678dd",
-        orange = "#d19a66",
+        fg = "#938aa9",
+        faded_fg = "#666666",
+        bg = "#191919",
+        lighter_bg = "#232323",
+        green = "#98bb6c",
+        yellow = "#e6c384",
+        purple = "#957fb8",
+        orange = "#ffa066",
         peanut = "#f6d5a4",
-        red = "#e06c75",
-        aqua = "#61afef",
-        darkblue = "#282c34",
-        dark_red = "#f75f5f",
+        red = "#E06C75",
+        blue = "#7e9cd8",
       }
 
       local mode_colors = {
@@ -293,21 +333,21 @@ return {
         visual = color.purple,
         insert = color.yellow,
         replace = color.red,
-        commandline = color.aqua,
-        terminal = color.dark_red,
+        commandline = color.blue,
+        terminal = color.red,
         inactive = color.green,
       }
       local mode_highlights = {}
       for mode, col in pairs(mode_colors) do
         mode_highlights[mode] = {
           fg = col,
-          bg = color.darkblue,
-          bold = true,
+          bg = color.lighter_bg,
+          bold = false,
         }
       end
 
       local stl = Bar("statusline", {
-        hl = { fg = color.fg, bg = color.bg, bold = true },
+        hl = { fg = color.fg, bg = color.bg, bold = false },
       })
 
       -- vim mode
@@ -321,7 +361,7 @@ return {
 
       -- git branch
       stl:add_item(nut.git.branch({
-        hl = { bg = color.darkblue, fg = color.aqua },
+        hl = { bg = color.lighter_bg, fg = color.blue },
         prefix = "  ",
         suffix = " ",
         sep_right = sep.right_upper_triangle_solid(true),
@@ -332,17 +372,17 @@ return {
         hl = { fg = color.bg },
         content = {
           nut.git.status.count("added", {
-            hl = { fg = color.green, bg = color.darkblue  },
+            hl = { fg = color.green, bg = color.lighter_bg  },
             prefix = "+",
             sep_right = sep.right_upper_triangle_solid(true),
           }),
           nut.git.status.count("changed", {
-            hl = { fg = color.yellow, bg = color.darkblue  },
+            hl = { fg = color.yellow, bg = color.lighter_bg  },
             prefix = "~",
             sep_right = sep.right_upper_triangle_solid(true),
           }),
           nut.git.status.count("removed", {
-            hl = { fg = color.red, bg = color.darkblue  },
+            hl = { fg = color.red, bg = color.lighter_bg  },
             prefix = "-",
             sep_right = sep.right_upper_triangle_solid(true),
           }),
@@ -350,15 +390,25 @@ return {
       }))
       --
       -- filename
+      stl:add_item(nut.buf.diagnostic_count({
+        prefix = " ",
+        suffix = " ",
+        config = {
+          error = { prefix = " ", fg = color.red },
+          warn = { prefix = " ", fg = color.yellow },
+          info = { prefix = " " },
+          hint = { prefix = "󰌶 ", fg = color.blue },
+        },
+      }))
       stl:add_item(nut.buf.filename({
-        hl = { fg = color.fg, bg = color.bg, bold = true },
+        hl = { fg = color.fg, bg = color.bg, bold = false },
         prefix = " ",
         suffix = " ",
       }))
 
       -- file modifier
       stl:add_item(nut.buf.filestatus({
-        hl = { fg = color.fg, bg = color.bg, bold = true },
+        hl = { fg = color.fg, bg = color.bg, bold = false },
         sep_right = sep.right_lower_triangle_solid(true),
         config = {
           modified = "󰏫",
@@ -381,29 +431,16 @@ return {
       stl:add_item(nut.spacer())
       stl:add_item(nut.truncation_point())
 
-      -- diagnostics
-      stl:add_item(nut.buf.diagnostic_count({
-        sep_left = sep.left_lower_triangle_solid(true),
-        prefix = " ",
-        suffix = " ",
-        config = {
-          error = { prefix = " ", fg = color.red },
-          warn = { prefix = " ", fg = color.yellow },
-          info = { prefix = " " },
-          hint = { prefix = "󰌶 ", fg = color.aqua },
-        },
-      }))
-
       -- filetype
       stl:add_item(nut.buf.filetype({
-        hl = { bg = color.darkblue, fg = color.purple },
+        hl = { bg = color.lighter_bg, fg = color.purple },
         sep_left = sep.left_lower_triangle_solid(true),
         prefix = " ",
       }))
 
       -- python venv
       stl:add_item(Item({
-        hl = { bg = color.darkblue, fg = color.purple },
+        hl = { bg = color.lighter_bg, fg = color.purple },
         prefix = " ",
         cache = {
           scope = "buf",
@@ -424,7 +461,7 @@ return {
 
       -- line:col
       stl:add_item(Item({
-        hl = { bg = color.darkblue, fg = color.green },
+        hl = { bg = color.lighter_bg, fg = color.green },
         sep_left = sep.left_lower_triangle_solid(true),
         prefix = " ",
         content = core.group({
@@ -437,7 +474,7 @@ return {
 
       -- file %
       stl:add_item(Item({
-        hl = { bg = color.darkblue, fg = color.aqua },
+        hl = { bg = color.lighter_bg, fg = color.blue },
         sep_left = sep.left_lower_triangle_solid(true),
         prefix = " ",
         content = core.code("P"),
@@ -449,55 +486,52 @@ return {
   },
 
   -- Indent lines
-  -- {
-  --   "lukas-reineke/indent-blankline.nvim",
-  --   event = "VeryLazy",
-  --   enabled = true,  -- FIXME: noticeable performance hit
-  --   config = function()
-  --     require("ibl").setup({
-  --       viewport_buffer = {
-  --         min = 10,
-  --         max = 20,
-  --       },
-  --       debounce = 200,
-  --       indent = {
-  --         char = "▏",
-  --         tab_char = "▏",
-  --       },
-  --       scope = {
-  --         enabled = false,
-  --       },
-  --       exclude = {
-  --         filetypes = {
-  --           "aerial",
-  --           "alpha",
-  --           "dap-repl",
-  --           "dashboard",
-  --           "dockerfile",
-  --           "FTerm",
-  --           "help",
-  --           "man",
-  --           "neo-tree",
-  --           "NeogitCommitView",
-  --           "NeovitStatus",
-  --           "NvimTree",
-  --           "oil",
-  --           "packer",
-  --           "startup",
-  --           "TelescopePrompt",
-  --           "TelescopeResults",
-  --           "toggleterm",
-  --           "tsplayground",
-  --           "qf",
-  --         }
-  --       }
-  --     })
-  --   end
-  -- },
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    event = "VeryLazy",
+    enabled = false,  -- FIXME: noticeable performance hit
+    config = function()
+      require("ibl").setup({
+        debounce = 200,
+        indent = {
+          char = "▏",
+          tab_char = "▏",
+        },
+        scope = {
+          enabled = false,
+        },
+        exclude = {
+          filetypes = {
+            "aerial",
+            "alpha",
+            "dap-repl",
+            "dashboard",
+            "dockerfile",
+            "FTerm",
+            "help",
+            "man",
+            "neo-tree",
+            "NeogitCommitView",
+            "NeovitStatus",
+            "NvimTree",
+            "oil",
+            "packer",
+            "startup",
+            "TelescopePrompt",
+            "TelescopeResults",
+            "toggleterm",
+            "tsplayground",
+            "qf",
+          }
+        }
+      })
+    end
+  },
   {
     "shellRaining/hlchunk.nvim",
     branch = "dev",
-    event = { "UIEnter" },
+    enabled = false,
+    event = { "BufReadPre", "BufNewFile" },
     config = function()
       require("hlchunk").setup({
         indent = {
@@ -505,6 +539,7 @@ return {
           chars = {
             "▏",
           },
+          ahead_lines = 10,
         },
         blank = {
           enable = false,
@@ -514,67 +549,47 @@ return {
         },
         line_num = {
           enable = false,
-        }
+        },
+        exclude_filetypes = {
+          fzf = true,
+          oil = true,
+          oil_preview = true,
+          gitgraph = true,
+        },
       })
     end
   },
-
-  -- Startup screen
   {
-    'glepnir/dashboard-nvim',
-    event = 'VimEnter',
-    opts = {
-      theme = "doom",
-      config = {
-        header = {
-          "                 ",
-          "                 ",
-          "                 ",
-          "                 ",
-          "       ^ ^       ",
-          "      (O,O)      ",
-          "      (   )      ",
-          '      -"-"-      ',
-          "                 ",
-          "                 ",
-          "                 ",
+    "nvimdev/indentmini.nvim",
+    enabled = false,
+    commit = "750ce1f",  -- pressing G breaks the plugin after this commit
+    init = function ()
+      vim.cmd.highlight('IndentLine guifg=#54546d')
+      vim.cmd.highlight('IndentLineCurrent guifg=#54546d')
+    end,
+    config = function ()
+      require("indentmini").setup({
+        only_current = false,
+        char = "▏",
+        exclude = {},
+      })
+    end
+  },
+  {
+    "Saghen/blink.indent",
+    event = "BufReadPost",  -- needs to be before BufEnter
+    config = function ()
+      local opts = {
+        static = {
+          char = "▏",
+          highlights = { "BlinkIndent" },
         },
-        center = {
-          {
-            icon = "  ",
-            desc = "New File",
-            key = "n",
-            action = "enew",
-          },
-          {
-            icon = "  ",
-            desc = "File Tree",
-            key = "t",
-            action = "Oil",
-          },
-          {
-            icon = "🕮  ",
-            desc = "Find File",
-            key = "f",
-            action = function ()
-              _G._usr_fzflua_files({ ignore = true, hidden = false })
-            end,
-          },
-          {
-            icon = "🗛  ",
-            desc = "Live Grep",
-            key = "g",
-            action = "FzfLua live_grep",
-          },
+        scope = {
+          enabled = false,
         },
-        footer = {
-          "                      ",
-          "                      ",
-          "Better than yesterday.",
-        },
-      },
-    },
-    dependencies = { {'nvim-tree/nvim-web-devicons'}}
+      }
+      require("blink.indent").setup(opts)
+    end,
   },
 
   -- UI Sugar
@@ -709,26 +724,6 @@ return {
     end
   },
 
-  -- Pretty notifications
-  {
-    "rcarriga/nvim-notify",
-    event = "VeryLazy",
-    config = function ()
-      require("notify").setup({
-        timeout = 3000,
-        max_height = function()
-          return math.floor(vim.o.lines * 0.75)
-        end,
-        max_width = function()
-          return math.floor(vim.o.columns * 0.75)
-        end,
-      })
-
-      vim.notify = require("notify")
-
-    end
-  },
-
   -- Statuscol config util
   {
     "luukvbaal/statuscol.nvim",
@@ -760,7 +755,7 @@ return {
           -- diagnostics
           {
             sign = {
-              namespace = { "diagnostic" },
+              namespace = { "diagnostic/signs" },
               maxwidth = 1,
               colwidth = 2,
               auto = false,

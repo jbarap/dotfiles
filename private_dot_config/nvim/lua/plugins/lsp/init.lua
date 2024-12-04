@@ -8,6 +8,7 @@ return {
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
           local bufnr = args.buf
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
 
           local function buf_set_keymap(lhs, rhs, opts, mode)
             opts = type(opts) == 'string' and { desc = opts, buffer = bufnr }
@@ -24,12 +25,18 @@ return {
             end, vim.tbl_extend("force", { buffer = bufnr }, keymap_opts))
           end
 
+          local have_ufo, ufo = pcall(require, "ufo")
+
+          if not have_ufo and client:supports_method('textDocument/foldingRange') then
+            vim.wo.foldmethod = 'expr'
+            vim.wo.foldexpr = 'v:lua.vim.lsp.foldexpr()'
+          end
+
           -- Hover
           buf_set_keymap("K",
             function()
               -- peek folded lines if using ufo
-              local ok, ufo = pcall(require, "ufo")
-              if ok then
+              if have_ufo then
                 local winid = ufo.peekFoldedLinesUnderCursor()
                 if winid then
                   return
@@ -43,7 +50,7 @@ return {
 
           -- Signature help
           buf_set_keymap("<C-S-k>",
-            vim.lsp.buf.signature_help,
+            function () vim.lsp.buf.signature_help({ border = "rounded" }) end,
             "Signature help",
             "i"
           )
@@ -72,21 +79,11 @@ return {
           buf_fzf_keymap("<Leader>fS", "lsp_workspace_symbols", {}, { desc = "Find symbols (lsp Workspace)" })
 
           -- Set up nvim-navic integration
-          local client = vim.lsp.get_client_by_id(args.data.client_id)
           if client ~= nil and client.server_capabilities.documentSymbolProvider then
             require("nvim-navic").attach(client, bufnr)
           end
         end,
       })
-
-      -- Handlers
-      vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-        border = "rounded",
-      })
-      vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-        border = "rounded",
-      })
-
     end,
     config = function()
       -- Set up language servers
@@ -99,10 +96,10 @@ return {
         dynamicRegistration = false,
         lineFoldingOnly = true
       }
-      -- for autocompletion with nvim-cmp
-      local ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+      -- for autocompletion with blink.cmp
+      local ok, blink_cmp = pcall(require, "blink.cmp")
       if ok then
-        capabilities = vim.tbl_deep_extend("force", capabilities, cmp_nvim_lsp.default_capabilities())
+        capabilities = blink_cmp.get_lsp_capabilities(capabilities)
       end
 
       -- initialization for all servers

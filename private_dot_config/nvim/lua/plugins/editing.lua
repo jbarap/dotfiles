@@ -357,88 +357,79 @@ return {
             ["<Tab>"] = { "snippet_forward", "fallback" },
             ["<S-Tab>"] = { "snippet_backward", "fallback" },
           },
+
           sources = {
             completion = {
               enabled_providers = { "lsp", "path", "snippets", "buffer" },
             },
-
             providers = {
-              lsp = {
-                name = "LSP",
-              },
-              path = {
-                name = "Path",
-              },
-              snippets = {
-                name = "Snippets",
-                score_offset = -3,
-              },
               buffer = {
-                name = "Buffer",
-                keyword_length = 3,
+                min_keyword_length = 3,  -- FIXME: doesn't do anything
                 fallback_for = { "lsp" },
               },
-            },
+            }
           },
-          windows = {
-            autocomplete = {
-              border = "rounded",
-              winblend = 10,
-              winhighlight = "Normal:BlinkCmpMenu,FloatBorder:FloatBorder,CursorLine:BlinkCmpMenuSelection,Search:None",
+
+          appearance = {
+            nerd_font_variant = "mono",
+            kind_icons = {
+              Text = "󰉿",
+              Method = "󰊕",
+              Function = "󰊕",
+              Constructor = "󰒓",
+
+              Field = "󰜢",
+              Property = "󰜢",
+              Variable = "󰀫",
+
+              Class = "󰠱",
+              Interface = "",
+              Struct = "󰙅",
+              Module = "",
+
+              Unit = "󰑭",
+              Value = "󰎠",
+              Enum = "",
+              EnumMember = "",
+
+              Keyword = "󰌋",
+              Constant = "󰏿",
+
+              Snippet = "",
+              Color = "󰏘",
+              File = "󰈙",
+              Reference = "󰈇",
+              Folder = "󰉋",
+              Event = "",
+              Operator = "󰆕",
+              TypeParameter = "󰬛",
+            }
+          },
+
+          completion = {
+            documentation = {
+              auto_show = true,
+              window = {
+                border = "rounded",
+                max_width = 100,
+              },
+            },
+            accept = {
+              auto_brackets = {
+                enabled = true,
+              },
+            },
+            list = {
               selection = "auto_insert",
             },
-            documentation = {
+            menu = {
+              winblend = 10,
               border = "rounded",
-              max_width = 100,
-              auto_show = true,
+              winhighlight = "Normal:BlinkCmpMenu,FloatBorder:FloatBorder,CursorLine:BlinkCmpMenuSelection,Search:None",
+              draw = {
+                -- treesitter = true,  -- quite nice, but slower
+              },
             },
-          },
-          highlight = {
-            use_nvim_cmp_as_default = true,
-          },
-          nerd_font_variant = "mono",
-          accept = {
-            -- experimental
-            auto_brackets = {
-              enabled = true,
-            },
-          },
-          trigger = {
-            signature_help = {
-              enabled = false,
-            },
-          },
-          kind_icons = {
-            Text = "󰉿",
-            Method = "󰊕",
-            Function = "󰊕",
-            Constructor = "󰒓",
-
-            Field = "󰜢",
-            Property = "󰜢",
-            Variable = "󰀫",
-
-            Class = "󰠱",
-            Interface = "",
-            Struct = "󰙅",
-            Module = "",
-
-            Unit = "󰑭",
-            Value = "󰎠",
-            Enum = "",
-            EnumMember = "",
-
-            Keyword = "󰌋",
-            Constant = "󰏿",
-
-            Snippet = "",
-            Color = "󰏘",
-            File = "󰈙",
-            Reference = "󰈇",
-            Folder = "󰉋",
-            Event = "",
-            Operator = "󰆕",
-            TypeParameter = "󰬛",
           },
         }
       )
@@ -515,6 +506,7 @@ return {
   {
     "kevinhwang91/nvim-ufo",
     dependencies = "kevinhwang91/promise-async",
+    enabled = false,
     event = "VeryLazy",
     keys = {
       { "zR", function()

@@ -62,6 +62,7 @@ opt.foldlevel = 99
 opt.foldenable = true
 opt.foldtext = ""
 
+
 -- Search
 opt.hlsearch = true
 opt.incsearch = true

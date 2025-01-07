@@ -45,6 +45,7 @@ alias lzd="TERM=xterm-kitty lazydocker"
 # kitty
 alias icat="kitty +kitten icat"
 alias s="kitty +kitten ssh"
+alias kitty="env __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia kitty"
 
 # docker
 alias compose-run="docker compose run --rm"
@@ -54,3 +55,7 @@ alias mkctl="microk8s kubectl"
 
 # bat
 alias cat="batcat"
+
+# gcloud
+alias gssh="gcloud compute ssh"
+alias gscp="gcloud compute scp"

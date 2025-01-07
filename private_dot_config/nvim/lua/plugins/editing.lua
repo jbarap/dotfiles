@@ -341,7 +341,7 @@ return {
     enabled = true,
     event = "InsertEnter",
 
-    -- TODO:change this if building becomes easier
+    -- TODO: change this if building becomes easier
     build = "rustup run nightly cargo build --release",
 
     config = function ()
@@ -359,15 +359,11 @@ return {
           },
 
           sources = {
-            completion = {
-              enabled_providers = { "lsp", "path", "snippets", "buffer" },
+            default = { "lsp", "path", "snippets", "buffer" },
+            per_filetype = {
+              codecompanion = { "codecompanion" },  -- See codecompanion for setup
             },
-            providers = {
-              buffer = {
-                min_keyword_length = 3,  -- FIXME: doesn't do anything
-                fallback_for = { "lsp" },
-              },
-            }
+            cmdline = {},
           },
 
           appearance = {
@@ -414,20 +410,18 @@ return {
                 max_width = 100,
               },
             },
-            accept = {
-              auto_brackets = {
-                enabled = true,
-              },
-            },
             list = {
-              selection = "auto_insert",
+              selection = {
+                preselect = false,
+                auto_insert = true,
+              },
             },
             menu = {
               winblend = 10,
               border = "rounded",
               winhighlight = "Normal:BlinkCmpMenu,FloatBorder:FloatBorder,CursorLine:BlinkCmpMenuSelection,Search:None",
               draw = {
-                -- treesitter = true,  -- quite nice, but slower
+                treesitter = {"lsp"},  -- quite nice, but slower
               },
             },
           },

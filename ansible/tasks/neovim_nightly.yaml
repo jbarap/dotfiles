@@ -1,4 +1,13 @@
-- name: Clone neovim nightly
+- name: Check if neovim dir exists
+  shell: "test -d {{lookup('env', 'HOME')}}/tools/neovim"
+  register: nvim_repo_exists
+  ignore_errors: true
+
+- name: Store previous commit hash
+  when: nvim_repo_exists is not failed
+  shell: "cd {{lookup('env', 'HOME')}}/tools/neovim && git rev-parse HEAD > PREV_COMMIT.txt"
+
+- name: Clone (or update) neovim nightly
   ansible.builtin.git:
     force: true
     repo: https://github.com/neovim/neovim.git

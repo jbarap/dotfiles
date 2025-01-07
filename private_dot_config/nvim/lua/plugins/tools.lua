@@ -1,8 +1,11 @@
 return {
   -- File explorer and modifier
+  -- TODO: add support for image preview
   {
     "stevearc/oil.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+    },
     cmd = "Oil",
     keys = {
       {
@@ -530,7 +533,10 @@ return {
   -- Fzf lua
   {
     "ibhagwan/fzf-lua",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+      "nvim-treesitter/nvim-treesitter",
+    },
     init = function()
       _G._usr_fzflua_files = function(func_opts)
         local fzf_opts = {}
@@ -682,11 +688,10 @@ return {
         end,
         desc = "Find buffers",
       },
-      -- TODO: replace with fzf implementation if it gets pretty
       {
         "<Leader>fz",
         function()
-          require("telescope.builtin").current_buffer_fuzzy_find()
+          require("fzf-lua").blines()
         end,
         desc = "Find fuZzy (in buffer)",
       },
@@ -697,8 +702,16 @@ return {
 
       require("fzf-lua").setup({
         "borderless_full",
-        global_git_icons = true,
+
+        defaults = {
+          file_icons = true,
+        },
+
         winopts = {
+          treesitter = {
+            enabled = true,
+          },
+
           height = 0.97,
           width = 0.97,
 
@@ -709,7 +722,7 @@ return {
           preview = {
             delay = 80,
             title_pos = "center",
-            layout = "vertical",
+            layout = "horizontal",
             vertical = "down:60%",
           },
         },
@@ -883,7 +896,10 @@ return {
     "MagicDuck/grug-far.nvim",
     cmd = "GrugFar",
     config = function()
-      require("grug-far").setup({})
+      require("grug-far").setup({
+        windowCreationCommand = "tab split",
+        maxSearchMatches = 2000,
+      })
     end,
   },
 
@@ -894,35 +910,47 @@ return {
       "nvim-treesitter/nvim-treesitter",
     },
     cmd = { "CodeCompanionChat", "CodeCompanion", "CodeCompanionActions" },
-    opts = {
-      strategies = {
-        chat = {
-          adapter = "ollama",
+    config = function ()
+      require("codecompanion").setup({
+        strategies = {
+          chat = {
+            adapter = "ollama",
+          },
+          inline = {
+            adapter = "ollama",
+          },
+          agent = {
+            adapter = "ollama",
+          },
         },
-        inline = {
-          adapter = "ollama",
+        display = {
+          chat = {
+            render_headers = false,
+          },
         },
-        agent = {
-          adapter = "ollama",
-        },
-      },
-      display = {
-        chat = {
-          render_headers = false,
-        },
-      },
-      adapters = {
-        ollama = function()
-          return require("codecompanion.adapters").extend("ollama", {
-            schema = {
-              model = {
-                default = "qwen2.5-coder",
+        adapters = {
+          ollama = function()
+            return require("codecompanion.adapters").extend("ollama", {
+              schema = {
+                model = {
+                  default = "qwen2.5-coder",
+                },
               },
-            },
-          })
-        end,
-      },
-    },
+            })
+          end,
+        },
+      })
+
+      local ok, blink_cmp = pcall(require, "blink.cmp")
+      if ok then
+        blink_cmp.add_provider("codecompanion", {
+          name = "CodeCompanion",
+          module = "codecompanion.providers.completion.blink",
+          enabled = true,
+        })
+      end
+
+    end,
   },
 
   -- Misc goodies
@@ -945,7 +973,15 @@ return {
       statuscolumn = { enabled = false },
       words = { enabled = false },
       -- Enabled
-      bigfile = { enabled = true },
+      indent = {
+        indent = {
+          char = "▏",
+        },
+        scope = {
+          enabled = false,
+        },
+      },
+      bigfile = { enabled = false }, -- TODO: re-enable
       notifier = {
         enabled = true,
         timeout = 3000,
@@ -953,6 +989,9 @@ return {
       profiler = {
         pick = {
           picker = "trouble",
+        },
+        filter_mod = {
+          -- ["^vim%."] = true,  -- Shows more data, but breaks it currently
         },
       },
       dashboard = {
@@ -965,7 +1004,7 @@ return {
             { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
             { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
             { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
-            { icon = "󰒲 ", key = "l", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
+            { icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
             { icon = " ", key = "h", desc = "Highlights", action = ":FzfLua highlights" },
             { icon = " ", key = "q", desc = "Quit", action = ":qa" },
           },

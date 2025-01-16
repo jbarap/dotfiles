@@ -1,0 +1,22 @@
+{
+    "ipdb set trace": {
+        "prefix": "ipdb",
+        "body": "__import__('ipdb').set_trace(context=5)$0",
+        "description": "Code snippet for ipdb debugging."
+    },
+    "Pretty print": {
+        "prefix": "pprint",
+        "body": "__import__('pprint').pprint(${1:expression})$0"
+    },
+    "debugpy remote attach": {
+        "prefix": "debugpy",
+        "body": [
+            "import debugpy",
+            "if not debugpy.is_client_connected():",
+            "\tdebugpy.listen(${1:5678})",
+            "\tprint(f\"debugpy listening on localhost:$1\", flush=True)",
+            "\tdebugpy.wait_for_client()$0"
+        ],
+        "description": "Code snippet for debugpy remote attach"
+    }
+}

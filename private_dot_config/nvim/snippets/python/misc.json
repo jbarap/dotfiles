@@ -1,0 +1,10 @@
+{
+    "Docstring": {
+        "prefix": "docstring",
+        "body": "\"\"\"$0\"\"\""
+    },
+    "If name main": {
+        "prefix": "ifnamemain",
+        "body": "if __name__ == \"__main__\":\n\t$0"
+    }
+}

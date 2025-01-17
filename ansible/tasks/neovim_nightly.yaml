@@ -8,6 +8,7 @@
   shell: "cd {{lookup('env', 'HOME')}}/tools/neovim && git rev-parse HEAD > PREV_COMMIT.txt"
 
 - name: Clone (or update) neovim nightly
+  tags: neovim_pull
   ansible.builtin.git:
     force: true
     repo: https://github.com/neovim/neovim.git

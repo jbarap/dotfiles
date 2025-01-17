@@ -48,6 +48,9 @@
       ansible.builtin.include_tasks: "tasks/docker.yaml"
 
     - name: Build neovim nightly
-      ansible.builtin.include_tasks: "tasks/neovim_nightly.yaml"
-      tags:
-        - nightly
+      ansible.builtin.include_tasks:
+        file: "tasks/neovim_nightly.yaml"
+        apply:
+          tags: neovim
+      tags: neovim
+

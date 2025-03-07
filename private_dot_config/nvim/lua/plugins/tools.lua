@@ -63,10 +63,10 @@ return {
         ["<C-p>"] = "actions.preview",
         ["<C-c>"] = "actions.close",
         ["<C-r>"] = "actions.refresh",
-        ["<C-y>"] = "actions.copy_entry_path",
+        ["<C-y>"] = "actions.yank_entry",
         ["<C-S-y>"] = {
           callback = function()
-            require("oil.actions").copy_entry_path.callback()
+            require("oil.actions").yank_entry.callback()
             vim.fn.setreg("+", vim.fn.getreg(vim.v.register))
           end,
           desc = "Yank the filepath of the entry under the cursor to the system clipboard",
@@ -92,6 +92,7 @@ return {
   {
     "mfussenegger/nvim-dap",
     dependencies = {
+      -- check out: igorlfs/nvim-dap-view
       { "rcarriga/nvim-dap-ui", dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" } },
     },
     lazy = true,
@@ -573,6 +574,11 @@ return {
     keys = {
       -- files
       {
+        "<Leader><Leader>",
+        "<cmd>FzfLua<cr>",
+        desc = "Fzf menu",
+      },
+      {
         "<Leader>ff",
         function()
           _G._usr_fzflua_files({
@@ -708,15 +714,11 @@ return {
         },
 
         winopts = {
-          treesitter = {
-            enabled = true,
-          },
-
-          height = 0.97,
-          width = 0.97,
+          height = 0.95,
+          width = 0.95,
 
           on_create = function()
-            vim.wo.winblend = 10
+            vim.wo.winblend = 0
           end,
 
           preview = {
@@ -767,7 +769,13 @@ return {
 
         lsp = {
           includeDeclaration = false,
-          formatter = "path.dirname_first",
+          jump1 = false,
+          symbols = {
+            child_prefix = true,
+          },
+          code_actions = {
+            previewer = "codeaction_native",
+          },
         },
 
         buffers = {
@@ -819,6 +827,9 @@ return {
             ["ctrl-q"] = actions.file_sel_to_qf,
             ["alt-q"] = { fn = actions.file_sel_to_qf, prefix = "select-all+accept" },
             ["alt-l"] = actions.file_sel_to_ll,
+            ["alt-i"] = actions.toggle_ignore,
+            ["alt-h"] = actions.toggle_hidden,
+            ["alt-f"] = actions.toggle_follow,
           },
           buffers = {
             ["default"] = actions.buf_edit,
@@ -914,13 +925,13 @@ return {
       require("codecompanion").setup({
         strategies = {
           chat = {
-            adapter = "ollama",
+            adapter = "gemini",
           },
           inline = {
-            adapter = "ollama",
+            adapter = "gemini",
           },
           agent = {
-            adapter = "ollama",
+            adapter = "gemini",
           },
         },
         display = {
@@ -938,17 +949,22 @@ return {
               },
             })
           end,
+          gemini = function()
+            return require("codecompanion.adapters").extend("gemini", {
+              env = {
+                api_key = "cmd:cat ~/data/.creds/gemini_api_key",
+              },
+            })
+          end,
+          anthropic = function()
+            return require("codecompanion.adapters").extend("anthropic", {
+              env = {
+                api_key = "cmd:cat ~/data/.creds/claude_api_key",
+              },
+            })
+          end,
         },
       })
-
-      local ok, blink_cmp = pcall(require, "blink.cmp")
-      if ok then
-        blink_cmp.add_provider("codecompanion", {
-          name = "CodeCompanion",
-          module = "codecompanion.providers.completion.blink",
-          enabled = true,
-        })
-      end
 
     end,
   },
@@ -968,11 +984,9 @@ return {
       )
     end,
     opts = {
-      -- Disabled
       quickfile = { enabled = false },
-      statuscolumn = { enabled = false },
-      words = { enabled = false },
-      -- Enabled
+      bigfile = { enabled = false },
+      image = {},
       indent = {
         indent = {
           char = "▏",
@@ -981,7 +995,12 @@ return {
           enabled = false,
         },
       },
-      bigfile = { enabled = false }, -- TODO: re-enable
+      scope = {
+        treesitter = {
+          enabled = false,  -- slow on giant files
+          injections = false,
+        },
+      },
       notifier = {
         enabled = true,
         timeout = 3000,

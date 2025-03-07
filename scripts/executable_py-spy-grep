@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PID=$(pgrep -a python | fzf | awk '{print $1}')
+PID=$(pgrep -afi python | fzf | awk '{print $1}')
 
 if [[ -z $PID ]]; then
     echo "Invalid PID, select a process to monitor"

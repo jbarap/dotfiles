@@ -96,6 +96,8 @@ return {
 
             -- TS
             ["@module"] = { link = "@lsp.type.namespace" },
+            ["@class"] = { link = "@lsp.type.class" },
+            ["@method"] = { link = "@lsp.type.method" },
 
           }
         end,
@@ -240,7 +242,6 @@ return {
 
   -- Markdown preview and renderer
   {
-    -- consider: https://github.com/brianhuster/live-preview.nvim
     "iamcco/markdown-preview.nvim",
     config = function ()
       vim.g.mkdp_auto_close = 0
@@ -262,17 +263,6 @@ return {
             rendered = 2, -- Correctly shows spaces when concealing &nbsp
           },
         },
-
-        -- for pretty rendering of blink.cmp documentation windows
-        overrides = {
-          buftype = {
-            nofile = {
-              render_modes = { "n", "c", "i" },
-            },
-          },
-          filetype = {},
-        },
-
       })
     end,
   },
@@ -419,6 +409,7 @@ return {
       }))
 
       -- breadcrumbs
+      -- TODO: try Bekaboo/dropbar.nvim
       stl:add_item(Item({
         hidden = function()
           return not require("nvim-navic").is_available()
@@ -485,113 +476,6 @@ return {
     end
   },
 
-  -- Indent lines
-  {
-    "lukas-reineke/indent-blankline.nvim",
-    event = "VeryLazy",
-    enabled = false,  -- FIXME: noticeable performance hit
-    config = function()
-      require("ibl").setup({
-        debounce = 200,
-        indent = {
-          char = "▏",
-          tab_char = "▏",
-        },
-        scope = {
-          enabled = false,
-        },
-        exclude = {
-          filetypes = {
-            "aerial",
-            "alpha",
-            "dap-repl",
-            "dashboard",
-            "dockerfile",
-            "FTerm",
-            "help",
-            "man",
-            "neo-tree",
-            "NeogitCommitView",
-            "NeovitStatus",
-            "NvimTree",
-            "oil",
-            "packer",
-            "startup",
-            "TelescopePrompt",
-            "TelescopeResults",
-            "toggleterm",
-            "tsplayground",
-            "qf",
-          }
-        }
-      })
-    end
-  },
-  {
-    "shellRaining/hlchunk.nvim",
-    branch = "dev",
-    enabled = false,
-    event = { "BufReadPre", "BufNewFile" },
-    config = function()
-      require("hlchunk").setup({
-        indent = {
-          enable = true,
-          chars = {
-            "▏",
-          },
-          ahead_lines = 10,
-        },
-        blank = {
-          enable = false,
-        },
-        chunk = {
-          enable = false,
-        },
-        line_num = {
-          enable = false,
-        },
-        exclude_filetypes = {
-          fzf = true,
-          oil = true,
-          oil_preview = true,
-          gitgraph = true,
-        },
-      })
-    end
-  },
-  {
-    "nvimdev/indentmini.nvim",
-    enabled = false,
-    commit = "750ce1f",  -- pressing G breaks the plugin after this commit
-    init = function ()
-      vim.cmd.highlight('IndentLine guifg=#54546d')
-      vim.cmd.highlight('IndentLineCurrent guifg=#54546d')
-    end,
-    config = function ()
-      require("indentmini").setup({
-        only_current = false,
-        char = "▏",
-        exclude = {},
-      })
-    end
-  },
-  {
-    "Saghen/blink.indent",
-    event = "BufReadPost",  -- needs to be before BufEnter
-    config = function ()
-      local opts = {
-        static = {
-          char = "▏",
-          highlights = { "BlinkIndent" },
-        },
-        scope = {
-          enabled = false,
-        },
-      }
-      require("blink.indent").setup(opts)
-    end,
-  },
-
   -- UI Sugar
   {
     "stevearc/dressing.nvim",
@@ -649,6 +533,8 @@ return {
           -- Leader triggers
           { mode = 'n', keys = '<Leader>' },
           { mode = 'x', keys = '<Leader>' },
+
+          { mode = "n", keys = "<Leader><Leader>" },
 
           -- Built-in completion
           { mode = 'i', keys = '<C-x>' },
@@ -755,7 +641,7 @@ return {
           -- diagnostics
           {
             sign = {
-              namespace = { "diagnostic/signs" },
+              namespace = { "diagnostic.signs" },
               maxwidth = 1,
               colwidth = 2,
               auto = false,

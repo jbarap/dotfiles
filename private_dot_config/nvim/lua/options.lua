@@ -56,12 +56,10 @@ opt.wrap = false
 opt.number = true
 
 -- Folding
-opt.foldmethod = "expr"
-opt.foldexpr = "nvim_treesitter#foldexpr()"
 opt.foldlevel = 99
 opt.foldenable = true
 opt.foldtext = ""
-
+-- could do: https://github.com/neovim/neovim/pull/30164#issuecomment-2315421660
 
 -- Search
 opt.hlsearch = true

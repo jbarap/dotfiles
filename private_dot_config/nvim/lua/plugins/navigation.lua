@@ -2,51 +2,40 @@ return {
   -- Smooth scrolling
   {
     "karb94/neoscroll.nvim",
+    enabled = true,
     event = "VeryLazy",
     keys = {
-      { "<C-u>", function() require("neoscroll").ctrl_u({ duration = 200}) end, desc = "Scroll up" },
-      { "<C-d>", function() require("neoscroll").ctrl_d({ duration = 200}) end, desc = "Scroll down" },
-      { "zz", function() require("neoscroll").zz({ duration = 200}) end, desc = "Center view" },
+      { "<C-u>", function() require("neoscroll").ctrl_u({ duration = 200}) end, mode = { "n", "v" }, desc = "Scroll up" },
+      { "<C-d>", function() require("neoscroll").ctrl_d({ duration = 200}) end, mode = { "n", "v" }, desc = "Scroll down" },
     },
     config = function()
       require("neoscroll").setup({
+        mappings = { "zz" },
         cursor_scrolls_alone = true,
         hide_cursor = false,
-        -- pre_hook = function()
-        --   vim.opt.eventignore:append({
-        --     'CursorMoved',
-        --   })
-        -- end,
-        -- post_hook = function()
-        --   vim.opt.eventignore:remove({
-        --     'CursorMoved',
-        --   })
-        -- end,
       })
     end
   },
 
   -- Tmux integration
   {
-    "aserowy/tmux.nvim",
-    event = "VeryLazy",
-    init = function()
-      vim.keymap.set("n", "<Right>", function() require("tmux").resize_right() end, { desc = "Win resize right" })
-      vim.keymap.set("n", "<Left>", function() require("tmux").resize_left() end, { desc = "Win resize left" })
-      vim.keymap.set("n", "<Up>", function() require("tmux").resize_top() end, { desc = "Win resize top" })
-      vim.keymap.set("n", "<Down>", function() require("tmux").resize_bottom() end, { desc = "Win resize bottom" })
-    end,
-    opts = {
-      copy_sync = {
-        enable = false,
-      },
-      navigation = {
-        enable_default_keybindings = true,
-      },
-      resize = {
-        enable_default_keybindings = false,
-      },
+    "mrjones2014/smart-splits.nvim",
+    keys = {
+      -- Movement
+      { "<C-l>", function() require("smart-splits").move_cursor_right() end, desc = "Resize right" },
+      { "<C-h>", function() require("smart-splits").move_cursor_left() end, desc = "Resize left" },
+      { "<C-k>", function() require("smart-splits").move_cursor_up() end, desc = "Resize up" },
+      { "<C-j>", function() require("smart-splits").move_cursor_down() end, desc = "Resize down" },
+
+      -- Resizing
+      { "<Right>", function() require("smart-splits").resize_right() end, desc = "Resize right" },
+      { "<Left>", function() require("smart-splits").resize_left() end, desc = "Resize left" },
+      { "<Up>", function() require("smart-splits").resize_up() end, desc = "Resize up" },
+      { "<Down>", function() require("smart-splits").resize_down() end, desc = "Resize down" },
     },
+    config = function ()
+      require('smart-splits').setup({})
+    end,
   },
 
   -- Buffer navigation
@@ -67,6 +56,19 @@ return {
     opts = {
       scope = "git_branch",
     },
-  }
+  },
+
+  {
+    "nvim-treesitter/nvim-treesitter-context",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+    },
+    cmd = { "TSContextEnable", "TSContextToggle" },
+    opts = {
+      multiwindow = true,
+      -- mode = "topline",
+      mode = "cursor",
+    },
+  },
 
 }

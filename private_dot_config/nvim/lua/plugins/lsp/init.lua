@@ -49,7 +49,7 @@ return {
           )
 
           -- Signature help
-          buf_set_keymap("<C-S-k>",
+          buf_set_keymap("<C-S>",
             function () vim.lsp.buf.signature_help({ border = "rounded" }) end,
             "Signature help",
             "i"
@@ -69,6 +69,9 @@ return {
           buf_fzf_keymap("gD", "lsp_declarations", {}, { desc = "Goto declaration" })
           buf_fzf_keymap("gI", "lsp_implementations", {}, { desc = "Goto implementation" })
           buf_fzf_keymap("gt", "lsp_typedefs", {}, { desc = "Goto type definition" })
+
+          -- Actions
+          buf_fzf_keymap("gra", "lsp_code_actions", {}, { desc = "Code actions" })
 
           -- Incoming/outgoing calls
           buf_fzf_keymap("<Leader>fi", "lsp_incoming_calls", {}, { desc = "Find incoming calls (lsp)" })

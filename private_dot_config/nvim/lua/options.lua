@@ -25,6 +25,10 @@ opt.pumheight = 20
 opt.pumblend = 10
 opt.completeopt = "menu,menuone,noselect,popup,fuzzy"
 
+-- Windows
+-- TODO: consider adding this if plugins handle it nicely
+-- opt.winborder = "rounded"
+
 -- Set encoding
 opt.encoding = "utf-8"
 

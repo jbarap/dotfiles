@@ -26,6 +26,9 @@ return {
 
         local is_big = stat.size > 5000000 -- disable on files > 5MB
 
+        -- Hardcoding this to false while I test performance on big files
+        is_big = false
+
         if is_big and disabled_buffers[bufnr] == nil then
           vim.notify("File is greater than 5MB, disabling treesitter for improved performance.", vim.log.levels.INFO)
           disabled_buffers[bufnr] = true

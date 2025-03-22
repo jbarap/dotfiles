@@ -41,5 +41,8 @@ if use_plugins then
       loader = true,
       require = true,
     },
+    rocks = {
+      hererocks = true,
+    },
   })
 end

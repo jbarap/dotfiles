@@ -49,6 +49,17 @@ set_keymap({ "n", "v" }, "<Leader>dt", "<cmd>diffthis<CR>", { desc = "Diff this"
 
 -- Diagnostics
 set_keymap("n", "<Leader>sl",  function() vim.diagnostic.open_float({ scope = "line", }) end, { desc = "Show diagnostics (line)" })
+set_keymap("n", "gl",  function() vim.diagnostic.open_float({ scope = "line", }) end, { desc = "Show diagnostics (line)" })
+set_keymap("n", "gK",  function()
+  local virt_lines = vim.diagnostic.config().virtual_lines
+  if virt_lines == false then
+    virt_lines = { current_line = true }
+  else
+    virt_lines = false
+  end
+  vim.diagnostic.config({ virtual_lines = virt_lines })
+  end, { desc = "Toggle diagnostics in virtual lines" }
+)
 set_keymap("n", "]d", function()
   vim.diagnostic.jump({count = 1, float = true})
 end, { desc = "Next diagnostic" })

@@ -93,7 +93,18 @@ return {
     "mfussenegger/nvim-dap",
     dependencies = {
       -- check out: igorlfs/nvim-dap-view
-      { "rcarriga/nvim-dap-ui", dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" } },
+      -- { "rcarriga/nvim-dap-ui", dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" } },
+      {
+        "igorlfs/nvim-dap-view",
+        opts = {
+          windows = {
+            terminal = {
+              start_hidden = true,
+              hide = { "python", "python_launch", "python_attach" },
+            },
+          },
+        },
+      },
     },
     lazy = true,
     keys = {
@@ -121,18 +132,25 @@ return {
       {
         "<Leader>di",
         function()
-          require("dapui").eval()
+          -- require("dapui").eval()
+          require("dap.ui.widgets").hover(nil, { border = "rounded" })
         end,
         mode = { "n", "v" },
         desc = "Debug inspect",
       },
       {
-        "<Leader>do",
-        function()
-          require("dapui").float_element()
-        end,
-        desc = "Debug open float",
+        "<Leader>dw",
+        "<cmd>DapViewWatch<CR>",
+        mode = { "n", "v" },
+        desc = "Debug inspect",
       },
+      -- {
+      --   "<Leader>do",
+      --   function()
+      --     require("dapui").float_element()
+      --   end,
+      --   desc = "Debug open float",
+      -- },
       {
         "<Leader>dl",
         function()
@@ -164,15 +182,16 @@ return {
       {
         "<Leader>ds",
         function()
+          require("dap-view").close()
           require("dap").close()
-          require("dapui").close()
+          -- require("dapui").close()
         end,
         desc = "Debug stop (and close)",
       },
     },
     config = function()
       local dap = require("dap")
-      local dapui = require("dapui")
+      -- local dapui = require("dapui")
 
       vim.cmd("au FileType dap-repl lua require('dap.ext.autocompl').attach()")
 
@@ -253,59 +272,60 @@ return {
 
       --          dapui
       -- ──────────────────────────────
-      dapui.setup({
-        icons = {
-          expanded = "―",
-          collapsed = "=",
-        },
-        mappings = {
-          expand = { "<Tab>", "<2-LeftMouse>" },
-          open = "<CR>",
-          remove = "dd",
-          edit = "e",
-        },
-        layouts = {
-          {
-            elements = {
-              { id = "scopes", size = 0.4 },
-              { id = "breakpoints", size = 0.1 },
-              { id = "stacks", size = 0.2 },
-              { id = "watches", size = 0.2 },
-            },
-            size = 40,
-            position = "left",
-          },
-          {
-            elements = {
-              { id = "repl", size = 1 },
-            },
-            size = 10,
-            position = "bottom",
-          },
-        },
-        controls = {
-          enabled = true,
-          element = "repl",
-          icons = {
-            pause = "",
-            play = "",
-            step_into = "",
-            step_over = "",
-            step_out = "",
-            step_back = "",
-            run_last = "",
-            terminate = "",
-          },
-        },
-        floating = {
-          max_height = nil, -- These can be integers or a float between 0 and 1.
-          max_width = nil, -- Floats will be treated as percentage of your screen.
-        },
-      })
+      -- dapui.setup({
+      --   icons = {
+      --     expanded = "―",
+      --     collapsed = "=",
+      --   },
+      --   mappings = {
+      --     expand = { "<Tab>", "<2-LeftMouse>" },
+      --     open = "<CR>",
+      --     remove = "dd",
+      --     edit = "e",
+      --   },
+      --   layouts = {
+      --     {
+      --       elements = {
+      --         { id = "scopes", size = 0.4 },
+      --         { id = "breakpoints", size = 0.1 },
+      --         { id = "stacks", size = 0.2 },
+      --         { id = "watches", size = 0.2 },
+      --       },
+      --       size = 40,
+      --       position = "left",
+      --     },
+      --     {
+      --       elements = {
+      --         { id = "repl", size = 1 },
+      --       },
+      --       size = 10,
+      --       position = "bottom",
+      --     },
+      --   },
+      --   controls = {
+      --     enabled = true,
+      --     element = "repl",
+      --     icons = {
+      --       pause = "",
+      --       play = "",
+      --       step_into = "",
+      --       step_over = "",
+      --       step_out = "",
+      --       step_back = "",
+      --       run_last = "",
+      --       terminate = "",
+      --     },
+      --   },
+      --   floating = {
+      --     max_height = nil, -- These can be integers or a float between 0 and 1.
+      --     max_width = nil, -- Floats will be treated as percentage of your screen.
+      --   },
+      -- })
 
       -- start ui automatically
-      dap.listeners.after["event_initialized"]["custom_dapui"] = function()
-        dapui.open()
+      dap.listeners.after["event_initialized"]["custom_ui"] = function()
+        -- dapui.open()
+        require("dap-view").open()
       end
     end,
   },

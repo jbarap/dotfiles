@@ -556,6 +556,8 @@ return {
 
         if func_opts.hidden then
           cmd_tbl[#cmd_tbl + 1] = "--hidden"
+        else
+          cmd_tbl[#cmd_tbl + 1] = "--no-hidden"
         end
 
         if func_opts.exclude then

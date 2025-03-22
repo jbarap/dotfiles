@@ -78,7 +78,7 @@ set_keymap({ "n" }, "dd", function()
   else
     return "dd"
   end
-end, { remap = false, expr = true }, { desc = "Delete line (don't yank if empty)" })
+end, { remap = false, expr = true, desc = "Delete line (don't yank if empty)" } )
 
 set_keymap("v", "<C-j>", ":m '>+1<CR>gv=gv")
 set_keymap("v", "<C-k>", ":m '<-2<CR>gv=gv")

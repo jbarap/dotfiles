@@ -222,21 +222,6 @@ M.buffer_delete = function()
   end
 end
 
--- TODO: scope buffers to only the ones in this tab?
-M.buffer_close_all_but_current = function()
-  local current_buf = vim.api.nvim_get_current_buf()
-  local all_bufs = vim.api.nvim_list_bufs()
-  for _, buf in ipairs(all_bufs) do
-    if
-      buf ~= current_buf
-      and vim.api.nvim_buf_is_loaded(buf)
-      and vim.api.nvim_buf_get_option(buf, "buftype") ~= "terminal"
-    then
-      vim.cmd(string.format("bdelete %s", buf))
-    end
-  end
-end
-
 --       highlight interface
 -- ──────────────────────────────
 

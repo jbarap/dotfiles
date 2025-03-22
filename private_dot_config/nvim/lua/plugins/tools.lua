@@ -270,58 +270,6 @@ return {
         },
       }
 
-      --          dapui
-      -- ──────────────────────────────
-      -- dapui.setup({
-      --   icons = {
-      --     expanded = "―",
-      --     collapsed = "=",
-      --   },
-      --   mappings = {
-      --     expand = { "<Tab>", "<2-LeftMouse>" },
-      --     open = "<CR>",
-      --     remove = "dd",
-      --     edit = "e",
-      --   },
-      --   layouts = {
-      --     {
-      --       elements = {
-      --         { id = "scopes", size = 0.4 },
-      --         { id = "breakpoints", size = 0.1 },
-      --         { id = "stacks", size = 0.2 },
-      --         { id = "watches", size = 0.2 },
-      --       },
-      --       size = 40,
-      --       position = "left",
-      --     },
-      --     {
-      --       elements = {
-      --         { id = "repl", size = 1 },
-      --       },
-      --       size = 10,
-      --       position = "bottom",
-      --     },
-      --   },
-      --   controls = {
-      --     enabled = true,
-      --     element = "repl",
-      --     icons = {
-      --       pause = "",
-      --       play = "",
-      --       step_into = "",
-      --       step_over = "",
-      --       step_out = "",
-      --       step_back = "",
-      --       run_last = "",
-      --       terminate = "",
-      --     },
-      --   },
-      --   floating = {
-      --     max_height = nil, -- These can be integers or a float between 0 and 1.
-      --     max_width = nil, -- Floats will be treated as percentage of your screen.
-      --   },
-      -- })
-
       -- start ui automatically
       dap.listeners.after["event_initialized"]["custom_ui"] = function()
         -- dapui.open()
@@ -548,6 +496,19 @@ return {
           end,
         })
       end,
+    },
+  },
+
+  -- Diagnostics window
+  {
+    "folke/trouble.nvim",
+    cmd = "Trouble",
+    keys = {
+      { "<leader>so", "<cmd>Trouble diagnostics<cr>", desc = "Show diagnostics (outline)" },
+    },
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = {
+      mode = "document_diagnostics",
     },
   },
 
@@ -954,6 +915,7 @@ return {
     end,
   },
 
+  -- AI stuff
   {
     "olimorris/codecompanion.nvim",
     dependencies = {

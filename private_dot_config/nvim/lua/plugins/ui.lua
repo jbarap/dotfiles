@@ -476,19 +476,6 @@ return {
     end
   },
 
-  -- Diagnostics window
-  {
-    "folke/trouble.nvim",
-    cmd = "Trouble",
-    keys = {
-      { "<leader>so", "<cmd>Trouble diagnostics<cr>", desc = "Show diagnostics (outline)" },
-    },
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    opts = {
-      mode = "document_diagnostics",
-    },
-  },
-
   -- Keymap hints
   -- FIXME: mapping <Leader><CR> works strangely because of clue's special keys
   -- TODO: Profile the performance impact compared to whichkey (not just startup)

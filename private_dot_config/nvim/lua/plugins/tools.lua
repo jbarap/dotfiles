@@ -570,6 +570,24 @@ return {
         fzf_opts.cmd = table.concat(cmd_tbl, " ")
         require("fzf-lua").files(fzf_opts)
       end
+
+      -- Use fzf-lua for vim.ui.select
+      ---@diagnostic disable-next-line: duplicate-set-field
+      vim.ui.select = function(...)
+        require("lazy").load({ plugins = { "fzf-lua" } })
+        require("fzf-lua").register_ui_select(function(_, items)
+          local min_h, max_h = 0.15, 0.70
+          local h = (#items + 4) / vim.o.lines
+          if h < min_h then
+            h = min_h
+          elseif h > max_h then
+            h = max_h
+          end
+          return { winopts = { height = h, width = 0.60, row = 0.40 } }
+        end)
+        return vim.ui.select(...)
+      end
+
     end,
     keys = {
       -- files
@@ -995,6 +1013,7 @@ return {
           enabled = false,
         },
       },
+      input = {},
       scope = {
         treesitter = {
           enabled = false,  -- slow on giant files
@@ -1013,15 +1032,23 @@ return {
           -- ["^vim%."] = true,  -- Shows more data, but breaks it currently
         },
       },
+      styles = {
+        input = {
+          keys = {
+            i_esc = { "<esc>", "cancel", mode = "i", expr = true },
+            n_esc = { "<esc>", "cancel", mode = "n", expr = true },
+          }
+        },
+      },
       dashboard = {
         enabled = true,
         width = 30,
         preset = {
           pick = "fzf-lua",
           keys = {
-            { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
+            { icon = " ", key = "f", desc = "Find File", action = "<leader>ff" },
             { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
-            { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
+            { icon = " ", key = "g", desc = "Find Text", action = "<leader>fg" },
             { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
             { icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
             { icon = " ", key = "h", desc = "Highlights", action = ":FzfLua highlights" },

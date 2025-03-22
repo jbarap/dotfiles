@@ -175,7 +175,6 @@ return {
     "kevinhwang91/nvim-ufo",
     dependencies = "kevinhwang91/promise-async",
     enabled = true,
-    event = "VeryLazy",
     keys = {
       { "zR", function()
           require("ufo").openAllFolds()
@@ -322,7 +321,7 @@ return {
         python = { "isort", "ruff_format" },
         markdown = { "prettier" },
         json = { "biome" },
-        yaml = { "yaml" },
+        yaml = { "yamlfmt" },
       },
     },
   },

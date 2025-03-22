@@ -69,6 +69,7 @@ return {
         "prettier",
         "staticcheck",
         "biome",
+        "yamlfmt",
 
         -- DAP
         "debugpy",

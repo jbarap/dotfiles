@@ -27,7 +27,7 @@ opt.completeopt = "menu,menuone,noselect,popup,fuzzy"
 
 -- Windows
 -- TODO: consider adding this if plugins handle it nicely
--- opt.winborder = "rounded"
+opt.winborder = "single"
 
 -- Set encoding
 opt.encoding = "utf-8"
@@ -62,8 +62,85 @@ opt.number = true
 -- Folding
 opt.foldlevel = 99
 opt.foldenable = true
-opt.foldtext = ""
--- could do: https://github.com/neovim/neovim/pull/30164#issuecomment-2315421660
+opt.foldmethod = "expr"
+opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+
+-- If LSP client supports folding, use that one over treesitter
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if client == nil then return end
+    if client:supports_method('textDocument/foldingRange') then
+      local win = vim.api.nvim_get_current_win()
+      vim.wo[win][0].foldexpr = 'v:lua.vim.lsp.foldexpr()'
+    end
+  end,
+})
+
+-- Custom foldtext highlighted by treesitter + line numbers
+local function fold_virt_text(result, s, lnum, coloff)
+  if not coloff then
+    coloff = 0
+  end
+  local text = ""
+  local hl
+  for i = 1, #s do
+    local char = s:sub(i, i)
+    local hls = vim.treesitter.get_captures_at_pos(0, lnum, coloff + i - 1)
+    local _hl = hls[#hls]
+    if _hl then
+      local new_hl = "@" .. _hl.capture
+      if new_hl ~= hl then
+        table.insert(result, { text, hl })
+        text = ""
+        hl = nil
+      end
+      text = text .. char
+      hl = new_hl
+    else
+      text = text .. char
+    end
+  end
+  table.insert(result, { text, hl })
+end
+
+function _G.custom_foldtext()
+  local result = {}
+
+  -- Insert start line highlighted by treesitter
+  local start_line_str = vim.fn.getline(vim.v.foldstart):gsub("\t", string.rep(" ", vim.o.tabstop))
+  fold_virt_text(result, start_line_str, vim.v.foldstart - 1)
+  table.insert(result, { " ... ", "Delimiter" })
+
+  -- Insert number of lines folded (right-aligned)
+  local buffer_lines = vim.api.nvim_buf_line_count(0)
+  local folded_lines = vim.v.foldend - vim.v.foldstart
+
+  local suffix = (" 󰁂 %d (%d%%)"):format(folded_lines, folded_lines / buffer_lines * 100)
+  local suffix_width = vim.fn.strdisplaywidth(suffix)
+
+  local target_width
+  local text_width = vim.opt.textwidth["_value"]
+  local colorcolumn = vim.opt.colorcolumn["_value"]
+  if text_width ~= 0 and text_width then
+    target_width = text_width
+  elseif colorcolumn ~= 0 and colorcolumn then
+    target_width = colorcolumn
+  else
+    target_width = vim.api.nvim_win_get_width(0)
+  end
+
+  local start_line_width = vim.fn.strdisplaywidth(start_line_str)
+
+  -- 5 is the " ... " length
+  suffix = (" "):rep(math.max(0, target_width - suffix_width - start_line_width - 5)) .. suffix
+
+  table.insert(result, { suffix, "MoreMsg" })
+  return result
+end
+
+vim.opt.foldtext = "v:lua.custom_foldtext()"
+
 
 -- Search
 opt.hlsearch = true

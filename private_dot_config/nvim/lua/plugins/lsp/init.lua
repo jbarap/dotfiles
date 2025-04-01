@@ -8,7 +8,6 @@ return {
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
           local bufnr = args.buf
-          local client = vim.lsp.get_client_by_id(args.data.client_id)
 
           local function buf_set_keymap(lhs, rhs, opts, mode)
             opts = type(opts) == 'string' and { desc = opts, buffer = bufnr }
@@ -25,24 +24,9 @@ return {
             end, vim.tbl_extend("force", { buffer = bufnr }, keymap_opts))
           end
 
-          local have_ufo, ufo = pcall(require, "ufo")
-
-          if not have_ufo and client:supports_method('textDocument/foldingRange') then
-            vim.wo.foldmethod = 'expr'
-            vim.wo.foldexpr = 'v:lua.vim.lsp.foldexpr()'
-          end
-
           -- Hover
           buf_set_keymap("K",
             function()
-              -- peek folded lines if using ufo
-              if have_ufo then
-                local winid = ufo.peekFoldedLinesUnderCursor()
-                if winid then
-                  return
-                end
-              end
-              -- LSP hover as fallback
               vim.lsp.buf.hover({ border = "rounded" })
             end,
             "Hover information"

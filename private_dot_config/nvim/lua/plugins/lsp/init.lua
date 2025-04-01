@@ -64,11 +64,6 @@ return {
           -- Symbols
           buf_fzf_keymap("<Leader>fs", "lsp_document_symbols", {}, { desc = "Find symbols (lsp)" })
           buf_fzf_keymap("<Leader>fS", "lsp_workspace_symbols", {}, { desc = "Find symbols (lsp Workspace)" })
-
-          -- Set up nvim-navic integration
-          if client ~= nil and client.server_capabilities.documentSymbolProvider then
-            require("nvim-navic").attach(client, bufnr)
-          end
         end,
       })
     end,
@@ -112,46 +107,6 @@ return {
     ft = "lua",
   },
 
-  -- Breadcrumbs
-  {
-    "SmiteshP/nvim-navic",
-    lazy = true,
-    opts = {
-      lazy_update_context = true,
-      separator = " ➜ ",
-      depth_limit = 0,
-      depth_limit_indicator = "..",
-      icons = {
-        File = ' ',
-        Module = ' ',
-        Namespace = ' ',
-        Package = ' ',
-        Class = ' ',
-        Method = ' ',
-        Property = ' ',
-        Field = ' ',
-        Constructor = ' ',
-        Enum = ' ',
-        Interface = ' ',
-        Function = ' ',
-        Variable = ' ',
-        Constant = ' ',
-        String = ' ',
-        Number = ' ',
-        Boolean = ' ',
-        Array = ' ',
-        Object = ' ',
-        Key = ' ',
-        Null = ' ',
-        EnumMember = ' ',
-        Struct = ' ',
-        Event = ' ',
-        Operator = ' ',
-        TypeParameter = ' '
-      },
-    },
-  },
-
   -- Symbol tree
   {
     "stevearc/aerial.nvim",
@@ -169,7 +124,6 @@ return {
       show_guides = true,
       disable_max_lines = 10000,
       disable_max_size = 2000000, -- 2MB
-      lazy_load = true,
       layout = {
         preserve_equality = true
       },

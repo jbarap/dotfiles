@@ -336,6 +336,27 @@ return {
         }
       end
 
+      local function format_aerial_breadcrums(symbols, depth, separator, icons_enabled)
+        local parts = {}
+        depth = depth or #symbols
+
+        if depth > 0 then
+          symbols = { unpack(symbols, 1, depth) }
+        else
+          symbols = { unpack(symbols, #symbols + 1 + depth) }
+        end
+
+        for _, symbol in ipairs(symbols) do
+          if icons_enabled then
+            table.insert(parts, string.format("%s%s", symbol.icon, symbol.name))
+          else
+            table.insert(parts, symbol.name)
+          end
+        end
+
+        return table.concat(parts, separator)
+      end
+
       local stl = Bar("statusline", {
         hl = { fg = color.fg, bg = color.bg, bold = false },
       })
@@ -411,13 +432,20 @@ return {
       -- breadcrumbs
       -- TODO: try Bekaboo/dropbar.nvim
       stl:add_item(Item({
-        hidden = function()
-          return not require("nvim-navic").is_available()
-        end,
         prefix = "➜ ",
-        content = function()
-          return require("nvim-navic").get_location()
+        content = function(item, ctx)
+          return format_aerial_breadcrums(require("aerial").get_location(), nil, " ➜ ", true)
         end,
+        cache = {
+          name = "nut.buf.aerial",
+          scope = "buf",
+          clear = {
+            "CursorHold",
+            function(info)
+              return info.buf
+            end
+          },
+        },
       }))
       stl:add_item(nut.spacer())
       stl:add_item(nut.truncation_point())

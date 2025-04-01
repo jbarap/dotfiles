@@ -715,8 +715,8 @@ return {
         },
 
         winopts = {
-          height = 0.95,
-          width = 0.95,
+          height = 0.90,
+          width = 0.90,
 
           on_create = function()
             vim.wo.winblend = 0
@@ -736,7 +736,7 @@ return {
 
         fzf_opts = {
           ["--layout"] = "reverse",
-          ["--pointer"] = "➜",
+          ["--pointer"] = "󰁕",
         },
 
         fzf_colors = {
@@ -828,9 +828,14 @@ return {
             ["ctrl-q"] = actions.file_sel_to_qf,
             ["alt-q"] = { fn = actions.file_sel_to_qf, prefix = "select-all+accept" },
             ["alt-l"] = actions.file_sel_to_ll,
-            ["alt-i"] = actions.toggle_ignore,
-            ["alt-h"] = actions.toggle_hidden,
-            ["alt-f"] = actions.toggle_follow,
+
+            -- FIXME: Toggle functionality introduced in:
+            -- https://github.com/ibhagwan/fzf-lua/commit/d1473afc7a617e6c66b5bb3caf10949499af8269
+            -- However, if you want to disable the UI for them, title_flags=false doesn't
+            -- work for some reason
+            -- ["alt-i"] = actions.toggle_ignore,
+            -- ["alt-h"] = actions.toggle_hidden,
+            -- ["alt-f"] = actions.toggle_follow,
           },
           buffers = {
             ["default"] = actions.buf_edit,

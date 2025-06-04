@@ -8,6 +8,12 @@ return {
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
           local bufnr = args.buf
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+
+          -- Enable document_color if possible
+          if client and client:supports_method('textDocument/documentColor') then
+            vim.lsp.document_color.enable(true, bufnr, { style = "virtual" })
+          end
 
           local function buf_set_keymap(lhs, rhs, opts, mode)
             opts = type(opts) == 'string' and { desc = opts, buffer = bufnr }
@@ -95,7 +101,8 @@ return {
       for _, name in ipairs(language_servers.lsps_in_use) do
         local server_config = language_servers.configs[name]
         local opts = vim.tbl_extend("keep", server_config, base_options or {})
-        require("lspconfig")[name].setup(opts)
+        vim.lsp.config(name, opts)
+        vim.lsp.enable(name)
       end
 
     end

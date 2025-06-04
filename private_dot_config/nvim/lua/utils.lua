@@ -1,5 +1,16 @@
 local M = {}
 
+--            envs
+-- ──────────────────────────────
+function M.find_python_bin()
+  local python_path = "python"
+  local virtual_env = vim.env.VIRTUAL_ENV or vim.env.PYENV_VIRTUAL_ENV
+  if virtual_env then
+    python_path = vim.fs.joinpath(virtual_env, "bin", "python")
+  end
+  return python_path
+end
+
 --            tables
 -- ──────────────────────────────
 function M.tbl_concat(tbl1, tbl2)

@@ -257,11 +257,14 @@ return {
     ft = { "markdown", "codecompanion", "Avante" },
     config = function()
       require("render-markdown").setup({
-        file_types = { "markdown", "Avante" },
+        file_types = { "markdown", "codecompanion" },
         win_options = {
           conceallevel = {
             rendered = 2, -- Correctly shows spaces when concealing &nbsp
           },
+        },
+        code = {
+          border = "thin",
         },
       })
     end,
@@ -468,11 +471,18 @@ return {
           return vim.api.nvim_get_option_value("filetype", { buf = ctx.bufnr }) ~= "python"
         end,
         content = function (_, _)
-          -- only suppoorts conda for now
-          local python_venv = vim.env.CONDA_DEFAULT_ENV
-            if not python_venv then
-              python_venv = "system"
-            end
+          local python_venv
+
+          if vim.env.CONDA_DEFAULT_ENV then
+            -- Conda
+            python_venv = vim.env.CONDA_DEFAULT_ENV
+          elseif vim.env.VIRTUAL_ENV_PROMPT then
+            -- Virtualenv
+            -- It's in a "(my-env) " format, so strip it
+            python_venv = string.sub(vim.env.VIRTUAL_ENV_PROMPT, 2, -3)
+          else
+            python_venv = "system"
+          end
 
           return string.format("(%s)", python_venv)
         end,

@@ -51,11 +51,13 @@ alias kitty="env __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia ki
 alias compose-run="docker compose run --rm"
 
 # kubernetes
-alias mkctl="microk8s kubectl"
+alias k="kubectl"
+alias kx="kubectx"
+alias kn="kubens"
 
 # bat
 alias cat="batcat"
 
 # gcloud
-alias gssh="gcloud compute ssh"
-alias gscp="gcloud compute scp"
+alias gssh="TERM=xterm-256color gcloud compute ssh"
+alias gscp="TERM=xterm-256color gcloud compute scp"

@@ -160,6 +160,7 @@ return {
   -- External tools as diagnostics/code actions/completion
   {
     "nvimtools/none-ls.nvim",
+    enabled = false,
     event = { "bufreadpre", "bufnewfile" },
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function ()

@@ -27,7 +27,7 @@ opt.completeopt = "menu,menuone,noselect,popup,fuzzy"
 
 -- Windows
 -- TODO: consider adding this if plugins handle it nicely
-opt.winborder = "single"
+-- opt.winborder = "single"
 
 -- Set encoding
 opt.encoding = "utf-8"
@@ -166,7 +166,7 @@ opt.listchars = { tab = "  ", space = " ", nbsp = " " }
 -- Jumplist
 opt.jumpoptions = "stack"
 
--- Use filetype in lua
+-- MLFlow
 vim.filetype.add({
   filename = {
     ["MLproject"] = "yaml",
@@ -176,13 +176,28 @@ vim.filetype.add({
   },
 })
 
+-- Helm
+vim.filetype.add({
+  pattern = {
+    [".*/templates/.*%.tpl"] = "helm",
+    [".*/templates/.*%.ya?ml"] = "helm",
+    [".*/templates/.*%.txt"] = "helm",
+    ["helmfile.*%.ya?ml"] = "helm",
+    ["helmfile.*%.ya?ml.gotmpl"] = "helm",
+    ["values.*%.yaml"] = "yaml.helm-values",
+  },
+  filename = {
+    ["Chart.yaml"] = "yaml.helm-chartfile",
+  },
+})
+
 -- disable netrw
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 -- Diff options
 -- oddly enough, this option isn't set as a table
-opt.diffopt = "filler,vertical,closeoff,internal,indent-heuristic,algorithm:patience,linematch:100"
+opt.diffopt = "filler,vertical,closeoff,internal,indent-heuristic,algorithm:histogram,linematch:120"
 
 -- Highlight text on yank
 utils.create_augroup("highlight_on_yank", {

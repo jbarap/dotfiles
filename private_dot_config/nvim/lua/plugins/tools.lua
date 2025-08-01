@@ -64,13 +64,7 @@ return {
         ["<C-c>"] = "actions.close",
         ["<C-r>"] = "actions.refresh",
         ["<C-y>"] = "actions.yank_entry",
-        ["<C-S-y>"] = {
-          callback = function()
-            require("oil.actions").yank_entry.callback()
-            vim.fn.setreg("+", vim.fn.getreg(vim.v.register))
-          end,
-          desc = "Yank the filepath of the entry under the cursor to the system clipboard",
-        },
+        ["<C-S-y>"] = "actions.copy_to_system_clipboard",
         ["<C-q>"] = "actions.add_to_qflist",
         ["<BS>"] = "actions.parent",
         ["-"] = "actions.parent",
@@ -558,16 +552,20 @@ return {
       ---@diagnostic disable-next-line: duplicate-set-field
       vim.ui.select = function(...)
         require("lazy").load({ plugins = { "fzf-lua" } })
-        require("fzf-lua").register_ui_select(function(_, items)
-          local min_h, max_h = 0.15, 0.70
-          local h = (#items + 4) / vim.o.lines
-          if h < min_h then
-            h = min_h
-          elseif h > max_h then
-            h = max_h
-          end
-          return { winopts = { height = h, width = 0.60, row = 0.40 } }
-        end)
+
+        if not require("fzf-lua.providers.ui_select").is_registered() then
+          require("fzf-lua").register_ui_select(function(_, items)
+            local min_h, max_h = 0.15, 0.70
+            local h = (#items + 4) / vim.o.lines
+            if h < min_h then
+              h = min_h
+            elseif h > max_h then
+              h = max_h
+            end
+            return { winopts = { height = h, width = 0.60, row = 0.40 } }
+          end, true)
+        end
+
         return vim.ui.select(...)
       end
 
@@ -1041,6 +1039,7 @@ return {
             { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
             { icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
             { icon = " ", key = "h", desc = "Highlights", action = ":FzfLua highlights" },
+            { icon = " ", key = ".", desc = "File tree", action = ":Oil" },
             { icon = " ", key = "q", desc = "Quit", action = ":qa" },
           },
           header = [[

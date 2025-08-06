@@ -61,3 +61,6 @@ alias cat="batcat"
 # gcloud
 alias gssh="TERM=xterm-256color gcloud compute ssh"
 alias gscp="TERM=xterm-256color gcloud compute scp"
+
+# fzf
+alias fzf="fzf --tmux center"

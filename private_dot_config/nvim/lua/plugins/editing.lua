@@ -238,6 +238,7 @@ return {
         markdown = { "prettier" },
         json = { "biome" },
         yaml = { "yamlfmt" },
+        just = { "just" },
       },
     },
   },

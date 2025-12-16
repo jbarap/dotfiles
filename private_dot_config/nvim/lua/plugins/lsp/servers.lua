@@ -8,8 +8,10 @@ M.lsps_in_use = {
   -- "jedi_language_server",
   -- "pylyzer",
   -- "pyright",
-  "basedpyright",
+  -- "basedpyright",
   "ty",
+  -- "pyrefly",
+  -- "zuban",
 
   "lua_ls",
   "dockerls",
@@ -19,6 +21,7 @@ M.lsps_in_use = {
   "yamlls",
   "clangd",
   "helm-ls",
+  "html",
 }
 
 --        lsp settings
@@ -143,24 +146,27 @@ M._configs = {
   },
 
   ty = {
-    on_init = function(client)
-      -- Disable a lot of features while running alongside basedpyright for alpha testing
-      client.server_capabilities.hoverProvider = false
-      client.server_capabilities.completionProvider = false
-
-      client.server_capabilities.declarationProvider = false
-      client.server_capabilities.definitionProvider = false
-      client.server_capabilities.implementationProvider = false
-      client.server_capabilities.typeDefinitionProvider = false
-      client.server_capabilities.referencesProvider = false
-
-      client.server_capabilities.documentSymbolProvider = false
-      client.server_capabilities.foldingRangeProvider = false
-      client.server_capabilities.documentFormattingProvider = false
-      client.server_capabilities.renameProvider = false
-      client.server_capabilities.semanticTokensProvider = false
-    end,
+    settings = {
+      ty = {
+        disableLanguageServices = false,
+        experimental = {
+        },
+      },
+    },
   },
+
+  pyrefly = {
+    -- https://pyrefly.org/en/docs/IDE/#customization
+    settings = {
+      python = {
+        pyrefly = {
+          displayTypeErrors = "force-on",
+        },
+      },
+    },
+  },
+
+  zuban = {},
 
   lua_ls = function()
     local runtime_path = vim.split(package.path, ";")

@@ -51,6 +51,7 @@ return {
         "icon",
       },
       lsp_file_methods = {
+        enabled = true,
         timeout_ms = 5000,
       },
       delete_to_trash = false,
@@ -380,7 +381,6 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
-      "antoinemadec/FixCursorHold.nvim",
       "nvim-neotest/neotest-python",
     },
     config = function()
@@ -556,7 +556,7 @@ return {
         if not require("fzf-lua.providers.ui_select").is_registered() then
           require("fzf-lua").register_ui_select(function(_, items)
             local min_h, max_h = 0.15, 0.70
-            local h = (#items + 4) / vim.o.lines
+            local h = (#items + 10) / vim.o.lines
             if h < min_h then
               h = min_h
             elseif h > max_h then
@@ -794,7 +794,6 @@ return {
             ["<F3>"] = "toggle-preview-wrap",
             ["<C-p>"] = "toggle-preview",
             ["<C-r>"] = "toggle-preview-ccw",
-            ["<F6>"] = "toggle-preview-cw",
             ["<A-j>"] = "preview-down",
             ["<A-k>"] = "preview-up",
             ["<C-d>"] = "preview-page-down",
@@ -1038,6 +1037,7 @@ return {
             { icon = " ", key = "g", desc = "Find Text", action = "<leader>fg" },
             { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
             { icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
+            { icon = " ", key = "M", desc = "Mason", action = ":Mason" },
             { icon = " ", key = "h", desc = "Highlights", action = ":FzfLua highlights" },
             { icon = " ", key = ".", desc = "File tree", action = ":Oil" },
             { icon = " ", key = "q", desc = "Quit", action = ":qa" },

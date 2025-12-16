@@ -91,6 +91,11 @@ return {
             -- Diffview
             DiffviewCursorLine = { bg = "#252525" },
 
+            -- Gitsigns
+            GitSignsAddInline = { link = "DiffAdd" },
+            GitSignsChangeInline = { link = "DiffChange" },
+            GitSignsDeleteInline = { link = "DiffDelete" },
+
             -- LSP
             ["@lsp.type.namespace"] = { fg = colors.palette.lotusRed4 },
 
@@ -98,6 +103,7 @@ return {
             ["@module"] = { link = "@lsp.type.namespace" },
             ["@class"] = { link = "@lsp.type.class" },
             ["@method"] = { link = "@lsp.type.method" },
+            -- ["@spell"] = { link = "@variable" },
 
           }
         end,
@@ -108,7 +114,7 @@ return {
 
   -- Pattern highlighter
   {
-    "echasnovski/mini.hipatterns",
+    "nvim-mini/mini.hipatterns",
     lazy = true,
     init = function ()
       vim.api.nvim_create_user_command(
@@ -518,7 +524,7 @@ return {
   -- FIXME: mapping <Leader><CR> works strangely because of clue's special keys
   -- TODO: Profile the performance impact compared to whichkey (not just startup)
   {
-    "echasnovski/mini.clue",
+    "nvim-mini/mini.clue",
     event = "VeryLazy",
     config = function ()
       local miniclue = require('mini.clue')

@@ -170,7 +170,7 @@ return {
 
   -- Backup git porcelain
   {
-    "echasnovski/mini-git",
+    "nvim-mini/mini-git",
     cmd = "Git",
     config = function ()
       require("mini.git").setup({})

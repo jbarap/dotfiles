@@ -1,7 +1,7 @@
 return {
   -- Autopairs
   {
-    "echasnovski/mini.pairs",
+    "nvim-mini/mini.pairs",
     event = "InsertEnter",
     config = function ()
       require("mini.pairs").setup({
@@ -106,7 +106,7 @@ return {
 
   -- Surround
   {
-    "echasnovski/mini.surround",
+    "nvim-mini/mini.surround",
     config = function ()
       require("mini.surround").setup({
         custom_surroundings = {
@@ -150,7 +150,7 @@ return {
 
   -- Text objects
   {
-    "echasnovski/mini.ai",
+    "nvim-mini/mini.ai",
     event = "VeryLazy",
     config = function ()
       require("mini.ai").setup({
@@ -228,6 +228,7 @@ return {
     "stevearc/conform.nvim",
     keys = {
       { "<Leader>cf", function() require("conform").format({
+        async = true,
         lsp_fallback = true,
       }) end, mode = { "n", "v" }, desc = "Code format" },
     },

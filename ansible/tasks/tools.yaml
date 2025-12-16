@@ -1,8 +1,9 @@
 - name: Install other tools (tmux, fzf, rg, etc.)
   become: true
   ansible.builtin.apt:
-    # TODO: install broot with cargo?
+    # TODO: install broot, xh,  with cargo?
     name:
+      # TODO: cargo install --locked tree-sitter-cli
       - bat
       - tmux  # TODO: install from release tarball
       - tmuxp  # TODO: install with pipx: tmuxp
@@ -15,6 +16,7 @@
       - imagemagick
       - pipx
       - mpv
+      - jo  # build json from shell arguments
       - autopoint  # for fswatch
       - texinfo  # for fswatch
       - libgit2-dev  # for nvim fugit2

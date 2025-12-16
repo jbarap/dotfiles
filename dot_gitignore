@@ -1,5 +1,6 @@
 # general
 *.ignore.*
+.scratch/**
 
 # python
 .python-version

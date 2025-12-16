@@ -15,7 +15,8 @@
             "if not debugpy.is_client_connected():",
             "\tdebugpy.listen(${1:5678})",
             "\tprint(f\"debugpy listening on localhost:$1\", flush=True)",
-            "\tdebugpy.wait_for_client()$0"
+            "\tdebugpy.wait_for_client()",
+            "\tbreakpoint()$0"
         ],
         "description": "Code snippet for debugpy remote attach"
     }

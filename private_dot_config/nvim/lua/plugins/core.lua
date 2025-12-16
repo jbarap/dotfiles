@@ -10,7 +10,7 @@ return {
 
   -- Rooter
   {
-    "echasnovski/mini.misc",
+    "nvim-mini/mini.misc",
     config = function ()
       local files = {
         "_darcs",
@@ -49,6 +49,8 @@ return {
         "pyright",
         "basedpyright",
         "ty",
+        "pyrefly",
+        "zuban",
         "python-lsp-server",
         "gopls",
         "lua-language-server",
@@ -57,6 +59,7 @@ return {
         "yaml-language-server",
         "terraform-ls",
         "clangd",
+        "html-lsp",
 
         -- linters/formatters
         "mypy",

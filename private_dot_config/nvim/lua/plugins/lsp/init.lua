@@ -4,6 +4,7 @@ return {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     init = function ()
+
       -- Set up keymaps
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
@@ -32,9 +33,7 @@ return {
 
           -- Hover
           buf_set_keymap("K",
-            function()
-              vim.lsp.buf.hover({ border = "rounded" })
-            end,
+            function() vim.lsp.buf.hover({ border = "rounded" }) end,
             "Hover information"
           )
 
@@ -51,6 +50,21 @@ return {
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({}))
             end,
             "Code hints toggle"
+          )
+
+          -- Inline completion (copilot-like)
+          buf_set_keymap("<C-CR>",
+            function()
+              if not vim.lsp.inline_completion.get() then
+                return "<C-CR>"
+              end
+            end,
+            {
+              expr = true,
+              replace_keycodes = true,
+              desc = "Get the current inline completion",
+            },
+            "i"
           )
 
           -- Goto
@@ -72,6 +86,7 @@ return {
           buf_fzf_keymap("<Leader>fS", "lsp_workspace_symbols", {}, { desc = "Find symbols (lsp Workspace)" })
         end,
       })
+
     end,
     config = function()
       -- Set up language servers

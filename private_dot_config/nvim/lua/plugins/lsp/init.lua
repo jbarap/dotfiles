@@ -33,7 +33,7 @@ return {
 
           -- Hover
           buf_set_keymap("K",
-            function() vim.lsp.buf.hover({ border = "rounded" }) end,
+            function() require("plugins.lsp.custom_hover").hover({ border = "rounded" }) end,
             "Hover information"
           )
 

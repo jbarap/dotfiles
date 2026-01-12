@@ -1,0 +1,55 @@
+# Font
+font-family = "JetBrains Mono"
+font-size = 10
+
+# If not present, fonts will look longer at certain sizes
+freetype-load-flags = no-force-autohint
+
+# Windows
+window-decoration = true
+gtk-toolbar-style = flat
+gtk-wide-tabs = false
+gtk-titlebar-hide-when-maximized = true
+
+# Mouse
+mouse-scroll-multiplier = 0.5
+
+# Colors
+background = #101010
+foreground = #f7f6ec
+selection-foreground = #1d1d1d
+selection-background = #165776
+
+cursor-color = #f9faf6
+
+# black
+palette = 0=#343835
+palette = 8=#585a58
+
+# red
+palette = 1=#ce3e60
+palette = 9=#d18ea6
+
+# green
+palette = 2=#7bb75b
+palette = 10=#767e2b
+
+# yellow
+palette = 3=#e8b32a
+palette = 11=#77592e
+
+# blue
+palette = 4=#4c99d3
+palette = 12=#135879
+
+# purple
+palette = 5=#a57fc4
+palette = 13=#5f4190
+
+# aqua
+palette = 6=#389aac
+palette = 14=#76bbca
+
+# white
+palette = 7=#f9faf6
+palette = 15=#b1b5ae

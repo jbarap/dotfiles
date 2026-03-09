@@ -19,6 +19,7 @@ return {
         "gitignore",
         "go",
         "hcl",
+        "helm",
         "html",
         "http",
         "java",
@@ -26,7 +27,7 @@ return {
         "jsdoc",
         "json",
         "json5",
-        "jsonc",
+        "just",
         "latex",
         "lua",
         "luadoc",
@@ -47,6 +48,7 @@ return {
         "typescript",
         "vim",
         "vimdoc",
+        "vue",
         "xml",
         "yaml",
       }
@@ -84,8 +86,30 @@ return {
 
           -- Start highlighting immediately (works if parser exists)
           pcall(vim.treesitter.start, buf, lang)
+
+          -- Indent (slow)
+          -- NOTE: disable vim.opt.smartindent if problematic
+          vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
         end,
       })
+
+      -- Incremental selection
+      vim.keymap.set({ "n", "x", "o" }, "<Tab>", function()
+        if vim.treesitter.get_parser(nil, nil, { error = false }) then
+          require "vim.treesitter._select".select_parent(vim.v.count1)
+        else
+          vim.lsp.buf.selection_range(vim.v.count1)
+        end
+      end, { desc = "Select parent treesitter node or outer incremental lsp selections" })
+
+      vim.keymap.set({ "n", "x", "o" }, "<S-Tab>", function()
+        if vim.treesitter.get_parser(nil, nil, { error = false }) then
+          require "vim.treesitter._select".select_child(vim.v.count1)
+        else
+          vim.lsp.buf.selection_range(-vim.v.count1)
+        end
+      end, { desc = "Select child treesitter node or inner incremental lsp selections" })
+
     end
   },
   {
@@ -172,25 +196,6 @@ return {
       end)
 
     end,
-  },
-  {
-    -- while more LSPs support textDocument/selectionRange
-    -- see :h vim.lsp.buf.selection_range
-    -- https://github.com/neovim/neovim/pull/34011/files
-    "MeanderingProgrammer/treesitter-modules.nvim",
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
-    event = "VeryLazy",
-    opts = {
-      incremental_selection = {
-        enable = true,
-        keymaps = {
-          init_selection = "<CR>",
-          scope_incremental = "<CR>",
-          node_incremental = "<TAB>",
-          node_decremental = "<S-TAB>",
-        },
-      },
-    },
   },
 
 }

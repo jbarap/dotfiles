@@ -1,5 +1,6 @@
 -- Copy of vim.lsp.buf.hover as of v0.12.0-dev-1855+gc08139d790
--- + replace "&nbsp;" with " "
+-- + replace html entities
+-- + replace escaped characters
 
 local api = vim.api
 local lsp = vim.lsp
@@ -156,12 +157,34 @@ function M.hover(config)
     -- Remove last linebreak ('---')
     contents[#contents] = nil
 
-    -- Remove html entities from servers that send it instead of a space
+    -- Remove html entities from servers that send them
     local function clean_html_entities(str)
-      return str:gsub("&nbsp;", " ")
+      local entities = {
+        nbsp = " ",
+        lt = "<",
+        gt = ">",
+        amp = "&",
+        quot = '"',
+        apos = "'",
+        ensp = " ",
+        emsp = " ",
+      }
+      for entity, char in pairs(entities) do
+        str = str:gsub("&" .. entity .. ";", char)
+      end
+      return str
     end
+
+    local function clean_escape_characters(str)
+      local chars = "\\`*_{}[]()#+-.!/"
+      for char in chars:gmatch(".") do
+        str = str:gsub("\\%" .. char, char)
+      end
+      return str
+    end
+
     for i, line in ipairs(contents) do
-      contents[i] = clean_html_entities(line)
+      contents[i] = clean_escape_characters(clean_html_entities(line))
     end
 
     local _, winid = lsp.util.open_floating_preview(contents, format, config)

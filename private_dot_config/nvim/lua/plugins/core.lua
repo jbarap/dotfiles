@@ -60,6 +60,7 @@ return {
         "terraform-ls",
         "clangd",
         "html-lsp",
+        "harper-ls",
 
         -- linters/formatters
         "mypy",

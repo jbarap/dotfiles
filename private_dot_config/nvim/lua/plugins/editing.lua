@@ -176,7 +176,7 @@ return {
     lazy = true,
     cmd = { "Neogen" },
     keys = {
-      { "<Leader>cdg", function()
+      { "<Leader>cD", function()
         if vim.bo.filetype == "python" then
           vim.ui.select({ "google_docstrings", "numpydoc", "reST" }, { prompt = "Enter docstring type:" },
             function(input)
@@ -191,8 +191,6 @@ return {
           require("neogen").generate()
         end
       end, desc = "Code docstring generate" },
-      { "<Leader>cd.", function() require("neogen").jump_next() end, desc = "Code docstring next field" },
-      { "<Leader>cd,", function() require("neogen").jump_prev() end, desc = "Code docstring prev field" },
     },
     dependencies = { "nvim-treesitter/nvim-treesitter" },
     opts = {

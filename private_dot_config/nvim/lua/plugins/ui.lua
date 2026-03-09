@@ -35,7 +35,7 @@ return {
                 add = "#0a2b2b",
                 delete = "#331523",
                 change = "#1c2536",
-                text = "#1f3b70",
+                text = "#2B4F94",
               },
               vcs = {
                 added = "#1f6f6f",
@@ -92,9 +92,9 @@ return {
             DiffviewCursorLine = { bg = "#252525" },
 
             -- Gitsigns
-            GitSignsAddInline = { link = "DiffAdd" },
-            GitSignsChangeInline = { link = "DiffChange" },
-            GitSignsDeleteInline = { link = "DiffDelete" },
+            GitSignsAddInline = { link = "DiffText" },
+            GitSignsChangeInline = { link = "DiffText" },
+            GitSignsDeleteInline = { link = "DiffText" },
 
             -- LSP
             ["@lsp.type.namespace"] = { fg = colors.palette.lotusRed4 },
@@ -576,7 +576,7 @@ return {
           -- custom
           { mode = 'n', keys = '<Leader>b', desc = '+Buffer' },
           { mode = 'n', keys = '<Leader>c', desc = '+Code' },
-          { mode = 'n', keys = '<Leader>cd', desc = '+Documentation' },
+          { mode = 'n', keys = '<Leader>cD', desc = '+Documentation' },
           { mode = 'n', keys = '<Leader>d', desc = '+Debugging/Diff' },
           { mode = 'n', keys = '<Leader>dv', desc = '+Diffview' },
           { mode = 'n', keys = '<Leader>f', desc = '+Find/Files' },

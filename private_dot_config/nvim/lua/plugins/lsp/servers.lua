@@ -9,11 +9,12 @@ M.lsps_in_use = {
   -- "pylyzer",
   -- "pyright",
   -- "basedpyright",
-  "ty",
-  -- "pyrefly",
+  -- "ty",
+  "pyrefly",
   -- "zuban",
 
   "lua_ls",
+  "harper_ls",
   "dockerls",
   "gopls",
   "jsonls",
@@ -167,6 +168,8 @@ M._configs = {
   },
 
   zuban = {},
+
+  harper_ls = {},
 
   lua_ls = function()
     local runtime_path = vim.split(package.path, ";")

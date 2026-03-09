@@ -1,4 +1,7 @@
 return {
+  -- Check out: https://github.com/zion-off/mole.nvim
+  -- for code annotations
+
   -- File explorer and modifier
   -- TODO: add support for image preview
   {
@@ -461,6 +464,16 @@ return {
 
   -- Remote
   {
+    "uhs-robert/sshfs.nvim",
+    opts = {
+      ui = {
+        local_picker = {
+          preferred_picker = "fzf-lua",
+        },
+      },
+    },
+  },
+  {
     "kenn7/vim-arsync",
     init = function()
       vim.keymap.set("n", "<Leader>rP", "<cmd>ARsyncUp<CR>", { desc = "Remote push (rsync)" })
@@ -863,6 +876,9 @@ return {
       require("perfanno").setup({
         line_highlights = util.make_bg_highlights(bgcolor, "#CC3300", 10),
         vt_highlight = util.make_fg_highlight("#CC3300"),
+        fzf_lua = {
+          enabled = true,
+        },
       })
     end,
   },
@@ -1032,13 +1048,13 @@ return {
         preset = {
           pick = "fzf-lua",
           keys = {
-            { icon = " ", key = "f", desc = "Find File", action = "<leader>ff" },
             { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
+            { icon = " ", key = "f", desc = "Find File", action = "<leader>ff" },
             { icon = " ", key = "g", desc = "Find Text", action = "<leader>fg" },
+            { icon = "󰊢 ", key = "G", desc = "Git", action = ":Neogit" },
             { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
             { icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
             { icon = " ", key = "M", desc = "Mason", action = ":Mason" },
-            { icon = " ", key = "h", desc = "Highlights", action = ":FzfLua highlights" },
             { icon = " ", key = ".", desc = "File tree", action = ":Oil" },
             { icon = " ", key = "q", desc = "Quit", action = ":qa" },
           },

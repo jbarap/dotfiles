@@ -110,10 +110,12 @@ return {
       },
       hooks = {
         on_select_commit = function(commit)
-          print("selected commit:", commit.hash)
+          vim.notify('DiffviewOpen ' .. commit.hash .. '^!')
+          vim.cmd(':DiffviewOpen ' .. commit.hash .. '^!')
         end,
         on_select_range_commit = function(from, to)
-          print("selected range:", from.hash, to.hash)
+          vim.notify('DiffviewOpen ' .. from.hash .. '~1..' .. to.hash)
+          vim.cmd(':DiffviewOpen ' .. from.hash .. '~1..' .. to.hash)
         end,
       },
     },
@@ -178,6 +180,22 @@ return {
   },
 
   -- Diff comparison
+  {
+    "esmuellert/codediff.nvim",
+    dependencies = { "MunifTanjim/nui.nvim" },
+    keys = {
+      { "<leader>cd", function() vim.fn.feedkeys(":CodeDiff ") end, mode = { "n", "v" }, desc = "Code diff" },
+    },
+    cmd = "CodeDiff",
+    opts = {
+      highlights = {
+        char_brightness = 1.7,
+      },
+      explorer = {
+        view_mode = "tree",
+      },
+    },
+  },
   {
     "sindrets/diffview.nvim",
     cmd = { "DiffviewOpen", "DiffviewFileHistory" },

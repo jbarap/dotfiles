@@ -20,6 +20,11 @@ foreground = #f7f6ec
 selection-foreground = #1d1d1d
 selection-background = #165776
 
+# Opt out of palette generation because it messes up existing colors in some applications
+# see: https://github.com/ghostty-org/ghostty/pull/10554
+# and: https://gist.github.com/jake-stewart/0a8ea46159a7da2c808e5be2177e1783
+palette-generate = false
+
 cursor-color = #f9faf6
 
 # black

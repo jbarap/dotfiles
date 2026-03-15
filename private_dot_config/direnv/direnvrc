@@ -1,0 +1,16 @@
+layout_uv() {
+    if [[ -d ".venv" ]]; then
+        VIRTUAL_ENV="$(pwd)/.venv"
+    else
+        log_status "No venv. Skipping activation."
+        return 0
+    fi
+
+    if [ -d ".venv/bin" ]; then
+        PATH_add .venv/bin
+    elif [ -d ".venv/Scripts" ]; then
+        PATH_add .venv/Scripts
+    fi
+    export UV_ACTIVE=1  # or VENV_ACTIVE=1
+    export VIRTUAL_ENV
+}

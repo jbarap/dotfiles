@@ -12,6 +12,26 @@
 	cm = commit -m
 	wt = worktree
 	clone-for-worktree = "!sh $HOME/scripts/git-clone-for-worktrees.sh"
+	; Delete local branches whose changes are already in the base branch, even
+	; via squash/rebase merges. Uses patch-identity (synthesize the branch's diff
+	; against the merge-base, then ask `git cherry` if it's already applied) rather
+	; than ancestry, so it preserves the safety of `git branch -d` for genuinely
+	; unmerged work. Base branch: first arg, else origin's default; if neither
+	; resolves it errors out rather than guessing (e.g. silently using the feature
+	; branch you're on as the base). The branch you're currently on is never
+	; deleted, so it's safe to run from a feature branch too.
+	; Usage: git sweep   |   git sweep master-dev
+	sweep = "!f() { \
+		base=\"${1:-$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null | sed 's@^origin/@@')}\"; \
+		[ -n \"$base\" ] || { echo 'git sweep: cannot determine base branch; pass one explicitly: git sweep <base>' >&2; return 1; }; \
+		cur=\"$(git rev-parse --abbrev-ref HEAD)\"; \
+		git for-each-ref refs/heads/ '--format=%(refname:short)' | while read b; do \
+			{ [ \"$b\" = \"$base\" ] || [ \"$b\" = \"$cur\" ]; } && continue; \
+			mb=\"$(git merge-base \"$base\" \"$b\")\" || continue; \
+			if [ \"$(git cherry \"$base\" \"$(git commit-tree \"$(git rev-parse \"$b^{tree}\")\" -p \"$mb\" -m _)\" | head -c1)\" = \"-\" ]; then \
+				echo \"deleting squash-merged: $b\"; git branch -D \"$b\"; \
+			fi; \
+		done; }; f"
 [branch]
 	autoSetupRebase = always
 [user]

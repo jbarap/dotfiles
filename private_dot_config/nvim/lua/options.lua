@@ -202,7 +202,9 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 -- Diff options
--- oddly enough, this option isn't set as a table
+-- TODO: look out for when inline:char is compatible with linematch
+-- see: https://github.com/vim/vim/pull/16881
+-- and: https://github.com/neovim/neovim/commit/e8785c2e94508eeabf6ff63e1fe1bcaecceef946
 opt.diffopt = "filler,vertical,closeoff,internal,indent-heuristic,algorithm:histogram,linematch:120"
 
 -- Highlight text on yank

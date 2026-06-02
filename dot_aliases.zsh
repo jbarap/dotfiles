@@ -30,6 +30,7 @@ alias jl="jupyter-lab"
 alias pt="poetry"
 alias pipgrep="pip list | grep -i"
 alias spy='sudo env "PATH=$PATH" py-spy'
+alias svenv="source .venv/bin/activate"
 
 # mamba
 alias mm="micromamba"

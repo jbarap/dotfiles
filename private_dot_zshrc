@@ -1,9 +1,15 @@
+# Direnv workaround to avoid p10k warning if starting up a shell when direnv emmits output
+# see: https://github.com/romkatv/powerlevel10k/issues/702
+emulate zsh -c "$(direnv export zsh)"
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
+
+emulate zsh -c "$(direnv hook zsh)"
 
 # --------
 # Options
@@ -86,6 +92,16 @@ fi
 if [ -f "$HOME/tools/google-cloud-sdk/completion.zsh.inc" ]; then
     . "$HOME/tools/google-cloud-sdk/completion.zsh.inc"
 fi
+
+# Claude
+claude() {
+  if [[ -z "$CLAUDE_CONFIG_DIR" ]]; then
+    echo "No profile active. cd into a project dir with a .envrc, or set CLAUDE_CONFIG_DIR manually."
+    return 1
+  else
+    command claude "$@"
+  fi
+}
 
 # ------------------------
 # Zim module configuration

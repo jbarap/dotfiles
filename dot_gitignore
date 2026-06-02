@@ -15,3 +15,6 @@ build/*
 
 # vscode
 **/.vscode/*
+
+# env setup
+.envrc

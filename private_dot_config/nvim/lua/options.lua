@@ -173,6 +173,12 @@ vim.filetype.add({
   },
   pattern = {
     [".*%.json%.cfg"] = "json",
+    ["%.env%..*"] = "sh",
+  },
+  extension = {
+    jinja = "jinja",
+    jinja2 = "jinja",
+    j2 = "jinja",
   },
 })
 

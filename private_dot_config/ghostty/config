@@ -11,6 +11,9 @@ gtk-toolbar-style = flat
 gtk-wide-tabs = false
 gtk-titlebar-hide-when-maximized = true
 
+# Notifications
+bell-features = "title,attention,system,border"
+
 # Mouse
 mouse-scroll-multiplier = 0.5
 

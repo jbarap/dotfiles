@@ -14,6 +14,7 @@ M.lsps_in_use = {
   -- "zuban",
 
   "lua_ls",
+  "rust_analyzer",
   "harper_ls",
   "dockerls",
   "gopls",
@@ -201,6 +202,8 @@ M._configs = {
       },
     }
   end,
+
+  rust_analyzer = {},
 
   yamlls = {
     settings = {

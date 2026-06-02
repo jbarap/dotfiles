@@ -197,7 +197,8 @@ return {
     },
   },
   {
-    "sindrets/diffview.nvim",
+    -- Maintained fork of: sindrets/diffview.nvim
+    "dlyongemallo/diffview.nvim",
     cmd = { "DiffviewOpen", "DiffviewFileHistory" },
     keys = {
       { "<leader>dvo", function() require("plugin_utils").toggle_diff_view("diff") end, mode = { "n", "v" }, desc = "Diffview open" },
@@ -223,6 +224,8 @@ return {
         enhanced_diff_hl = true,
         use_icons = true,
         file_panel = {
+          show_branch_name = true,
+          always_show_sections = true,
           win_config = {
             position = "left",
             width = 35,
@@ -258,12 +261,9 @@ return {
           },
           file_panel = {
             { "n", "j", actions.next_entry, { desc = "Next entry" }},
-            { "n", "<down>", actions.next_entry, { desc = "Next entry" }},
             { "n", "k", actions.prev_entry, { desc = "Prev entry" }},
-            { "n", "<up>", actions.prev_entry, { desc = "Prev entry" }},
             { "n", "<cr>", actions.select_entry, { desc = "Select entry" }},
-            { "n", "o", actions.select_entry, { desc = "Select entry" }},
-            { "n", "R", actions.refresh_files, { desc = "Refresh files" }},
+            { "n", "<c-r>", actions.refresh_files, { desc = "Refresh files" }},
             { "n", "<tab>", actions.select_next_entry, { desc = "Select next entry" }},
             { "n", "<s-tab>", actions.select_prev_entry, { desc = "Select prev entry" }},
             { "n", "<leader>nf", actions.focus_files, { desc = "Focus files" }},

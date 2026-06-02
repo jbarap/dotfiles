@@ -13,7 +13,7 @@ return {
 
           -- Enable document_color if possible
           if client and client:supports_method('textDocument/documentColor') then
-            vim.lsp.document_color.enable(true, bufnr, { style = "virtual" })
+            vim.lsp.document_color.enable(true, {}, { style = "virtual" })
           end
 
           local function buf_set_keymap(lhs, rhs, opts, mode)

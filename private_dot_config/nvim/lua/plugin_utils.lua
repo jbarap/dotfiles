@@ -73,7 +73,7 @@ function M.toggle_diff_view(mode)
 
           local cmd
           if choice == "all" then
-            cmd = string.format("DiffviewOpen %s...HEAD --imply-local", base_ref)
+            cmd = string.format("DiffviewOpen %s...HEAD", base_ref)
           else
             cmd = string.format("DiffviewFileHistory --range=%s...HEAD --right-only --no-merges", base_ref)
           end

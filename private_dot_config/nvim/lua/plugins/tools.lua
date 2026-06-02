@@ -4,6 +4,7 @@ return {
 
   -- File explorer and modifier
   -- TODO: add support for image preview
+  -- check out: https://github.com/barrettruth/canola.nvim
   {
     "stevearc/oil.nvim",
     dependencies = {
@@ -935,58 +936,13 @@ return {
 
   -- AI stuff
   {
-    "olimorris/codecompanion.nvim",
+    "georgeguimaraes/review.nvim",
     dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter",
+      "esmuellert/codediff.nvim",
+      "MunifTanjim/nui.nvim",
     },
-    cmd = { "CodeCompanionChat", "CodeCompanion", "CodeCompanionActions" },
-    config = function ()
-      require("codecompanion").setup({
-        strategies = {
-          chat = {
-            adapter = "gemini",
-          },
-          inline = {
-            adapter = "gemini",
-          },
-          agent = {
-            adapter = "gemini",
-          },
-        },
-        display = {
-          chat = {
-            render_headers = false,
-          },
-        },
-        adapters = {
-          ollama = function()
-            return require("codecompanion.adapters").extend("ollama", {
-              schema = {
-                model = {
-                  default = "qwen2.5-coder",
-                },
-              },
-            })
-          end,
-          gemini = function()
-            return require("codecompanion.adapters").extend("gemini", {
-              env = {
-                api_key = "cmd:cat ~/data/.creds/gemini_api_key",
-              },
-            })
-          end,
-          anthropic = function()
-            return require("codecompanion.adapters").extend("anthropic", {
-              env = {
-                api_key = "cmd:cat ~/data/.creds/claude_api_key",
-              },
-            })
-          end,
-        },
-      })
-
-    end,
+    cmd = { "Review" },
+    opts = {},
   },
 
   -- Misc goodies
@@ -1081,4 +1037,6 @@ return {
       },
     },
   },
+
+  -- check out: https://github.com/NickTsaizer/splitasm.nvim
 }

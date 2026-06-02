@@ -28,6 +28,8 @@ return {
         "json",
         "json5",
         "just",
+        "jinja",
+        "jinja_inline",
         "latex",
         "lua",
         "luadoc",
@@ -94,7 +96,7 @@ return {
       })
 
       -- Incremental selection
-      vim.keymap.set({ "n", "x", "o" }, "<Tab>", function()
+      vim.keymap.set({ "n", "x", "o" }, "<A-o>", function()
         if vim.treesitter.get_parser(nil, nil, { error = false }) then
           require "vim.treesitter._select".select_parent(vim.v.count1)
         else
@@ -102,7 +104,7 @@ return {
         end
       end, { desc = "Select parent treesitter node or outer incremental lsp selections" })
 
-      vim.keymap.set({ "n", "x", "o" }, "<S-Tab>", function()
+      vim.keymap.set({ "n", "x", "o" }, "<A-i>", function()
         if vim.treesitter.get_parser(nil, nil, { error = false }) then
           require "vim.treesitter._select".select_child(vim.v.count1)
         else

@@ -13,6 +13,7 @@ return {
   {
     "saghen/blink.cmp",
     enabled = true,
+    version = '1.*',
     event = "InsertEnter",
 
     -- TODO: change this if building becomes easier

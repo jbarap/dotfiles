@@ -596,8 +596,9 @@ return {
         function()
           _G._usr_fzflua_files({
             ignore = true,
-            hidden = false,
+            hidden = true,
             pretty = false,
+            exclude = { ".git/*" },
           })
         end,
         desc = "Find files",

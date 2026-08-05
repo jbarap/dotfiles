@@ -1,3 +1,4 @@
+-- Check: https://github.com/r4ppz/lspeek.nvim
 return {
   -- Lsp config
   {

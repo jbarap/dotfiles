@@ -14,3 +14,13 @@ layout_uv() {
     export UV_ACTIVE=1  # or VENV_ACTIVE=1
     export VIRTUAL_ENV
 }
+
+# Select the agent profile (personal|work) for a project's .envrc. Points both
+# CLI config-dir env vars at the matching per-profile runtime dir, keeping them
+# in lockstep so a project can never be personal for one tool and work for the
+# other. Adding a new agent = one more export here, no per-project churn.
+use_agent_profile() {
+    local p="${1:?use_agent_profile: profile name required (personal|work)}"
+    export CLAUDE_CONFIG_DIR="$HOME/.claude-$p"  # Claude Code
+    export CODEX_HOME="$HOME/.codex-$p"          # Codex
+}

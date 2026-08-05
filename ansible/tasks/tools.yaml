@@ -4,7 +4,8 @@
     # TODO: install broot, xh,  with cargo?
     name:
       # TODO: cargo install --locked tree-sitter-cli
-      - bat
+      - direnv  # Auto-load .envrc
+      - bat  # Prettier cat
       - tmux  # TODO: install from release tarball
       - tmuxp  # TODO: install with pipx: tmuxp
       - fzf
@@ -22,6 +23,7 @@
       - libgit2-dev  # for nvim fugit2
       - inotify-tools  # neovim watcher
       - libmagickwand-dev  # for image.nvim
+      - libnotify-bin  # notify-send for notifications
     state: latest
 
 - name: Add fd alias

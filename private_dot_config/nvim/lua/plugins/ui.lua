@@ -278,7 +278,10 @@ return {
 
   -- Statusline/Winbar
   {
-    "MunifTanjim/nougat.nvim",
+    -- Fork carries a fix for the stale modified indicator: upstream tracks the
+    -- flag via BufModifiedSet, which misses some transitions
+    "jbarap/nougat.nvim",
+    branch = "fix/modified-flag-optionset",
     event = "VeryLazy",
     config = function ()
       local nougat = require("nougat")

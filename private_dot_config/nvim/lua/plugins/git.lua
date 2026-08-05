@@ -69,7 +69,7 @@ return {
   -- Commit and branch visualizer
   {
     "isakbm/gitgraph.nvim",
-    dependencies = { "sindrets/diffview.nvim" },
+    dependencies = { "dlyongemallo/diffview-plus.nvim" },
     keys = {
       { "<leader>gl", function()
         require("gitgraph").draw({}, { all = true, max_count = 5000 })
@@ -198,7 +198,7 @@ return {
   },
   {
     -- Maintained fork of: sindrets/diffview.nvim
-    "dlyongemallo/diffview.nvim",
+    "dlyongemallo/diffview-plus.nvim",
     cmd = { "DiffviewOpen", "DiffviewFileHistory" },
     keys = {
       { "<leader>dvo", function() require("plugin_utils").toggle_diff_view("diff") end, mode = { "n", "v" }, desc = "Diffview open" },

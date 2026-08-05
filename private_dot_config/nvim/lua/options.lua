@@ -205,7 +205,7 @@ vim.g.loaded_netrwPlugin = 1
 -- TODO: look out for when inline:char is compatible with linematch
 -- see: https://github.com/vim/vim/pull/16881
 -- and: https://github.com/neovim/neovim/commit/e8785c2e94508eeabf6ff63e1fe1bcaecceef946
-opt.diffopt = "filler,vertical,closeoff,internal,indent-heuristic,algorithm:histogram,linematch:120"
+opt.diffopt = "filler,vertical,closeoff,internal,indent-heuristic,algorithm:histogram,linematch:120,inline:char"
 
 -- Highlight text on yank
 utils.create_augroup("highlight_on_yank", {

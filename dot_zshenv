@@ -18,8 +18,11 @@ export PATH="/usr/local/go/bin:$HOME/go/bin/:$PATH"
 # cargo
 . "$HOME/.cargo/env"
 
-# nvm
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# fnm (Node version manager). Must init here in .zshenv, not .zshrc, so `node`
+# is on PATH for non-interactive shells - tools spawned outside an interactive
+# shell (e.g. nvim LSP servers) resolve it via a raw PATH lookup.
+# --use-on-cd auto-switches per project on .nvmrc / .node-version.
+if command -v fnm >/dev/null 2>&1; then
+  eval "$(fnm env --shell zsh --use-on-cd)"
+fi
 

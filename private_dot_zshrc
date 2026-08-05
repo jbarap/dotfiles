@@ -93,6 +93,8 @@ if [ -f "$HOME/tools/google-cloud-sdk/completion.zsh.inc" ]; then
     . "$HOME/tools/google-cloud-sdk/completion.zsh.inc"
 fi
 
+# Node: managed by fnm (initialized in .zshenv).
+
 # Claude
 claude() {
   if [[ -z "$CLAUDE_CONFIG_DIR" ]]; then
@@ -100,6 +102,15 @@ claude() {
     return 1
   else
     command claude "$@"
+  fi
+}
+
+codex() {
+  if [[ -z "$CODEX_HOME" ]]; then
+    echo "No profile active. cd into a project dir with a .envrc, or set CODEX_HOME manually."
+    return 1
+  else
+    command codex "$@"
   fi
 }
 

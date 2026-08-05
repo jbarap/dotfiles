@@ -1,22 +1,24 @@
-- name: Check for nvm
-  ansible.builtin.shell: test -d "{{lookup('env', 'HOME')}}/.nvm"
-  register: nvm_exists
-  ignore_errors: yes
+- name: Check for fnm
+  ansible.builtin.shell: command -v fnm
+  register: fnm_exists
+  ignore_errors: true
 
-- name: Download nvm
-  when: nvm_exists is failed
-  ansible.builtin.get_url:
-    url: https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh
-    dest: /tmp/nvm_installer.sh
-
-# TODO: add creates to applicable scripts
-- name: Install nvm
-  when: nvm_exists is failed
-  ansible.builtin.shell: bash /tmp/nvm_installer.sh
-
-- name: Install node
-  when: nvm_exists is failed
+# cargo-binstall fetches a prebuilt fnm binary into ~/.cargo/bin (already on PATH).
+- name: Install fnm
+  when: fnm_exists is failed
+  ansible.builtin.command: cargo binstall --no-confirm fnm
   environment:
-    NVM_DIR: "{{lookup('env', 'HOME')}}/.nvm"
-  ansible.builtin.shell: >-
-    /bin/bash -c "source $NVM_DIR/nvm.sh && nvm install node"
+    PATH: "{{ lookup('env', 'HOME') }}/.cargo/bin:{{ lookup('env', 'PATH') }}"
+
+# Swap --lts for --latest to track the current (non-LTS) release instead.
+- name: Install default Node via fnm
+  when: fnm_exists is failed
+  ansible.builtin.shell: |
+    set -e
+    eval "$(fnm env)"
+    fnm install --lts
+    fnm default "$(fnm ls | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | sort -V | tail -1)"
+  args:
+    executable: /bin/bash
+  environment:
+    PATH: "{{ lookup('env', 'HOME') }}/.cargo/bin:{{ lookup('env', 'PATH') }}"

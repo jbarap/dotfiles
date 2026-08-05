@@ -18,3 +18,7 @@ build/*
 
 # env setup
 .envrc
+
+**/.claude/settings.local.json
+
+**/.claude/settings.local.json

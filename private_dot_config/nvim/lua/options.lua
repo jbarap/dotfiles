@@ -64,14 +64,17 @@ opt.foldlevel = 99
 opt.foldenable = true
 opt.foldmethod = "expr"
 opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+opt.foldcolumn = "auto:1"
 
 -- If LSP client supports folding, use that one over treesitter
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
     local client = vim.lsp.get_client_by_id(args.data.client_id)
     if client == nil then return end
-    if client:supports_method('textDocument/foldingRange') then
-      local win = vim.api.nvim_get_current_win()
+    if not client:supports_method('textDocument/foldingRange') then return end
+    if vim.b[args.buf].lsp_foldexpr_set then return end
+    vim.b[args.buf].lsp_foldexpr_set = true
+    for _, win in ipairs(vim.fn.win_findbuf(args.buf)) do
       vim.wo[win][0].foldexpr = 'v:lua.vim.lsp.foldexpr()'
     end
   end,
@@ -158,7 +161,7 @@ opt.scrolloff = 10
 opt.sidescrolloff = 4
 
 -- Fillchars
-opt.fillchars = "eob: ,fold: ,foldopen:,foldsep: ,foldclose:,diff:╱,msgsep:─"
+opt.fillchars = "eob: ,fold: ,foldopen:,foldsep: ,foldclose:,diff:╱,msgsep:─,foldinner: "
 opt.list = true
 -- for some reason the help menu shows ^I if tab is not explicitly "  "
 opt.listchars = { tab = "  ", space = " ", nbsp = " " }

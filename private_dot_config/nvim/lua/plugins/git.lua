@@ -271,6 +271,7 @@ return {
   {
     -- TODO: lazy load. Fairly light though
     "emrearmagan/atlas.nvim",
+    cmd = "Atlas",
     dependencies = {
       "nvim-tree/nvim-web-devicons",
       -- "MeanderingProgrammer/render-markdown.nvim", -- optional but recommended

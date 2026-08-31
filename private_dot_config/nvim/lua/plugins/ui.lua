@@ -614,76 +614,21 @@ return {
     end
   },
 
-  -- Statuscol config util
+  -- Statuscolumn
   {
-    "luukvbaal/statuscol.nvim",
-    event = { "VimEnter" }, -- Ideally, this would be VeryLazy, but ignored ft don't work
-    branch = "0.10",
+    "nvim-mini/mini.statuscolumn",
+    version = false,
+    event = { "VimEnter" },
     config = function()
-      local builtin = require('statuscol.builtin')
-      require('statuscol').setup {
-        ft_ignore = {
-          "dashboard",
-          "starter",
-          "man",
-          "help",
-          "NeogitStatus",
-          "NeogitLogView",
+      local statuscolumn = require('mini.statuscolumn')
+      statuscolumn.setup {
+        content = statuscolumn.gen_content.main {
+          -- Composable layers
+          { format = 'slf', sep = ' ' },  -- Base format (sign, line, fold) and ' ' separator
+          { ltype = 'virt', lnum = '•' }, -- On linetype 'virt', show dot
+          { ltype = 'wrap', lnum = '↳' }, -- On linetype 'wrap', show enter
         },
-        relculright = true,
-        segments = {
-          -- gitsigns status
-          {
-            sign = {
-              namespace = { 'gitsigns' },
-              maxwidth = 1,
-              colwidth = 1,
-              auto = false,
-            },
-            click = 'v:lua.ScSa',
-          },
-          -- diagnostics
-          {
-            sign = {
-              namespace = { "diagnostic.signs" },
-              maxwidth = 1,
-              colwidth = 2,
-              auto = false,
-            },
-            click = 'v:lua.ScSa',
-          },
-          -- other symbols
-          {
-            sign = {
-              name = { ".*" },
-              maxwidth = 2,
-              colwidth = 2,
-              auto = true,
-            },
-            click = "v:lua.ScSa",
-          },
-          -- line number
-          {
-            text = { builtin.lnumfunc, " " },
-            click = "v:lua.ScLa",
-            condition = {
-              true,
-              builtin.not_empty,
-            },
-          },
-          {
-            text = { builtin.foldfunc, " " },
-            condition = {
-              function(args)
-                return args.fold.width ~= 0
-              end,
-              function(args)
-                return args.fold.width ~= 0
-              end,
-            },
-            click = "v:lua.ScFa",
-          },
-        },
+        dim_inactive = true,
       }
     end
   },

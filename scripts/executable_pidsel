@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+if [[ -z $1 ]]; then
+    echo "Provide an argument to search pids for"
+    exit 1
+fi
+
+PID=$(pgrep -afi $1 | fzf | awk '{print $1}')
+
+if [[ -z $PID ]]; then
+    echo "Invalid PID, select a process to monitor"
+    exit 1
+fi
+
+echo $PID

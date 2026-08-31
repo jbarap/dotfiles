@@ -23,18 +23,18 @@ return {
         end
 
         -- Navigation
-        map('n', ']h', function()
+        map('n', ']c', function()
           if vim.wo.diff then
-            vim.cmd.normal({']h', bang = true})
+            vim.cmd.normal({']c', bang = true})
           else
             gitsigns.nav_hunk('next')
           end
         end)
 
 
-        map('n', '[h', function()
+        map('n', '[c', function()
           if vim.wo.diff then
-            vim.cmd.normal({'[h', bang = true})
+            vim.cmd.normal({'[c', bang = true})
           else
             gitsigns.nav_hunk('prev')
           end
@@ -170,15 +170,6 @@ return {
     }
   },
 
-  -- Backup git porcelain
-  {
-    "nvim-mini/mini-git",
-    cmd = "Git",
-    config = function ()
-      require("mini.git").setup({})
-    end
-  },
-
   -- Diff comparison
   {
     "esmuellert/codediff.nvim",
@@ -277,4 +268,16 @@ return {
       })
     end
   },
+  {
+    -- TODO: lazy load. Fairly light though
+    "emrearmagan/atlas.nvim",
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+      -- "MeanderingProgrammer/render-markdown.nvim", -- optional but recommended
+      -- "esmuellert/codediff.nvim", -- optional (PullRequest diff)
+      -- "sindrets/diffview.nvim", -- optional (PullRequest diff - alternative)
+    },
+    opts = {
+    },
+  }
 }

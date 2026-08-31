@@ -157,46 +157,6 @@ return {
       vim.keymap.set({ "x", "o" }, "ia", function()
         require "nvim-treesitter-textobjects.select".select_textobject("@parameter.inner", "textobjects")
       end)
-
-      -- Move
-      -- next start
-      vim.keymap.set({ "n", "x", "o" }, "]f", function()
-        require("nvim-treesitter-textobjects.move").goto_next_start("@function.outer", "textobjects")
-      end)
-      vim.keymap.set({ "n", "x", "o" }, "]c", function()
-        require("nvim-treesitter-textobjects.move").goto_next_start("@class.outer", "textobjects")
-      end)
-      vim.keymap.set({ "n", "x", "o" }, "]a", function()
-        require("nvim-treesitter-textobjects.move").goto_next_start("@parameter.inner", "textobjects")
-      end)
-
-      -- next end
-      vim.keymap.set({ "n", "x", "o" }, "]F", function()
-        require("nvim-treesitter-textobjects.move").goto_next_end("@function.outer", "textobjects")
-      end)
-      vim.keymap.set({ "n", "x", "o" }, "]C", function()
-        require("nvim-treesitter-textobjects.move").goto_next_end("@class.outer", "textobjects")
-      end)
-
-      -- prev start
-      vim.keymap.set({ "n", "x", "o" }, "[f", function()
-        require("nvim-treesitter-textobjects.move").goto_previous_start("@function.outer", "textobjects")
-      end)
-      vim.keymap.set({ "n", "x", "o" }, "[c", function()
-        require("nvim-treesitter-textobjects.move").goto_previous_start("@class.outer", "textobjects")
-      end)
-      vim.keymap.set({ "n", "x", "o" }, "[a", function()
-        require("nvim-treesitter-textobjects.move").goto_previous_start("@parameter.inner", "textobjects")
-      end)
-
-      -- prev end
-      vim.keymap.set({ "n", "x", "o" }, "[F", function()
-        require("nvim-treesitter-textobjects.move").goto_previous_end("@function.outer", "textobjects")
-      end)
-      vim.keymap.set({ "n", "x", "o" }, "[C", function()
-        require("nvim-treesitter-textobjects.move").goto_previous_end("@class.outer", "textobjects")
-      end)
-
     end,
   },
 

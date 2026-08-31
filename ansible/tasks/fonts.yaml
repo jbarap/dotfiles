@@ -48,15 +48,18 @@
     dest: "{{lookup('env', 'HOME')}}/.local/share/fonts/jetbrains_mono"
 
 # symbols
+# Guard on a version stamp, not on mere presence: a bare fc-list check makes
+# version bumps silent no-ops, since any installed release satisfies it.
 - name: Check for Nerd Font Symbols
-  ansible.builtin.shell: test -n "$(fc-list | grep -i symbolsnerdfont | head -n 1)"
+  ansible.builtin.shell: >-
+    test -f "{{lookup('env', 'HOME')}}/.local/share/fonts/nerd_font_symbols/.version-{{nerd_symbols_version | default('3.5.0')}}"
   register: nerd_symbols_installed
   ignore_errors: true
 
 - name: Download Nerd Font Symbols
   when: nerd_symbols_installed is failed
   ansible.builtin.get_url:
-    url: https://github.com/ryanoasis/nerd-fonts/releases/download/v{{nerd_symbols_version | default('3.2.1')}}/NerdFontsSymbolsOnly.tar.xz
+    url: https://github.com/ryanoasis/nerd-fonts/releases/download/v{{nerd_symbols_version | default('3.5.0')}}/NerdFontsSymbolsOnly.tar.xz
     dest: /tmp/nerd_font_symbols.tar.xz
 
 - name: Create Nerd Font Symbols dir
@@ -70,6 +73,12 @@
   ansible.builtin.unarchive:
     src: /tmp/nerd_font_symbols.tar.xz
     dest: "{{lookup('env', 'HOME')}}/.local/share/fonts/nerd_font_symbols"
+
+- name: Stamp Nerd Font Symbols version
+  when: nerd_symbols_installed is failed
+  ansible.builtin.shell: >-
+    rm -f "{{lookup('env', 'HOME')}}/.local/share/fonts/nerd_font_symbols/.version-"* &&
+    touch "{{lookup('env', 'HOME')}}/.local/share/fonts/nerd_font_symbols/.version-{{nerd_symbols_version | default('3.5.0')}}"
 
 - name: Regenerate font cache
   when: hack_installed is failed or nerd_symbols_installed is failed

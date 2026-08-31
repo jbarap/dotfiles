@@ -1,3 +1,4 @@
+# TODO: consider using pyinfra
 ---
 - name: Test playbooks
   hosts: localhost

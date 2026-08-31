@@ -961,8 +961,6 @@ return {
       )
     end,
     opts = {
-      quickfile = { enabled = false },
-      bigfile = { enabled = false },
       image = {},
       indent = {
         indent = {
